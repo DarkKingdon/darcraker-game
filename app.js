@@ -15,13 +15,22 @@ app.use(session({
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// 2. ARQUIVOS PÚBLICOS
-// Usamos path.join(__dirname) para garantir que o Railway ache os arquivos na raiz
-app.use(express.static(path.join(__dirname))); 
+// 2. ARQUIVOS PÚBLICOS (Apontando para a pasta 'public')
+// Isso permite carregar CSS/JS que estejam dentro de 'public' automaticamente
+app.use(express.static(path.join(__dirname, 'public'))); 
 
-// Rota raiz: Quando alguém acessar o link puro, vai para o login
+// Rota raiz: Envia o arquivo de login que está dentro da pasta public
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'login.html'));
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Rotas diretas para os HTMLs da pasta public
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/cadastro.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'cadastro.html'));
 });
 
 // 3. BLOQUEIO DA PASTA /pastas (Acesso apenas se logado)
@@ -33,7 +42,7 @@ app.use('/pastas', (req, res, next) => {
     }
 }, express.static(path.join(__dirname, 'pastas')));
 
-// --- 4. ROTAS DE NAVEGAÇÃO (Páginas protegidas) ---
+// --- 4. ROTAS DE NAVEGAÇÃO (Páginas protegidas dentro de 'pastas') ---
 
 app.get('/inicio.html', (req, res) => {
     if (req.session.logado) {
@@ -147,7 +156,6 @@ app.get('/sair', (req, res) => {
     res.redirect('/login.html');
 });
 
-// Porta configurada para o Railway
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
