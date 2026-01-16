@@ -2,21 +2,22 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #e9ecef; margin: 0; }
-        form { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input { display: block; width: 100%; margin-bottom: 15px; padding: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    </style>
+    <title>Login - DarCraker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <form action="/login" method="POST">
-        <h2>Acessar Conta</h2>
-        <input type="email" name="email" placeholder="E-mail" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-        <p><a href="/cadastro.html">Criar conta</a></p>
-    </form>
+    <div class="login-container">
+        <h1 class="titulo-jogo">DarCraker</h1>
+        
+        <form action="/login" method="POST">
+            <h2>Acessar Conta</h2>
+            <input type="email" name="email" placeholder="E-mail" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+            <p><a href="/cadastro.html">Criar conta</a></p>
+        </form>
+    </div>
 </body>
 </html>
