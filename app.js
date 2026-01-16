@@ -9,16 +9,21 @@ app.use(session({
     secret: 'minha-chave-secreta',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000 } // 1 hora
+    cookie: { maxAge: 3600000 }
 }));
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// 2. ARQUIVOS PÚBLICOS
-app.use(express.static('public')); 
+// 2. ARQUIVOS PÚBLICOS (Ajustado para ler da raiz)
+app.use(express.static(__dirname)); 
 
-// 3. BLOQUEIO DA PASTA /pastas (Acesso apenas se logado)
+// Rota raiz para evitar o erro "Cannot GET /"
+app.get('/', (req, res) => {
+    res.redirect('/login.html');
+});
+
+// 3. BLOQUEIO DA PASTA /pastas
 app.use('/pastas', (req, res, next) => {
     if (req.session.logado) {
         next();
@@ -26,6 +31,8 @@ app.use('/pastas', (req, res, next) => {
         res.redirect('/login.html');
     }
 }, express.static(path.join(__dirname, 'pastas')));
+
+
 
 // --- 4. ROTAS DE NAVEGAÇÃO (Páginas protegidas) ---
 
