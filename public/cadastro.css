@@ -3,7 +3,7 @@
 /* 1. Configuração do Fundo e Layout */
 body {
     /* Mova sua imagem para a raiz ou uma pasta chamada 'img' fora de '/pastas' */
-    background-image: url('/pastas/img/fundo.jpg'); 
+    background-image: url('pastas/img/fundo.jpg'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
