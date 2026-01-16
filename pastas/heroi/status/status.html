@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do Herói - DarCraker</title>
+    
+    <link rel="stylesheet" href="status.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+   <header class="navbar">
+      <div class="logo">DarCraker</div>
+      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="/pastas/inicio/inicio.html" class="sidebar-link">
+                <img src="/pastas/img/inicio.jpg" alt="Início" class="sidebar-img">
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="/pastas/heroi/heroi.html" class="sidebar-link">
+                <img src="/pastas/img/heroi.jpg" alt="Herói" class="sidebar-img">
+                <span class="sidebar-text">Herói</span>
+            </a>
+            </div>
+    </nav>
+
+    <main class="status-container">
+        <section class="level-header">
+            <h1>Nível <span id="level-valor">1</span></h1>
+            <p>Experiência: <span id="exp-valor">0 / 0</span></p>
+            <p>Pontos Disponíveis: <span id="points-valor">0</span></p>
+        </section>
+
+       <section class="bars-container">
+    <div class="bar-group">
+        <label>Vida (HP)</label>
+        <div class="bar-background">
+            <div id="hp-bar-fill" class="bar-fill hp">
+                <span id="hp-texto" class="bar-text">0 / 0</span>
+            </div>
+        </div>
+    </div>
+    <div class="bar-group">
+        <label>Mana (MP)</label>
+        <div class="bar-background">
+            <div id="mp-bar-fill" class="bar-fill mp">
+                <span id="mp-texto" class="bar-text">0 / 0</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <section class="attributes-grid">
+            <div class="attr-card">
+                <span class="attr-label">⚔️ Força:</span>
+                <span id="forca-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="forca">+</button>
+            </div>
+            <div class="attr-card">
+                <span class="attr-label">🛡️ Proteção:</span>
+                <span id="protecao-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="protecao">+</button>
+            </div>
+            <div class="attr-card">
+                <span class="attr-label">❤️ Vitalidade:</span>
+                <span id="vitalidade-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="vitalidade">+</button>
+            </div>
+            <div class="attr-card">
+                <span class="attr-label">📖 Inteligência:</span>
+                <span id="inteligencia-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="inteligencia">+</button>
+            </div>
+        </section>
+
+<section class="secondary-stats" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+    <div class="attr-card" style="background: rgba(255, 0, 0, 0.1);">
+        <span class="attr-label">⚔️ Ataque:</span>
+        <span id="ataque-valor" class="attr-number">1 - 2</span>
+    </div>
+    <div class="attr-card" style="background: rgba(0, 0, 255, 0.1);">
+        <span class="attr-label">🛡️ Defesa:</span>
+        <span id="defesa-valor" class="attr-number">1 - 2</span>
+    </div>
+</section>
+
+
+    </main>
+
+    <script src="status.js"></script>
+</body>
+</html>
