@@ -2,7 +2,8 @@
 
 /* 1. Configuração do Fundo e Layout */
 body {
-    background-image: url('/pastas/img/fundo.jpg');
+    /* Mova sua imagem para a raiz ou uma pasta chamada 'img' fora de '/pastas' */
+    background-image: url('/pastas/img/fundo.jpg'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -26,24 +27,17 @@ body {
 
 /* 3. Estilo Épico para o Título DarCraker */
 .titulo-jogo {
-    font-family: 'Luckiest Guy', cursive;
+    font-family: 'Luckiest Guy', cursive; /* Fonte padrão RPG/Anime */
     font-size: 5rem;
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Margem pequena para o form subir */
     text-align: center;
-    
-    /* Gradiente Estilo Anime (Laranja para Amarelo Ouro) */
     background: linear-gradient(to bottom, #FFD700 20%, #FF8C00 80%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    
-    /* Contorno grosso para parecer logo de anime */
     -webkit-text-stroke: 2px #333;
-    
-    /* Brilho de "Energia" */
     filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
 }
-
 /* 4. Estilo do Formulário (Interface de Menu RPG) */
 form {
     background: rgba(20, 20, 30, 0.9); /* Azul marinho escuro profundo */
@@ -123,14 +117,13 @@ a:hover {
 @media screen and (max-width: 600px) {
     .titulo-jogo {
         font-size: 3.5rem;
-        margin-bottom: 0px;
+        margin-bottom: 10px; /* Reduzido para o form subir no celular */
     }
 
     form {
         width: 85%;
         padding: 25px;
-        margin-top: 220px; /* Mantendo a mesma posição do login */
-        border-width: 2px;
+        margin-top: 0; /* Removido o excesso de margem */
     }
 
     button {
