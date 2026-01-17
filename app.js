@@ -9,31 +9,26 @@ app.use(session({
     secret: 'minha-chave-secreta',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000 } // 1 hora
+    cookie: { maxAge: 3600000 }
 }));
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// 2. ARQUIVOS PÚBLICOS (Apontando para a pasta 'public')
-// Isso permite carregar CSS/JS que estejam dentro de 'public' automaticamente
-app.use(express.static(path.join(__dirname, 'public'))); 
+// 2. ARQUIVOS PÚBLICOS DA RAIZ (login, cadastro, etc.)
+app.use(express.static(__dirname)); 
 
-// Rota raiz: Envia o arquivo de login que está dentro da pasta public
+// --- LIBERAÇÃO DA IMAGEM DE FUNDO ---
+// Isso permite que o fundo.jpg seja carregado mesmo sem login
+app.use('/pastas/img', express.static(path.join(__dirname, 'pastas', 'img')));
+
+// Rota raiz para evitar o erro "Cannot GET /"
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+    res.redirect('/login.html');
 });
 
-// Rotas diretas para os HTMLs da pasta public
-app.get('/login.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
-
-app.get('/cadastro.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'cadastro.html'));
-});
-
-// 3. BLOQUEIO DA PASTA /pastas (Acesso apenas se logado)
+// 3. BLOQUEIO DA PASTA /pastas (Protege heroi, inicio, etc.)
+// Note: Esta rota deve vir DEPOIS da liberação da /pastas/img
 app.use('/pastas', (req, res, next) => {
     if (req.session.logado) {
         next();
@@ -42,7 +37,8 @@ app.use('/pastas', (req, res, next) => {
     }
 }, express.static(path.join(__dirname, 'pastas')));
 
-// --- 4. ROTAS DE NAVEGAÇÃO (Páginas protegidas dentro de 'pastas') ---
+
+// --- 4. ROTAS DE NAVEGAÇÃO (Páginas protegidas) ---
 
 app.get('/inicio.html', (req, res) => {
     if (req.session.logado) {

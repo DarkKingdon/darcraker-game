@@ -1,9 +1,6 @@
-/* login.css */
-
-/* 1. Configuração do Fundo e Layout */
+/* Configuração Global */
 body {
-    /* Mova sua imagem para a raiz ou uma pasta chamada 'img' fora de '/pastas' */
-    background-image: url('pastas/img/fundo.jpg'); 
+    background-image: url('/pastas/img/fundo.jpg'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -17,7 +14,6 @@ body {
     overflow: hidden;
 }
 
-/* 2. Container Principal */
 .login-container {
     display: flex;
     flex-direction: column;
@@ -25,11 +21,11 @@ body {
     width: 100%;
 }
 
-/* 3. Estilo Épico para o Título DarCraker */
+/* Título DarCraker - Fonte Luckiest Guy */
 .titulo-jogo {
-    font-family: 'Luckiest Guy', cursive; /* Fonte padrão RPG/Anime */
+    font-family: 'Luckiest Guy', cursive;
     font-size: 5rem;
-    margin-bottom: 20px; /* Margem pequena para o form subir */
+    margin-bottom: 20px;
     text-align: center;
     background: linear-gradient(to bottom, #FFD700 20%, #FF8C00 80%);
     -webkit-background-clip: text;
@@ -39,15 +35,10 @@ body {
     filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
 }
 
-@keyframes flutuar {
-    0%, 100% { transform: translateY(0) rotate(-1deg); }
-    50% { transform: translateY(-15px) rotate(1deg); }
-}
-
-/* 4. Estilo do Formulário (Interface de Menu RPG) */
+/* Formulário Estilo RPG */
 form {
-    background: rgba(20, 20, 30, 0.9); /* Azul marinho escuro profundo */
-    border: 3px solid #4deeea; /* Borda ciano neon (estilo interface futurista/magia) */
+    background: rgba(20, 20, 30, 0.9);
+    border: 3px solid #4deeea;
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 0 25px rgba(77, 238, 234, 0.4);
@@ -58,7 +49,6 @@ form {
     backdrop-filter: blur(10px);
 }
 
-/* 5. Inputs com estilo "Mana" */
 input {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid #4deeea;
@@ -69,6 +59,7 @@ input {
     margin-bottom: 20px;
     width: 100%;
     box-sizing: border-box;
+    transition: 0.3s;
 }
 
 input:focus {
@@ -77,84 +68,46 @@ input:focus {
     outline: none;
 }
 
-/* 6. Botão de "START" / LOGIN */
 button {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(45deg, #4deeea, #74ee15); /* Ciano para Verde Lima */
+    background: linear-gradient(45deg, #4deeea, #74ee15);
     color: #000;
     border: none;
-    border-radius: 30px; /* Botão arredondado estilo mobile RPG */
+    border-radius: 30px;
     cursor: pointer;
     font-size: 18px;
     font-weight: 900;
     text-transform: uppercase;
-    font-family: 'Poppins', sans-serif;
     transition: 0.3s;
 }
 
 button:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 0 20px #74ee15;
-    letter-spacing: 2px;
 }
 
-
-
-/* 7. Link de Cadastro */
 a {
     color: #ff4d4d;
     text-decoration: none;
     font-size: 14px;
-    transition: 0.3s;
 }
 
-a:hover {
-    text-decoration: underline;
-    color: #fff;
-}
-
-/* 8. Responsividade (Media Queries) */
-
-/* Ajustes para Telas de Celular (Mobile) */
-@media screen and (max-width: 600px) {
-   /* 8. Responsividade (Mobile) */
+/* Responsividade Mobile */
 @media screen and (max-width: 600px) {
     .titulo-jogo {
         font-size: 3.5rem;
-        margin-bottom: 10px; /* Reduzido para o form subir no celular */
+        margin-bottom: 10px;
     }
 
     form {
         width: 85%;
-        padding: 25px;
-        margin-top: 0; /* Removido o excesso de margem */
-    }
-}
-
-    /* Opcional: Ajustar o container para garantir que nada transborde */
-    .login-container {
-        justify-content: center;
-        padding-top: 20px; /* Dá um respiro no topo da tela */
-    }
-
-    h2 {
-        font-size: 1.5rem;
+        padding: 20px;
+        margin-top: 0;
     }
 
     button {
         padding: 12px;
         font-size: 16px;
-    }
-}
-
-/* Ajustes para Telas Grandes (Monitores Desktop) */
-@media screen and (min-width: 1400px) {
-    .titulo-jogo {
-        font-size: 6rem; /* Aumenta o destaque em telas grandes */
-    }
-
-    form {
-        max-width: 450px; /* Aumenta um pouco o formulário para não parecer pequeno demais */
     }
 }
