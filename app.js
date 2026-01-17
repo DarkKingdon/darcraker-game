@@ -4,32 +4,36 @@ const path = require('path');
 const session = require('express-session');
 const app = express();
 
-// --- 1. CONFIGURAÇÕES INICIAIS ---
+// --- 1. CONFIGURAÇÕES ---
 app.use(session({
     secret: 'minha-chave-secreta',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000 } // 1 hora
+    cookie: { maxAge: 3600000 }
 }));
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// --- 2. ARQUIVOS PÚBLICOS ---
+// --- 2. ARQUIVOS ESTÁTICOS ---
+// Libera a raiz (login, cadastro)
 app.use(express.static(__dirname)); 
-app.use('/pastas/img', express.static(path.join(__dirname, 'pastas', 'img')));
 
-app.get('/', (req, res) => {
-    res.redirect('/login.html');
-});
-
-// --- 3. ROTAS DE API (STATUS DO HERÓI) ---
-
-// Busca os status do herói logado
-app.get('/api/status', async (req, res) => {
-    if (!req.session.logado) {
-        return res.status(401).json({ erro: "Não autorizado" });
+// Libera a pasta 'pastas' para arquivos CSS/JS/HTML internos
+// O middleware verifica se o usuário está logado antes de permitir o acesso
+app.use('/pastas', (req, res, next) => {
+    if (req.session.logado) {
+        next();
+    } else {
+        res.redirect('/login.html');
     }
+}, express.static(path.join(__dirname, 'pastas')));
+
+// --- 3. ROTAS DE API (STATUS) ---
+
+app.get('/api/status', async (req, res) => {
+    if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
+    
     try {
         const [rows] = await db.query('SELECT * FROM heroi_status WHERE usuario_id = ?', [req.session.usuarioId]);
         if (rows.length > 0) {
@@ -38,60 +42,38 @@ app.get('/api/status', async (req, res) => {
             res.status(404).json({ erro: "Status não encontrados" });
         }
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ erro: "Erro ao buscar status" });
+        res.status(500).json({ erro: "Erro interno" });
     }
 });
 
-// Salva os status atualizados
 app.post('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).send("Não autorizado");
-
-    const { forca, protecao, vitalidade, inteligencia, pontos_disponiveis, vida_atual, mana_atual } = req.body;
-    
+    const s = req.body;
     try {
         await db.query(
             `UPDATE heroi_status SET 
-            forca = ?, protecao = ?, vitalidade = ?, inteligencia = ?, 
-            pontos_disponiveis = ?, vida_atual = ?, mana_atual = ?
+            forca=?, protecao=?, vitalidade=?, inteligencia=?, pontos_disponiveis=?, 
+            vida_atual=?, mana_atual=?, vida_maxima=?, mana_maxima=? 
             WHERE usuario_id = ?`,
-            [forca, protecao, vitalidade, inteligencia, pontos_disponiveis, vida_atual, mana_atual, req.session.usuarioId]
+            [s.forca, s.protecao, s.vitalidade, s.inteligencia, s.pontos_disponiveis, 
+             s.vida_atual, s.mana_atual, s.vida_maxima, s.mana_maxima, req.session.usuarioId]
         );
-        res.send("Salvo com sucesso");
+        res.send("OK");
     } catch (err) {
-        console.error(err);
         res.status(500).send("Erro ao salvar");
     }
 });
 
-// --- 4. ROTAS DE AUTENTICAÇÃO ---
-
-app.post('/cadastrar', async (req, res) => {
-    const { nome, email, senha } = req.body;
-    try {
-        const [result] = await db.query('INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)', [nome, email, senha]);
-        const novoUsuarioId = result.insertId;
-        // Cria o registro inicial de status para o novo herói
-        await db.query('INSERT INTO heroi_status (usuario_id) VALUES (?)', [novoUsuarioId]);
-        res.send("<script>alert('Sucesso!'); window.location='/login.html';</script>");
-    } catch (err) {
-        res.status(500).send("Erro ao cadastrar");
-    }
-});
-
+// --- 4. LOGIN E CADASTRO ---
 app.post('/login', async (req, res) => {
     const { email, senha } = req.body;
-    try {
-        const [usuarios] = await db.query('SELECT * FROM usuarios WHERE email = ? AND senha = ?', [email, senha]);
-        if (usuarios.length > 0) {
-            req.session.logado = true;
-            req.session.usuarioId = usuarios[0].id;
-            res.redirect('/inicio.html'); 
-        } else {
-            res.send("<script>alert('Login incorreto!'); window.location='/login.html';</script>");
-        }
-    } catch (err) {
-        res.status(500).send("Erro no banco");
+    const [user] = await db.query('SELECT * FROM usuarios WHERE email=? AND senha=?', [email, senha]);
+    if (user.length > 0) {
+        req.session.logado = true;
+        req.session.usuarioId = user[0].id;
+        res.redirect('/pastas/inicio/inicio.html');
+    } else {
+        res.send("<script>alert('Falha'); window.location='/login.html';</script>");
     }
 });
 
@@ -100,5 +82,4 @@ app.get('/sair', (req, res) => {
     res.redirect('/login.html');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(process.env.PORT || 3000);
