@@ -83,3 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.onclick = () => adicionarAtributo(btn.dataset.attribute);
     });
 });
+
+// Garante que o código só rode após o HTML carregar completamente
+document.addEventListener('DOMContentLoaded', () => {
+    carregarDados(); // Chama o banco de dados assim que a página abre
+
+    // Configura os botões de adicionar pontos
+    DOM.addPointBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const attr = btn.getAttribute('data-attribute');
+            adicionarAtributo(attr);
+        });
+    });
+});
