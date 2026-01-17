@@ -65,22 +65,27 @@ async function salvarDados() {
 
 function atualizarTela() {
     // Atualiza os textos simples
-    if(DOM.level) DOM.level.textContent = heroStatus.nivel;
-    if(DOM.pontos) DOM.pontos.textContent = heroStatus.pontos_disponiveis;
-    if(DOM.forca) DOM.forca.textContent = heroStatus.forca;
-    if(DOM.protecao) DOM.protecao.textContent = heroStatus.protecao;
-    if(DOM.vitalidade) DOM.vitalidade.textContent = heroStatus.vitalidade;
-    if(DOM.inteligencia) DOM.inteligencia.textContent = heroStatus.inteligencia;
+    if(DOM.level) DOM.level.textContent = heroStatus.nivel || 1;
+    if(DOM.pontos) DOM.pontos.textContent = heroStatus.pontos_disponiveis || 0;
+    if(DOM.forca) DOM.forca.textContent = heroStatus.forca || 1;
+    if(DOM.protecao) DOM.protecao.textContent = heroStatus.protecao || 1;
+    if(DOM.vitalidade) DOM.vitalidade.textContent = heroStatus.vitalidade || 1;
+    if(DOM.inteligencia) DOM.inteligencia.textContent = heroStatus.inteligencia || 1;
 
-    // Atualiza as barras de Vida e Mana (Cálculo de %)
-    const pVida = (heroStatus.vida_atual / heroStatus.vida_maxima) * 100;
-    const pMana = (heroStatus.mana_atual / heroStatus.mana_maxima) * 100;
+    // Proteção contra divisão por zero (evita o 0/0 e barra vazia)
+    const vidaMax = heroStatus.vida_maxima || 10;
+    const manaMax = heroStatus.mana_maxima || 10;
+    const vidaAtual = heroStatus.vida_atual || 0;
+    const manaAtual = heroStatus.mana_atual || 0;
+
+    const pVida = (vidaAtual / vidaMax) * 100;
+    const pMana = (manaAtual / manaMax) * 100;
     
     if(DOM.vidaBar) DOM.vidaBar.style.width = pVida + "%";
     if(DOM.manaBar) DOM.manaBar.style.width = pMana + "%";
     
-    if(DOM.vidaTexto) DOM.vidaTexto.textContent = `${heroStatus.vida_atual}/${heroStatus.vida_maxima}`;
-    if(DOM.manaTexto) DOM.manaTexto.textContent = `${heroStatus.mana_atual}/${heroStatus.mana_maxima}`;
+    if(DOM.vidaTexto) DOM.vidaTexto.textContent = `${vidaAtual}/${vidaMax}`;
+    if(DOM.manaTexto) DOM.manaTexto.textContent = `${manaAtual}/${manaMax}`;
 }
 
 function adicionarAtributo(attr) {
