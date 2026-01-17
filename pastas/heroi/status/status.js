@@ -1,18 +1,10 @@
 // --- CONFIGURAÇÕES TÉCNICAS ---
-const EXP_POR_NIVEL = { 1: 5, 2: 20, 3: 60, 4: 90, 5: 130, 6: 170, 7: 200, 8: 250, 9: 300 };
-
-// Objeto principal atualizado com status secundários
 let heroStatus = {
-    level: 1, exp: 0, pontosDisponiveis: 0, pontosMaestria: 0,
+    level: 1, exp: 0, pontosDisponiveis: 0,
     forca: 1, protecao: 1, vitalidade: 1, inteligencia: 1,
-    vidaAtual: 10, manaAtual: 10,
-    // Novos campos para sincronizar com o banco
-    ataqueMin: 1, ataqueMax: 2,
-    defesaMin: 1, defesaMax: 2,
-    vidaMaxima: 10, manaMaxima: 10
+    vidaAtual: 10, manaAtual: 10, vidaMaxima: 10, manaMaxima: 10
 };
 
-// Mapeamento dos elementos do HTML (incluindo os novos campos de ataque/defesa)
 const DOM = {
     level: document.getElementById('level-valor'),
     exp: document.getElementById('exp-valor'),
@@ -21,102 +13,85 @@ const DOM = {
     protecao: document.getElementById('protecao-valor'),
     vitalidade: document.getElementById('vitalidade-valor'),
     inteligencia: document.getElementById('inteligencia-valor'),
-    // Novos elementos para exibir ataque e defesa
     ataque: document.getElementById('ataque-valor'),
     defesa: document.getElementById('defesa-valor'),
-    vidaBar: document.getElementById('hp-bar-fill'),
-    manaBar: document.getElementById('mp-bar-fill'),
-    vidaTexto: document.getElementById('hp-texto'),
-    manaTexto: document.getElementById('mp-texto'),
+    vidaBar: document.getElementById('vida-bar'),
+    manaBar: document.getElementById('mana-bar'),
+    vidaTexto: document.getElementById('vida-texto'),
+    manaTexto: document.getElementById('mana-texto'),
     addPointBtns: document.querySelectorAll('.add-point-btn')
 };
 
-// --- FUNÇÕES DE COMUNICAÇÃO COM O SERVIDOR ---
-
 async function carregarStatusDoBanco() {
     try {
-        const response = await fetch('/api/status');
-        if (!response.ok) throw new Error("Erro ao carregar");
-        
-        const data = await response.json();
-        
-        // Mapeia os dados do Banco para o Objeto JS, incluindo os novos campos
-        heroStatus = {
-            level: data.nivel,
-            exp: data.exp,
-            pontosDisponiveis: data.pontos_disponiveis,
-            pontosMaestria: data.pontos_maestria,
-            forca: data.forca,
-            protecao: data.protecao,
-            vitalidade: data.vitalidade,
-            inteligencia: data.inteligencia,
-            vidaAtual: data.vida_atual,
-            manaAtual: data.mana_atual,
-            ataqueMin: data.ataque_min || (data.forca * 1),
-            ataqueMax: data.ataque_max || (data.forca * 2),
-            defesaMin: data.defesa_min || (data.protecao * 1),
-            defesaMax: data.defesa_max || (data.protecao * 2),
-            vidaMaxima: data.vida_maxima || (data.vitalidade * 10),
-            manaMaxima: data.mana_maxima || (data.inteligencia * 10)
-        };
-
-        renderizarStatus();
-    } catch (err) {
-        console.error("Erro ao sincronizar com o servidor:", err);
+        const resposta = await fetch('/api/status');
+        if (resposta.ok) {
+            const dados = await resposta.json();
+            
+            // Mapeia do Banco (snake_case) para o JS (camelCase)
+            heroStatus = {
+                level: dados.nivel,
+                exp: dados.exp,
+                pontosDisponiveis: dados.pontos_disponiveis,
+                forca: dados.forca,
+                protecao: dados.protecao,
+                vitalidade: dados.vitalidade,
+                inteligencia: dados.inteligencia,
+                vidaAtual: dados.vida_atual,
+                manaAtual: dados.mana_atual,
+                vidaMaxima: dados.vida_maxima,
+                manaMaxima: dados.mana_maxima
+            };
+            renderizarStatus();
+        }
+    } catch (erro) {
+        console.error("Erro ao carregar:", erro);
     }
 }
 
 async function salvarNoBanco() {
     try {
-        // Envia o objeto heroStatus completo para o endpoint do app.js
-        await fetch('/api/status/salvar', {
+        await fetch('/api/status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(heroStatus)
+            body: JSON.stringify({
+                forca: heroStatus.forca,
+                protecao: heroStatus.protecao,
+                vitalidade: heroStatus.vitalidade,
+                inteligencia: heroStatus.inteligencia,
+                pontos_disponiveis: heroStatus.pontosDisponiveis,
+                vida_atual: heroStatus.vidaAtual,
+                mana_atual: heroStatus.manaAtual
+            })
         });
-    } catch (err) {
-        console.error("Erro ao salvar no banco:", err);
+    } catch (erro) {
+        console.error("Erro ao salvar:", erro);
     }
 }
 
-// --- LÓGICA DE JOGO ---
-
 function renderizarStatus() {
-    if (!DOM.level) return; 
+    if (DOM.level) DOM.level.textContent = heroStatus.level;
+    if (DOM.exp) DOM.exp.textContent = heroStatus.exp;
+    if (DOM.pontos) DOM.pontos.textContent = heroStatus.pontosDisponiveis;
+    if (DOM.forca) DOM.forca.textContent = heroStatus.forca;
+    if (DOM.protecao) DOM.protecao.textContent = heroStatus.protecao;
+    if (DOM.vitalidade) DOM.vitalidade.textContent = heroStatus.vitalidade;
+    if (DOM.inteligencia) DOM.inteligencia.textContent = heroStatus.inteligencia;
 
-    // 1. CÁLCULOS DOS STATUS SECUNDÁRIOS (Sua regra de negócio)
-    // Força: 1 min / 2 max por ponto
-    heroStatus.ataqueMin = heroStatus.forca * 1;
-    heroStatus.ataqueMax = heroStatus.forca * 2;
-    
-    // Proteção: 1 min / 2 max por ponto
-    heroStatus.defesaMin = heroStatus.protecao * 1;
-    heroStatus.defesaMax = heroStatus.protecao * 2;
-    
-    // Vitalidade e Inteligência: 10 por ponto
-    heroStatus.vidaMaxima = heroStatus.vitalidade * 10;
-    heroStatus.manaMaxima = heroStatus.inteligencia * 10;
+    // Cálculos simples de Ataque/Defesa
+    const atkMin = heroStatus.forca * 2;
+    const atkMax = heroStatus.forca * 3;
+    const defMin = heroStatus.protecao * 1;
+    const defMax = heroStatus.protecao * 2;
 
-    // 2. ATUALIZAÇÃO DA INTERFACE (DOM)
-    DOM.level.textContent = heroStatus.level;
-    DOM.exp.textContent = `${heroStatus.exp} / ${EXP_POR_NIVEL[heroStatus.level] || 'MAX'}`;
-    DOM.pontos.textContent = heroStatus.pontosDisponiveis;
-    
-    DOM.forca.textContent = heroStatus.forca;
-    DOM.protecao.textContent = heroStatus.protecao;
-    DOM.vitalidade.textContent = heroStatus.vitalidade;
-    DOM.inteligencia.textContent = heroStatus.inteligencia;
+    if (DOM.ataque) DOM.ataque.textContent = `${atkMin} - ${atkMax}`;
+    if (DOM.defesa) DOM.defesa.textContent = `${defMin} - ${defMax}`;
 
-    // Exibe os novos valores de Ataque e Defesa no HTML
-    if (DOM.ataque) DOM.ataque.textContent = `${heroStatus.ataqueMin} - ${heroStatus.ataqueMax}`;
-    if (DOM.defesa) DOM.defesa.textContent = `${heroStatus.defesaMin} - ${heroStatus.defesaMax}`;
-
-    // Atualiza Barras e Textos de Vida/Mana
+    // Barras
     DOM.vidaBar.style.width = `${(heroStatus.vidaAtual / heroStatus.vidaMaxima) * 100}%`;
     DOM.manaBar.style.width = `${(heroStatus.manaAtual / heroStatus.manaMaxima) * 100}%`;
-
-    if (DOM.vidaTexto) DOM.vidaTexto.textContent = `${heroStatus.vidaAtual} / ${heroStatus.vidaMaxima}`;
-    if (DOM.manaTexto) DOM.manaTexto.textContent = `${heroStatus.manaAtual} / ${heroStatus.manaMaxima}`;
+    DOM.vidaTexto.textContent = `${heroStatus.vidaAtual} / ${heroStatus.vidaMaxima}`;
+    DOM.manaTexto.textContent = `${heroStatus.manaAtual} / ${heroStatus.manaMaxima}`;
 }
 
 function adicionarPonto(atributo) {
@@ -124,31 +99,26 @@ function adicionarPonto(atributo) {
         heroStatus[atributo]++;
         heroStatus.pontosDisponiveis--;
         
-        // Recuperação imediata ao subir atributo de sustentação
-        if (atributo === 'vitalidade') heroStatus.vidaAtual += 10;
-        if (atributo === 'inteligencia') heroStatus.manaAtual += 10;
+        // Bonus de vida/mana ao subir os status
+        if (atributo === 'vitalidade') {
+            heroStatus.vidaMaxima += 10;
+            heroStatus.vidaAtual += 10;
+        }
+        if (atributo === 'inteligencia') {
+            heroStatus.manaMaxima += 10;
+            heroStatus.manaAtual += 10;
+        }
 
         renderizarStatus();
         salvarNoBanco(); 
     } else {
-        alert("Você não tem pontos disponíveis!");
+        alert("Sem pontos!");
     }
 }
 
-// --- INICIALIZAÇÃO ---
-
 document.addEventListener('DOMContentLoaded', () => {
     carregarStatusDoBanco();
-
     DOM.addPointBtns.forEach(btn => {
-        btn.onclick = () => {
-            const attr = btn.getAttribute('data-attribute');
-            adicionarPonto(attr);
-        };
+        btn.onclick = () => adicionarPonto(btn.dataset.attribute);
     });
 });
-
-window.toggleSidebar = function() {
-    const sidebar = document.getElementById('sidebar');
-    if(sidebar) sidebar.classList.toggle('is-open');
-};
