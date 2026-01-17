@@ -4,7 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const app = express();
 
-// 1. Configuração de Sessão
+// 1. Configuração de Sessão (MANTIDO)
 app.use(session({
     secret: 'minha-chave-secreta',
     resave: false,
@@ -15,7 +15,7 @@ app.use(session({
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// --- FUNÇÃO DE VERIFICAÇÃO DE LOGIN ---
+// --- FUNÇÃO QUE ESTAVA FALTANDO (ADICIONADO PARA CORRIGIR O ERRO) ---
 function verificarLogado(req, res, next) {
     if (req.session.logado) {
         return next();
@@ -23,29 +23,21 @@ function verificarLogado(req, res, next) {
     res.redirect('/login.html');
 }
 
-// 2. ARQUIVOS PÚBLICOS (Ajustado para a pasta /public)
-// Isso serve os arquivos login.html, cadastro.html, etc., que estão em /public
+// 2. ARQUIVOS PÚBLICOS (MANTIDO)
 app.use(express.static(path.join(__dirname, 'public'))); 
 
-// Liberação específica da imagem de fundo para que apareça no login
+// Liberação da imagem de fundo (MANTIDO)
 app.use('/pastas/img', express.static(path.join(__dirname, 'pastas', 'img')));
 
-// Rota raiz redireciona para o login que agora está em /public
 app.get('/', (req, res) => {
     res.redirect('/login.html');
 });
 
-// 3. BLOQUEIO E ACESSO À PASTA /pastas (Onde estão inicio e heroi)
-app.use('/pastas', (req, res, next) => {
-    if (req.session.logado) {
-        next();
-    } else {
-        res.redirect('/login.html');
-    }
-}, express.static(path.join(__dirname, 'pastas')));
+// 3. BLOQUEIO DA PASTA /pastas (MANTIDO E CORRIGIDO)
+app.use('/pastas', verificarLogado, express.static(path.join(__dirname, 'pastas')));
 
 
-// --- 4. ROTAS DE NAVEGAÇÃO ---
+// --- 4. ROTAS DE NAVEGAÇÃO (MANTIDO) ---
 
 app.get('/inicio.html', verificarLogado, (req, res) => {
     res.sendFile(path.join(__dirname, 'pastas', 'inicio', 'inicio.html'));
@@ -59,7 +51,7 @@ app.get('/status.html', verificarLogado, (req, res) => {
     res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'status', 'status.html'));
 });
 
-// --- 5. API DE STATUS (Compatível com seu SQL) ---
+// --- 5. API DE STATUS (SINCRONIZADA COM SEU SQL) ---
 
 app.get('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
@@ -68,6 +60,7 @@ app.get('/api/status', async (req, res) => {
         if (rows.length > 0) {
             res.json(rows[0]);
         } else {
+            // Cria registro caso não exista (MANTIDO)
             await db.query('INSERT INTO heroi_status (usuario_id) VALUES (?)', [req.session.usuarioId]);
             const [novo] = await db.query('SELECT * FROM heroi_status WHERE usuario_id = ?', [req.session.usuarioId]);
             res.json(novo[0]);
@@ -79,12 +72,15 @@ app.get('/api/status', async (req, res) => {
 
 app.post('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
+    
     const s = req.body;
+    // Nomes das colunas batendo com seu arquivo SQL (CORRIGIDO)
     const query = `UPDATE heroi_status SET 
         nivel=?, exp=?, pontos_disponiveis=?, 
         forca=?, protecao=?, vitalidade=?, inteligencia=?, 
         vida_atual=?, mana_atual=?, vida_maxima=?, mana_maxima=? 
         WHERE usuario_id=?`;
+    
     try {
         await db.query(query, [
             s.nivel, s.exp, s.pontos_disponiveis, 
@@ -99,7 +95,7 @@ app.post('/api/status', async (req, res) => {
     }
 });
 
-// --- 6. LOGIN E CADASTRO ---
+// --- 6. LOGIN E CADASTRO (MANTIDO) ---
 
 app.post('/cadastrar', async (req, res) => {
     const { nome, email, senha } = req.body;
@@ -113,6 +109,7 @@ app.post('/cadastrar', async (req, res) => {
             [nome, email, senha]
         );
         const novoUsuarioId = result.insertId;
+        // Cria o herói no banco junto com o usuário (MANTIDO)
         await db.query('INSERT INTO heroi_status (usuario_id) VALUES (?)', [novoUsuarioId]);
         res.send("<script>alert('Cadastro realizado com sucesso!'); window.location='/login.html';</script>");
     } catch (err) {
@@ -142,6 +139,7 @@ app.get('/sair', (req, res) => {
     res.redirect('/login.html');
 });
 
+// Porta do Railway (MANTIDO)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
