@@ -157,6 +157,45 @@ app.get('/api/status', verificarLogado, async (req, res) => {
     }
 });
 
+// Rota para fornecer os dados do herói ao status.js
+app.get('/api/status', verificarLogado, async (req, res) => {
+    try {
+        const usuarioId = req.session.usuarioId;
+        // Busca na tabela heroi_status usando o ID da sessão
+        const [rows] = await db.query('SELECT * FROM heroi_status WHERE usuario_id = ?', [usuarioId]);
+        
+        if (rows.length > 0) {
+            res.json(rows[0]); // Retorna nível, vida, mana, etc.
+        } else {
+            res.status(404).json({ erro: "Personagem não encontrado" });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ erro: "Erro interno no servidor" });
+    }
+});
+
+// Rota para salvar os pontos distribuídos
+app.post('/api/status', verificarLogado, async (req, res) => {
+    try {
+        const { forca, protecao, vitalidade, inteligencia, pontos_disponiveis, vida_maxima, mana_maxima, vida_atual, mana_atual } = req.body;
+        const usuarioId = req.session.usuarioId;
+
+        await db.query(
+            `UPDATE heroi_status SET 
+            forca = ?, protecao = ?, vitalidade = ?, inteligencia = ?, 
+            pontos_disponiveis = ?, vida_maxima = ?, mana_maxima = ?, 
+            vida_atual = ?, mana_atual = ? 
+            WHERE usuario_id = ?`,
+            [forca, protecao, vitalidade, inteligencia, pontos_disponiveis, vida_maxima, mana_maxima, vida_atual, mana_atual, usuarioId]
+        );
+        res.json({ sucesso: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ erro: "Erro ao salvar status" });
+    }
+});
+
 // Porta do Railway (MANTIDO)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
