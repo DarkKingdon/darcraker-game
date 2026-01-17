@@ -1,8 +1,26 @@
+function verificarLevelUp(heroi) {
+    const tabelaXP = {
+        1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
+        6: 75, 7: 100, 8: 125, 9: 155, 10: 200
+    };
+
+    // Enquanto a exp atual for maior ou igual ao necessário para o nível atual
+    if (heroi.exp >= tabelaXP[heroi.nivel]) {
+        heroi.nivel += 1; // Sobe o nível
+        heroi.exp_max = tabelaXP[heroi.nivel]; // Define o novo limite no banco
+        heroi.pontos_disponiveis += 5; // Exemplo: ganha pontos para distribuir
+        
+        console.log("Subiu de nível!");
+    }
+}
+
+
 let heroStatus = {};
 
 const DOM = {
     level: document.getElementById('level-valor'),
     exp: document.getElementById('exp-valor'),
+    expMax: document.getElementById('exp-max-valor'), // Adicionado para controlar o 100 fixo
     pontos: document.getElementById('points-valor'),
     forca: document.getElementById('forca-valor'),
     protecao: document.getElementById('protecao-valor'),
@@ -28,27 +46,32 @@ async function carregarDados() {
 }
 
 function atualizarTela() {
-    // Básicos
+    // Básicos e Experiência
     DOM.level.textContent = heroStatus.nivel;
     DOM.exp.textContent = heroStatus.exp;
+    // Puxa o valor da nova coluna 'exp_max' do banco de dados
+    DOM.expMax.textContent = heroStatus.exp_max || 5; 
     DOM.pontos.textContent = heroStatus.pontos_disponiveis;
     
-    // Atributos
+    // Atributos base
     DOM.forca.textContent = heroStatus.forca;
     DOM.protecao.textContent = heroStatus.protecao;
     DOM.vitalidade.textContent = heroStatus.vitalidade;
     DOM.inteligencia.textContent = heroStatus.inteligencia;
 
-    // Cálculo de Ataque e Defesa (Exemplo baseado em Força/Proteção)
-    heroStatus.ataque_min = heroStatus.forca * 2;
-    heroStatus.ataque_max = heroStatus.forca * 3;
+    // CÁLCULOS SOLICITADOS:
+    // 1 de força = 1 ataque min / 2 ataque max
+    heroStatus.ataque_min = heroStatus.forca * 1;
+    heroStatus.ataque_max = heroStatus.forca * 2;
+    
+    // 1 de proteção = 1 defesa min / 2 defesa max
     heroStatus.defesa_min = heroStatus.protecao * 1;
     heroStatus.defesa_max = heroStatus.protecao * 2;
 
     DOM.ataque.textContent = `${heroStatus.ataque_min} - ${heroStatus.ataque_max}`;
     DOM.defesa.textContent = `${heroStatus.defesa_min} - ${heroStatus.defesa_max}`;
 
-    // Barras de HP/MP
+    // Barras de HP/MP baseadas em Vitalidade e Inteligência
     const pHp = (heroStatus.vida_atual / heroStatus.vida_maxima) * 100;
     const pMp = (heroStatus.mana_atual / heroStatus.mana_maxima) * 100;
 
@@ -63,7 +86,7 @@ async function adicionarAtributo(attr) {
         heroStatus.pontos_disponiveis--;
         heroStatus[attr]++;
 
-        // Lógica de bônus por atributo
+        // Lógica de bônus por atributo (10 de vida/mana por ponto)
         if (attr === 'vitalidade') {
             heroStatus.vida_maxima += 10;
             heroStatus.vida_atual += 10;
@@ -75,7 +98,6 @@ async function adicionarAtributo(attr) {
 
         atualizarTela();
         
-        // Salva no banco
         try {
             await fetch('/api/status', {
                 method: 'POST',
@@ -88,7 +110,6 @@ async function adicionarAtributo(attr) {
     }
 }
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
     DOM.btns.forEach(btn => {
