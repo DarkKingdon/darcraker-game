@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status do Herói - DarCraker</title>
-    
     <link rel="stylesheet" href="status.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -17,42 +16,42 @@
 
     <nav id="sidebar" class="sidebar">
         <div class="sidebar-content">
-            <a href="/pastas/inicio/inicio.html" class="sidebar-link">
+            <a href="/inicio.html" class="sidebar-link">
                 <img src="/pastas/img/inicio.jpg" alt="Início" class="sidebar-img">
                 <span class="sidebar-text">Início</span>
             </a>
-            <a href="/pastas/heroi/heroi.html" class="sidebar-link">
+            <a href="/heroi.html" class="sidebar-link">
                 <img src="/pastas/img/heroi.jpg" alt="Herói" class="sidebar-img">
                 <span class="sidebar-text">Herói</span>
             </a>
-            </div>
+        </div>
     </nav>
 
     <main class="status-container">
         <section class="level-header">
             <h1>Nível <span id="level-valor">1</span></h1>
-            <p>Experiência: <span id="exp-valor">0 / 0</span></p>
+            <p>Experiência: <span id="exp-valor">0</span> / <span id="exp-max-valor">100</span></p>
             <p>Pontos Disponíveis: <span id="points-valor">0</span></p>
         </section>
 
        <section class="bars-container">
-    <div class="bar-group">
-        <label>Vida (HP)</label>
-        <div class="bar-background">
-            <div id="hp-bar-fill" class="bar-fill hp">
-                <span id="hp-texto" class="bar-text">0 / 0</span>
+            <div class="bar-group">
+                <label>Vida (HP)</label>
+                <div class="bar-background">
+                    <div id="hp-bar-fill" class="bar-fill hp">
+                        <span id="hp-texto" class="bar-text">0 / 0</span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="bar-group">
-        <label>Mana (MP)</label>
-        <div class="bar-background">
-            <div id="mp-bar-fill" class="bar-fill mp">
-                <span id="mp-texto" class="bar-text">0 / 0</span>
+            <div class="bar-group">
+                <label>Mana (MP)</label>
+                <div class="bar-background">
+                    <div id="mp-bar-fill" class="bar-fill mp">
+                        <span id="mp-texto" class="bar-text">0 / 0</span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <section class="attributes-grid">
             <div class="attr-card">
@@ -77,18 +76,16 @@
             </div>
         </section>
 
-<section class="secondary-stats" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-    <div class="attr-card" style="background: rgba(255, 0, 0, 0.1);">
-        <span class="attr-label">⚔️ Ataque:</span>
-        <span id="ataque-valor" class="attr-number">1 - 2</span>
-    </div>
-    <div class="attr-card" style="background: rgba(0, 0, 255, 0.1);">
-        <span class="attr-label">🛡️ Defesa:</span>
-        <span id="defesa-valor" class="attr-number">1 - 2</span>
-    </div>
-</section>
-
-
+        <section class="secondary-stats">
+            <div class="attr-card sec-ataque">
+                <span class="attr-label">⚔️ Ataque:</span>
+                <span id="ataque-valor" class="attr-number">0 - 0</span>
+            </div>
+            <div class="attr-card sec-defesa">
+                <span class="attr-label">🛡️ Defesa:</span>
+                <span id="defesa-valor" class="attr-number">0 - 0</span>
+            </div>
+        </section>
     </main>
 
     <script src="status.js"></script>
