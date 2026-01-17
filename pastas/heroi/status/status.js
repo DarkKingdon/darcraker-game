@@ -47,17 +47,17 @@ function atualizarTela() {
     if(DOM.vitalidade) DOM.vitalidade.textContent = heroStatus.vitalidade;
     if(DOM.inteligencia) DOM.inteligencia.textContent = heroStatus.inteligencia;
 
-    // Proteção para não dividir por zero e as barras não sumirem
-    const vMax = heroStatus.vida_maxima || 10;
+    // Garante que o valor mínimo para o cálculo seja 1 (evita divisão por zero)
+    const vMax = heroStatus.vida_maxima || 10; 
     const mMax = heroStatus.mana_maxima || 10;
-    
-    const pVida = (heroStatus.vida_atual / vMax) * 100;
-    const pMana = (heroStatus.mana_atual / mMax) * 100;
-    
+    const vAtu = heroStatus.vida_atual || 0;
+    const mAtu = heroStatus.mana_atual || 0;
+
+    const pVida = (vAtu / vMax) * 100;
+    const pMana = (mAtu / mMax) * 100;
+
     if(DOM.vidaBar) DOM.vidaBar.style.width = pVida + "%";
     if(DOM.manaBar) DOM.manaBar.style.width = pMana + "%";
-    if(DOM.vidaTexto) DOM.vidaTexto.textContent = `${heroStatus.vida_atual}/${vMax}`;
-    if(DOM.manaTexto) DOM.manaTexto.textContent = `${heroStatus.mana_atual}/${mMax}`;
 }
 
 function adicionarAtributo(attr) {
@@ -82,3 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     });
 });
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        // Verifica se a sidebar está visível ou escondida
+        if (sidebar.style.right === '0px') {
+            sidebar.style.right = '-250px';
+        } else {
+            sidebar.style.right = '0px';
+        }
+    }
+}
