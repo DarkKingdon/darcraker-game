@@ -139,6 +139,24 @@ app.get('/sair', (req, res) => {
     res.redirect('/login.html');
 });
 
+
+// Rota para o JS do Herói buscar os dados do banco
+app.get('/api/status', verificarLogado, async (req, res) => {
+    try {
+        const usuarioId = req.session.usuarioId;
+        const [rows] = await db.query('SELECT * FROM heroi_status WHERE usuario_id = ?', [usuarioId]);
+        
+        if (rows.length > 0) {
+            res.json(rows[0]); // Envia os dados do herói (vida, mana, forca, etc)
+        } else {
+            res.status(404).json({ erro: "Status não encontrado" });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ erro: "Erro no servidor" });
+    }
+});
+
 // Porta do Railway (MANTIDO)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
