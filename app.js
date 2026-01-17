@@ -4,7 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const app = express();
 
-// --- 1. CONFIGURAÇÃO DE SESSÃO ---
+// 1. Configuração de Sessão
 app.use(session({
     secret: 'minha-chave-secreta',
     resave: false,
@@ -15,7 +15,7 @@ app.use(session({
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// --- FUNÇÃO DE VERIFICAÇÃO DE LOGIN (CORREÇÃO) ---
+// --- FUNÇÃO DE VERIFICAÇÃO DE LOGIN ---
 function verificarLogado(req, res, next) {
     if (req.session.logado) {
         return next();
@@ -23,17 +23,19 @@ function verificarLogado(req, res, next) {
     res.redirect('/login.html');
 }
 
-// --- 2. ARQUIVOS PÚBLICOS DA RAIZ ---
-app.use(express.static(__dirname)); 
+// 2. ARQUIVOS PÚBLICOS (Ajustado para a pasta /public)
+// Isso serve os arquivos login.html, cadastro.html, etc., que estão em /public
+app.use(express.static(path.join(__dirname, 'public'))); 
 
-// Liberação da imagem de fundo
+// Liberação específica da imagem de fundo para que apareça no login
 app.use('/pastas/img', express.static(path.join(__dirname, 'pastas', 'img')));
 
+// Rota raiz redireciona para o login que agora está em /public
 app.get('/', (req, res) => {
     res.redirect('/login.html');
 });
 
-// --- 3. BLOQUEIO DA PASTA /pastas ---
+// 3. BLOQUEIO E ACESSO À PASTA /pastas (Onde estão inicio e heroi)
 app.use('/pastas', (req, res, next) => {
     if (req.session.logado) {
         next();
@@ -43,7 +45,7 @@ app.use('/pastas', (req, res, next) => {
 }, express.static(path.join(__dirname, 'pastas')));
 
 
-// --- 4. ROTAS DE NAVEGAÇÃO DAS PÁGINAS ---
+// --- 4. ROTAS DE NAVEGAÇÃO ---
 
 app.get('/inicio.html', verificarLogado, (req, res) => {
     res.sendFile(path.join(__dirname, 'pastas', 'inicio', 'inicio.html'));
@@ -57,7 +59,7 @@ app.get('/status.html', verificarLogado, (req, res) => {
     res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'status', 'status.html'));
 });
 
-// --- 5. API DE STATUS (CORRIGIDA) ---
+// --- 5. API DE STATUS (Compatível com seu SQL) ---
 
 app.get('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
@@ -75,17 +77,14 @@ app.get('/api/status', async (req, res) => {
     }
 });
 
-// Ajustado para receber os nomes do status.js (nivel, forca, etc)
 app.post('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
-    
     const s = req.body;
     const query = `UPDATE heroi_status SET 
         nivel=?, exp=?, pontos_disponiveis=?, 
         forca=?, protecao=?, vitalidade=?, inteligencia=?, 
         vida_atual=?, mana_atual=?, vida_maxima=?, mana_maxima=? 
         WHERE usuario_id=?`;
-    
     try {
         await db.query(query, [
             s.nivel, s.exp, s.pontos_disponiveis, 
