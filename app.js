@@ -4,67 +4,61 @@ const path = require('path');
 const session = require('express-session');
 const app = express();
 
-// 1. Configuração de Sessão
+// --- 1. CONFIGURAÇÕES INICIAIS ---
 app.use(session({
     secret: 'minha-chave-secreta',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 3600000 }
+    cookie: { maxAge: 3600000 } // 1 hora
 }));
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// 2. ARQUIVOS PÚBLICOS DA RAIZ (login, cadastro, etc.)
+// --- 2. ARQUIVOS PÚBLICOS (ACESSO LIVRE) ---
+
+// Libera os arquivos da raiz (login.html, cadastro.html, login.css, cadastro.css)
 app.use(express.static(__dirname)); 
 
-// --- LIBERAÇÃO DA IMAGEM DE FUNDO ---
-// Isso permite que o fundo.jpg seja carregado mesmo sem login
+// Libera a subpasta de imagens para que o fundo apareça no login/cadastro
 app.use('/pastas/img', express.static(path.join(__dirname, 'pastas', 'img')));
 
-// Rota raiz para evitar o erro "Cannot GET /"
+// Rota raiz redireciona para o login
 app.get('/', (req, res) => {
     res.redirect('/login.html');
 });
 
-// 3. BLOQUEIO DA PASTA /pastas (Protege heroi, inicio, etc.)
-// Note: Esta rota deve vir DEPOIS da liberação da /pastas/img
-app.use('/pastas', (req, res, next) => {
+// --- 3. SEGURANÇA E BLOQUEIO DA PASTA /pastas ---
+
+// Middleware de proteção: impede acesso a /pastas sem estar logado
+const verificarLogado = (req, res, next) => {
     if (req.session.logado) {
-        next();
+        return next();
     } else {
         res.redirect('/login.html');
     }
-}, express.static(path.join(__dirname, 'pastas')));
+};
+
+// Aplica a proteção em tudo que estiver dentro de /pastas (exceto o que já liberamos acima)
+app.use('/pastas', verificarLogado, express.static(path.join(__dirname, 'pastas')));
 
 
-// --- 4. ROTAS DE NAVEGAÇÃO (Páginas protegidas) ---
+// --- 4. ROTAS DE NAVEGAÇÃO DAS PÁGINAS ---
 
-app.get('/inicio.html', (req, res) => {
-    if (req.session.logado) {
-        res.sendFile(path.join(__dirname, 'pastas', 'inicio', 'inicio.html'));
-    } else {
-        res.redirect('/login.html');
-    }
+app.get('/inicio.html', verificarLogado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'pastas', 'inicio', 'inicio.html'));
 });
 
-app.get('/heroi.html', (req, res) => {
-    if (req.session.logado) {
-        res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'heroi.html'));
-    } else {
-        res.redirect('/login.html');
-    }
+app.get('/heroi.html', verificarLogado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'heroi.html'));
 });
 
-app.get('/status.html', (req, res) => {
-    if (req.session.logado) {
-        res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'status.html'));
-    } else {
-        res.redirect('/login.html');
-    }
+app.get('/status.html', verificarLogado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'status.html'));
 });
 
-// --- 5. API DE STATUS (Interação com Banco) ---
+
+// --- 5. API DO HERÓI (INTERAÇÃO COM O BANCO) ---
 
 app.get('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
@@ -73,6 +67,7 @@ app.get('/api/status', async (req, res) => {
         if (rows.length > 0) {
             res.json(rows[0]);
         } else {
+            // Se por algum motivo não tiver status, cria um novo
             await db.query('INSERT INTO heroi_status (usuario_id) VALUES (?)', [req.session.usuarioId]);
             const [novo] = await db.query('SELECT * FROM heroi_status WHERE usuario_id = ?', [req.session.usuarioId]);
             res.json(novo[0]);
@@ -109,7 +104,8 @@ app.post('/api/status/salvar', async (req, res) => {
     }
 });
 
-// --- 6. LOGIN E CADASTRO ---
+
+// --- 6. SISTEMA DE USUÁRIOS (LOGIN E CADASTRO) ---
 
 app.post('/cadastrar', async (req, res) => {
     const { nome, email, senha } = req.body;
@@ -123,6 +119,7 @@ app.post('/cadastrar', async (req, res) => {
             [nome, email, senha]
         );
         const novoUsuarioId = result.insertId;
+        // Cria o herói inicial no banco
         await db.query('INSERT INTO heroi_status (usuario_id) VALUES (?)', [novoUsuarioId]);
         res.send("<script>alert('Cadastro realizado com sucesso!'); window.location='/login.html';</script>");
     } catch (err) {
@@ -143,7 +140,7 @@ app.post('/login', async (req, res) => {
             res.send("<script>alert('Login incorreto!'); window.location='/login.html';</script>");
         }
     } catch (err) {
-        res.status(500).send("Erro no banco");
+        res.status(500).send("Erro no banco de dados.");
     }
 });
 
@@ -152,7 +149,8 @@ app.get('/sair', (req, res) => {
     res.redirect('/login.html');
 });
 
+// --- 7. INICIALIZAÇÃO DO SERVIDOR ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando em: http://localhost:${PORT}`);
 });

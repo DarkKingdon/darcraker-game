@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 
-// O Railway preenche a variável process.env.MYSQL_URL automaticamente quando conectamos os serviços
+// Configuração do Pool
 const pool = mysql.createPool(process.env.MYSQL_URL || {
   host: 'localhost',
   user: 'root',
@@ -8,7 +8,10 @@ const pool = mysql.createPool(process.env.MYSQL_URL || {
   database: 'darcraker',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  enableKeepAlive: true, // Ajuda a manter a conexão ativa no Railway
+  keepAliveInitialDelay: 10000
 });
 
+// Exporta como Promise para você usar o 'await' no app.js
 module.exports = pool.promise();
