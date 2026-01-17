@@ -4,7 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const app = express();
 
-// 1. Configuração de Sessão
+// --- 1. CONFIGURAÇÃO DE SESSÃO ---
 app.use(session({
     secret: 'minha-chave-secreta',
     resave: false,
@@ -15,20 +15,25 @@ app.use(session({
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// 2. ARQUIVOS PÚBLICOS DA RAIZ (login, cadastro, etc.)
+// --- FUNÇÃO DE VERIFICAÇÃO DE LOGIN (CORREÇÃO) ---
+function verificarLogado(req, res, next) {
+    if (req.session.logado) {
+        return next();
+    }
+    res.redirect('/login.html');
+}
+
+// --- 2. ARQUIVOS PÚBLICOS DA RAIZ ---
 app.use(express.static(__dirname)); 
 
-// --- LIBERAÇÃO DA IMAGEM DE FUNDO ---
-// Isso permite que o fundo.jpg seja carregado mesmo sem login
+// Liberação da imagem de fundo
 app.use('/pastas/img', express.static(path.join(__dirname, 'pastas', 'img')));
 
-// Rota raiz para evitar o erro "Cannot GET /"
 app.get('/', (req, res) => {
     res.redirect('/login.html');
 });
 
-// 3. BLOQUEIO DA PASTA /pastas (Protege heroi, inicio, etc.)
-// Note: Esta rota deve vir DEPOIS da liberação da /pastas/img
+// --- 3. BLOQUEIO DA PASTA /pastas ---
 app.use('/pastas', (req, res, next) => {
     if (req.session.logado) {
         next();
@@ -48,12 +53,11 @@ app.get('/heroi.html', verificarLogado, (req, res) => {
     res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'heroi.html'));
 });
 
-// Ajustado para o caminho: pastas/heroi/status/status.html
 app.get('/status.html', verificarLogado, (req, res) => {
     res.sendFile(path.join(__dirname, 'pastas', 'heroi', 'status', 'status.html'));
 });
 
-// --- 5. API DE STATUS (Interação com Banco) ---
+// --- 5. API DE STATUS (CORRIGIDA) ---
 
 app.get('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
@@ -71,29 +75,27 @@ app.get('/api/status', async (req, res) => {
     }
 });
 
-app.post('/api/status/salvar', async (req, res) => {
+// Ajustado para receber os nomes do status.js (nivel, forca, etc)
+app.post('/api/status', async (req, res) => {
     if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
+    
     const s = req.body;
     const query = `UPDATE heroi_status SET 
-        nivel=?, exp=?, pontos_disponiveis=?, pontos_maestria=?, 
+        nivel=?, exp=?, pontos_disponiveis=?, 
         forca=?, protecao=?, vitalidade=?, inteligencia=?, 
-        vida_atual=?, mana_atual=?,
-        ataque_min=?, ataque_max=?, defesa_min=?, defesa_max=?, 
-        vida_maxima=?, mana_maxima=? 
+        vida_atual=?, mana_atual=?, vida_maxima=?, mana_maxima=? 
         WHERE usuario_id=?`;
     
     try {
         await db.query(query, [
-            s.level, s.exp, s.pontosDisponiveis, s.pontosMaestria, 
+            s.nivel, s.exp, s.pontos_disponiveis, 
             s.forca, s.protecao, s.vitalidade, s.inteligencia, 
-            s.vidaAtual, s.manaAtual,
-            s.ataqueMin, s.ataqueMax, s.defesaMin, s.defesaMax,
-            s.vidaMaxima, s.manaMaxima,
+            s.vida_atual, s.mana_atual, s.vida_maxima, s.mana_maxima,
             req.session.usuarioId
         ]);
         res.json({ mensagem: "Sucesso" });
     } catch (err) {
-        console.error(err);
+        console.error("Erro ao salvar:", err);
         res.status(500).json({ erro: "Erro ao salvar" });
     }
 });
