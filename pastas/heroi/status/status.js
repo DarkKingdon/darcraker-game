@@ -1,20 +1,9 @@
-// --- CONFIGURAÇÕES DO HERÓI ---
-// Estes valores são os padrões, serão substituídos pelos do banco de dados
 let heroStatus = {
-    nivel: 1, 
-    exp: 0, 
-    pontos_disponiveis: 0,
-    forca: 1, 
-    protecao: 1, 
-    vitalidade: 1, 
-    inteligencia: 1,
-    vida_atual: 10, 
-    mana_atual: 10, 
-    vida_maxima: 10, 
-    mana_maxima: 10
+    nivel: 1, pontos_disponiveis: 0,
+    forca: 1, protecao: 1, vitalidade: 1, inteligencia: 1,
+    vida_atual: 10, vida_maxima: 10, mana_atual: 10, mana_maxima: 10
 };
 
-// Mapeamento dos elementos do HTML (IDs devem ser iguais ao status.html)
 const DOM = {
     level: document.getElementById('level-valor'),
     pontos: document.getElementById('points-valor'),
@@ -29,26 +18,17 @@ const DOM = {
     addPointBtns: document.querySelectorAll('.add-point-btn')
 };
 
-// --- FUNÇÕES DE COMUNICAÇÃO COM O BACKEND ---
-
-// Busca os dados do MySQL via API do Node.js
 async function carregarDados() {
     try {
-        const res = await fetch('/api/status'); // Rota definida no app.js
+        const res = await fetch('/api/status');
         if (res.ok) {
-            const dadosDoBanco = await res.json();
-            // Mescla os dados recebidos com o nosso objeto local
-            heroStatus = { ...heroStatus, ...dadosDoBanco };
+            const dados = await res.json();
+            heroStatus = dados;
             atualizarTela();
-        } else {
-            console.error("Erro ao procurar dados: Utilizador não logado ou erro na rota.");
         }
-    } catch (e) { 
-        console.error("Erro na conexão com a API:", e); 
-    }
+    } catch (e) { console.error("Erro ao carregar banco:", e); }
 }
 
-// Salva as alterações (como novos pontos de atributo) no banco de dados
 async function salvarDados() {
     try {
         await fetch('/api/status', {
@@ -56,74 +36,49 @@ async function salvarDados() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(heroStatus)
         });
-    } catch (e) { 
-        console.error("Erro ao salvar no banco:", e); 
-    }
+    } catch (e) { console.error("Erro ao salvar:", e); }
 }
 
-// --- FUNÇÕES DE INTERFACE ---
-
 function atualizarTela() {
-    // Atualiza os textos simples
-    if(DOM.level) DOM.level.textContent = heroStatus.nivel || 1;
-    if(DOM.pontos) DOM.pontos.textContent = heroStatus.pontos_disponiveis || 0;
-    if(DOM.forca) DOM.forca.textContent = heroStatus.forca || 1;
-    if(DOM.protecao) DOM.protecao.textContent = heroStatus.protecao || 1;
-    if(DOM.vitalidade) DOM.vitalidade.textContent = heroStatus.vitalidade || 1;
-    if(DOM.inteligencia) DOM.inteligencia.textContent = heroStatus.inteligencia || 1;
+    if(DOM.level) DOM.level.textContent = heroStatus.nivel;
+    if(DOM.pontos) DOM.pontos.textContent = heroStatus.pontos_disponiveis;
+    if(DOM.forca) DOM.forca.textContent = heroStatus.forca;
+    if(DOM.protecao) DOM.protecao.textContent = heroStatus.protecao;
+    if(DOM.vitalidade) DOM.vitalidade.textContent = heroStatus.vitalidade;
+    if(DOM.inteligencia) DOM.inteligencia.textContent = heroStatus.inteligencia;
 
-    // Proteção contra divisão por zero (evita o 0/0 e barra vazia)
-    const vidaMax = heroStatus.vida_maxima || 10;
-    const manaMax = heroStatus.mana_maxima || 10;
-    const vidaAtual = heroStatus.vida_atual || 0;
-    const manaAtual = heroStatus.mana_atual || 0;
-
-    const pVida = (vidaAtual / vidaMax) * 100;
-    const pMana = (manaAtual / manaMax) * 100;
+    // Proteção para não dividir por zero e as barras não sumirem
+    const vMax = heroStatus.vida_maxima || 10;
+    const mMax = heroStatus.mana_maxima || 10;
+    
+    const pVida = (heroStatus.vida_atual / vMax) * 100;
+    const pMana = (heroStatus.mana_atual / mMax) * 100;
     
     if(DOM.vidaBar) DOM.vidaBar.style.width = pVida + "%";
     if(DOM.manaBar) DOM.manaBar.style.width = pMana + "%";
-    
-    if(DOM.vidaTexto) DOM.vidaTexto.textContent = `${vidaAtual}/${vidaMax}`;
-    if(DOM.manaTexto) DOM.manaTexto.textContent = `${manaAtual}/${manaMax}`;
+    if(DOM.vidaTexto) DOM.vidaTexto.textContent = `${heroStatus.vida_atual}/${vMax}`;
+    if(DOM.manaTexto) DOM.manaTexto.textContent = `${heroStatus.mana_atual}/${mMax}`;
 }
 
 function adicionarAtributo(attr) {
     if (heroStatus.pontos_disponiveis > 0) {
-        heroStatus[attr]++; // Aumenta o atributo (ex: forca)
-        heroStatus.pontos_disponiveis--; // Gasta 1 ponto
-        
-        // Lógica de bónus imediatos
-        if (attr === 'vitalidade') {
-            heroStatus.vida_maxima += 10;
-            heroStatus.vida_atual += 10;
-        }
-        if (attr === 'inteligencia') {
-            heroStatus.mana_maxima += 10;
-            heroStatus.mana_atual += 10;
-        }
-
-        atualizarTela(); // Atualiza o visual
-        salvarDados();   // Grava no Railway/MySQL
+        heroStatus[attr]++;
+        heroStatus.pontos_disponiveis--;
+        if (attr === 'vitalidade') { heroStatus.vida_maxima += 10; heroStatus.vida_atual += 10; }
+        if (attr === 'inteligencia') { heroStatus.mana_maxima += 10; heroStatus.mana_atual += 10; }
+        atualizarTela();
+        salvarDados();
     } else {
-        alert("Não tens pontos disponíveis!");
+        alert("Sem pontos disponíveis!");
     }
 }
 
-// --- INICIALIZAÇÃO ---
-
-// Garante que o código só corre depois do HTML estar pronto
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // 1. Carrega os dados do banco imediatamente
     carregarDados();
-
-    // 2. Configura os cliques nos botões de "+"
     DOM.addPointBtns.forEach(btn => {
         btn.onclick = () => {
-            // Pega o valor do "data-attribute" definido no HTML
-            const atributo = btn.getAttribute('data-attribute');
-            adicionarAtributo(atributo);
+            const attr = btn.getAttribute('data-attribute'); // Corrigido para pegar do HTML
+            adicionarAtributo(attr);
         };
     });
 });
