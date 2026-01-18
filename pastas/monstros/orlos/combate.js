@@ -68,21 +68,20 @@ async function finalizarCombate(vitoria) {
         log(`Vitória! +${monstro.exp_recompensa} EXP`);
         heroi.exp += monstro.exp_recompensa;
 
-        // LÓGICA DE LEVEL UP
+        // LÓGICA DE LEVEL UP (Mantida conforme seu código)
         if (heroi.exp >= heroi.exp_max) {
             heroi.nivel += 1;
             heroi.exp = 0; 
-            heroi.pontos_disponiveis += 5; // Dando 5 pontos como é comum em RPGs
-            heroi.exp_max = heroi.nivel * 10; // Dificuldade aumenta
+            heroi.pontos_disponiveis += 5;
+            heroi.exp_max = heroi.nivel * 10;
             
-            // Recupera vida e mana ao subir de nível
             heroi.vida_atual = heroi.vida_maxima;
             heroi.mana_atual = heroi.mana_maxima;
             
             alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
         }
 
-        // SALVAR NO BANCO (IMPORTANTE: A rota deve ser absoluta '/api/status')
+        // SALVAR NO BANCO
         try {
             await fetch('/api/status', {
                 method: 'POST',
@@ -93,20 +92,22 @@ async function finalizarCombate(vitoria) {
             console.error("Erro ao salvar progresso:", e);
         }
 
-        setTimeout(() => { window.location.href = '/status.html'; }, 1500);
+        // REDIRECIONAMENTO CORRIGIDO:
+        // O caminho '/heroi.html' no seu app.js já aponta para '/pastas/heroi/heroi.html'
+        setTimeout(() => { window.location.href = '/heroi.html'; }, 1500);
+
     } else {
         log("Você foi derrotado...");
-        // Se morrer, volta pro status com 1 de vida
         heroi.vida_atual = 1;
         await fetch('/api/status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(heroi)
         });
-        setTimeout(() => { window.location.href = '/status.html'; }, 2000);
+        // Opcional: Redirecionar para o herói também em caso de derrota
+        setTimeout(() => { window.location.href = '/heroi.html'; }, 2000);
     }
 }
-
 function log(msg) {
     const l = document.getElementById('log-combate');
     l.innerHTML = `<p>${msg}</p>` + l.innerHTML;
