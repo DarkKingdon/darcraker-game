@@ -175,6 +175,25 @@ app.get('/api/status', verificarLogado, async (req, res) => {
     }
 });
 
+
+
+// Rota para buscar dados de um monstro específico
+app.get('/api/monstro/:nome', verificarLogado, async (req, res) => {
+    try {
+        // Agora o req.params.nome vai pegar o que vier depois de /monstro/
+        const [rows] = await db.query('SELECT * FROM monstros WHERE nome = ?', [req.params.nome]);
+        
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ erro: "Monstro não encontrado" });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ erro: "Erro ao buscar monstro" });
+    }
+});
+
 // Rota para salvar os pontos distribuídos
 app.post('/api/status', verificarLogado, async (req, res) => {
     try {
