@@ -1,39 +1,44 @@
 let heroi, monstro;
 
 async function iniciarBatalha() {
-    // Busca dados do herói e do monstro simultaneamente
-    const [resH, resM] = await Promise.all([
-        fetch('/api/status'),
-        fetch('/api/monstro/Orlos')
-    ]);
-    
-    heroi = await resH.json();
-    monstro = await resM.json();
-    monstro.vida_atual = monstro.vida_maxima;
+    try {
+        const [resH, resM] = await Promise.all([
+            fetch('/api/status'),
+            fetch('/api/monstro/Orlos')
+        ]);
+        
+        heroi = await resH.json();
+        monstro = await resM.json();
+        
+        // Garante que o monstro comece com vida cheia (coluna correta: vida_maxIMA)
+        monstro.vida_atual = monstro.vida_maxIMA || monstro.vida_maxima;
 
-    atualizarInterface();
+        atualizarInterface();
+    } catch (err) {
+        console.error("Erro ao carregar batalha:", err);
+    }
 }
 
 function atualizarInterface() {
-    // Atualiza Monstro (Atenção ao nome da coluna vida_maxima)
     if (monstro) {
-        const mPct = (monstro.vida_atual / monstro.vida_maxima) * 100;
+        const vMaxM = monstro.vida_maxIMA || monstro.vida_maxima;
+        const mPct = (monstro.vida_atual / vMaxM) * 100;
         document.getElementById('m-hp-fill').style.width = mPct + "%";
-        document.getElementById('m-hp-text').textContent = `${monstro.vida_atual}/${monstro.vida_maxima}`;
+        document.getElementById('m-hp-text').textContent = `${monstro.vida_atual}/${vMaxM}`;
         document.getElementById('m-nome').textContent = monstro.nome;
     }
 
-    // Atualiza Herói (Nomes conforme seu darcraker_heroi_status.sql)
     if (heroi) {
         const hPct = (heroi.vida_atual / heroi.vida_maxima) * 100;
         document.getElementById('h-hp-fill').style.width = hPct + "%";
-        document.getElementById('h-hp-text').textContent = `${heroi.vida_atual}/${heroi.vida_maxima}`;
+        document.getElementById('h-hp-text').textContent = `${Math.floor(heroi.vida_atual)}/${heroi.vida_maxima}`;
     }
 }
+
 async function atacar() {
     // --- TURNO DO HERÓI ---
     let danoH = Math.floor(Math.random() * (heroi.ataque_max - heroi.ataque_min + 1)) + heroi.ataque_min;
-    danoH = Math.max(0, danoH - monstro.defesa);
+    danoH = Math.max(0, danoH - (monstro.defesa || 0));
     monstro.vida_atual -= danoH;
     log(`Você causou ${danoH} de dano!`);
 
@@ -44,7 +49,8 @@ async function atacar() {
     }
 
     // --- TURNO DO MONSTRO ---
-    let danoM = Math.max(0, monstro.ataque - (heroi.defesa_min / 2)); // Defesa reduz dano
+    // Usando a defesa do herói do seu SQL (defesa_min)
+    let danoM = Math.max(0, monstro.ataque - (heroi.defesa_min || 0)); 
     heroi.vida_atual -= Math.floor(danoM);
     log(`${monstro.nome} te deu ${Math.floor(danoM)} de dano!`);
 
@@ -59,51 +65,45 @@ async function atacar() {
 
 async function finalizarCombate(vitoria) {
     if (vitoria) {
-        log(`Vitória! Você ganhou ${monstro.exp_recompensa} de EXP.`);
-        
-        // 1. Adiciona a experiência do monstro ao herói
+        log(`Vitória! +${monstro.exp_recompensa} EXP`);
         heroi.exp += monstro.exp_recompensa;
 
-        // 2. Verifica se subiu de nível (Ex: 5/5)
+        // LÓGICA DE LEVEL UP
         if (heroi.exp >= heroi.exp_max) {
-            heroi.nivel += 1; // Sobe para o nível 2
-            heroi.exp = 0;    // Reseta a barra para 0/10 (ou o próximo alvo)
-            heroi.pontos_disponiveis += 1; // Ganha 1 ponto para distribuir
+            heroi.nivel += 1;
+            heroi.exp = 0; 
+            heroi.pontos_disponiveis += 5; // Dando 5 pontos como é comum em RPGs
+            heroi.exp_max = heroi.nivel * 10; // Dificuldade aumenta
             
-            // Opcional: Aumentar a dificuldade do próximo nível (ex: dobrar o exp necessário)
-            heroi.exp_max = heroi.nivel * 5; 
+            // Recupera vida e mana ao subir de nível
+            heroi.vida_atual = heroi.vida_maxima;
+            heroi.mana_atual = heroi.mana_maxima;
             
-            alert(`PARABÉNS! Você subiu para o Nível ${heroi.nivel} e ganhou 1 ponto de atributo!`);
+            alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
         }
 
-        // 3. Salva tudo no banco de dados através da API
+        // SALVAR NO BANCO (IMPORTANTE: A rota deve ser absoluta '/api/status')
         try {
-            const response = await fetch('/api/status', {
+            await fetch('/api/status', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(heroi)
             });
-
-            if (response.ok) {
-                log("Progresso salvo com sucesso!");
-                setTimeout(() => {
-                    window.location.href = '/status.html'; // Redireciona para ver os pontos
-                }, 2000);
-            }
-        } catch (erro) {
-            console.error("Erro ao salvar progresso:", erro);
+        } catch (e) {
+            console.error("Erro ao salvar progresso:", e);
         }
 
+        setTimeout(() => { window.location.href = '/status.html'; }, 1500);
     } else {
-        alert("Você foi derrotado! Volte quando estiver mais forte.");
-        // Penalidade opcional: herói volta com 1 de vida
+        log("Você foi derrotado...");
+        // Se morrer, volta pro status com 1 de vida
         heroi.vida_atual = 1;
         await fetch('/api/status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(heroi)
         });
-        window.location.href = '/inicio.html';
+        setTimeout(() => { window.location.href = '/status.html'; }, 2000);
     }
 }
 
