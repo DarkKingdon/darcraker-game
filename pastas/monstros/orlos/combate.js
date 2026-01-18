@@ -72,7 +72,7 @@ async function finalizarCombate(vitoria) {
         if (heroi.exp >= heroi.exp_max) {
             heroi.nivel += 1;
             heroi.exp = 0; 
-            heroi.pontos_disponiveis += 5;
+            heroi.pontos_disponiveis += 1;
             heroi.exp_max = heroi.nivel * 10;
             
             heroi.vida_atual = heroi.vida_maxima;
