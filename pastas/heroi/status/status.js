@@ -37,12 +37,21 @@ const DOM = {
 
 async function carregarDados() {
     try {
-        const res = await fetch('/api/status');
-        if (res.ok) {
-            heroStatus = await res.json();
-            atualizarTela();
+        const response = await fetch('/api/status');
+
+        // Se o servidor retornar 401 ou redirecionar (fazer cair no login)
+        if (!response.ok || response.redirected) {
+            window.location.href = '/login.html';
+            return;
         }
-    } catch (e) { console.error("Erro ao carregar:", e); }
+
+        const data = await response.json();
+        heroStatus = data;
+        atualizarTela();
+    } catch (error) {
+        console.error("Erro ao carregar JSON:", error);
+        // Se der erro de sintaxe, provavelmente é porque recebemos HTML em vez de JSON
+    }
 }
 
 function atualizarTela() {
