@@ -70,28 +70,29 @@ app.get('/api/status', async (req, res) => {
     }
 });
 
-app.post('/api/status', async (req, res) => {
-    if (!req.session.logado) return res.status(401).json({ erro: "Não autorizado" });
-    
-    const s = req.body;
-    // Nomes das colunas batendo com seu arquivo SQL (CORRIGIDO)
-    const query = `UPDATE heroi_status SET 
-        nivel=?, exp=?, pontos_disponiveis=?, 
-        forca=?, protecao=?, vitalidade=?, inteligencia=?, 
-        vida_atual=?, mana_atual=?, vida_maxima=?, mana_maxima=? 
-        WHERE usuario_id=?`;
-    
+app.post('/api/status', verificarLogado, async (req, res) => {
     try {
-        await db.query(query, [
-            s.nivel, s.exp, s.pontos_disponiveis, 
-            s.forca, s.protecao, s.vitalidade, s.inteligencia, 
-            s.vida_atual, s.mana_atual, s.vida_maxima, s.mana_maxima,
-            req.session.usuarioId
-        ]);
-        res.json({ mensagem: "Sucesso" });
+        const { 
+            forca, protecao, vitalidade, inteligencia, 
+            pontos_disponiveis, vida_maxima, mana_maxima, 
+            vida_atual, mana_atual, nivel, exp, exp_max 
+        } = req.body;
+        
+        const usuarioId = req.session.usuarioId;
+
+        await db.query(
+            `UPDATE heroi_status SET 
+            forca = ?, protecao = ?, vitalidade = ?, inteligencia = ?, 
+            pontos_disponiveis = ?, vida_maxima = ?, mana_maxima = ?, 
+            vida_atual = ?, mana_atual = ?, nivel = ?, exp = ?, exp_max = ?
+            WHERE usuario_id = ?`,
+            [forca, protecao, vitalidade, inteligencia, pontos_disponiveis, 
+             vida_maxima, mana_maxima, vida_atual, mana_atual, nivel, exp, exp_max, usuarioId]
+        );
+        res.json({ mensagem: "Status atualizado com sucesso!" });
     } catch (err) {
-        console.error("Erro ao salvar:", err);
-        res.status(500).json({ erro: "Erro ao salvar" });
+        console.error(err);
+        res.status(500).json({ erro: "Erro ao salvar status" });
     }
 });
 
