@@ -59,30 +59,52 @@ async function atacar() {
 
 async function finalizarCombate(vitoria) {
     if (vitoria) {
-        alert(`Vitória! Você ganhou ${monstro.exp_recompensa} de EXP.`);
-        heroi.exp += monstro.exp_recompensa;
+        log(`Vitória! Você ganhou ${monstro.exp_recompensa} de EXP.`);
         
-        // Aqui usamos a função de Level Up que você já tem no status.js
-        // Se a exp passar do exp_max, sobe de nível
+        // 1. Adiciona a experiência do monstro ao herói
+        heroi.exp += monstro.exp_recompensa;
+
+        // 2. Verifica se subiu de nível (Ex: 5/5)
         if (heroi.exp >= heroi.exp_max) {
-             heroi.nivel += 1;
-             heroi.exp = 0;
-             heroi.pontos_disponiveis += 5;
-             heroi.exp_max += 10; // Aumenta dificuldade do próximo nível
+            heroi.nivel += 1; // Sobe para o nível 2
+            heroi.exp = 0;    // Reseta a barra para 0/10 (ou o próximo alvo)
+            heroi.pontos_disponiveis += 1; // Ganha 1 ponto para distribuir
+            
+            // Opcional: Aumentar a dificuldade do próximo nível (ex: dobrar o exp necessário)
+            heroi.exp_max = heroi.nivel * 5; 
+            
+            alert(`PARABÉNS! Você subiu para o Nível ${heroi.nivel} e ganhou 1 ponto de atributo!`);
         }
+
+        // 3. Salva tudo no banco de dados através da API
+        try {
+            const response = await fetch('/api/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(heroi)
+            });
+
+            if (response.ok) {
+                log("Progresso salvo com sucesso!");
+                setTimeout(() => {
+                    window.location.href = '/status.html'; // Redireciona para ver os pontos
+                }, 2000);
+            }
+        } catch (erro) {
+            console.error("Erro ao salvar progresso:", erro);
+        }
+
     } else {
-        alert("Você foi derrotado!");
-        heroi.vida_atual = 1; // Deixa o herói com 1 de vida para não travar o jogo
+        alert("Você foi derrotado! Volte quando estiver mais forte.");
+        // Penalidade opcional: herói volta com 1 de vida
+        heroi.vida_atual = 1;
+        await fetch('/api/status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(heroi)
+        });
+        window.location.href = '/inicio.html';
     }
-
-    // Salva o novo estado do herói no banco
-    await fetch('/api/status', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(heroi)
-    });
-
-    window.location.href = '/inicio.html';
 }
 
 function log(msg) {
