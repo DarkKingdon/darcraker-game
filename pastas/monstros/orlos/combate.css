@@ -1,0 +1,157 @@
+/* combate.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('/pastas/img/fundo.jpg'); /* Mantendo o padrão do sistema */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.battle-arena {
+    width: 90%;
+    max-width: 800px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #555;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.entity-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+/* Áreas do Herói e Monstro */
+#monstro-area, #heroi-area {
+    text-align: center;
+    flex: 1;
+}
+
+.vs {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 10px #ff4500;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #ffd700;
+}
+
+.sprite {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #444;
+    background: rgba(255,255,255,0.05);
+}
+
+/* Barras de HP */
+.hp-bar {
+    width: 100%;
+    height: 20px;
+    background: #333;
+    border-radius: 10px;
+    border: 1px solid #000;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.fill {
+    height: 100%;
+    width: 100%;
+    transition: width 0.4s ease-out;
+}
+
+#m-hp-fill { background: linear-gradient(90deg, #ff4d4d, #b30000); } /* Vermelho para o Monstro */
+#h-hp-fill { background: linear-gradient(90deg, #28a745, #1e7e34); } /* Verde para o Herói */
+
+#m-hp-text, #h-hp-text {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Log de Combate */
+.log {
+    background: rgba(0, 0, 0, 0.5);
+    height: 120px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column-reverse; /* Mensagens novas aparecem no topo */
+}
+
+.log p {
+    margin-bottom: 5px;
+    border-left: 3px solid #ffd700;
+    padding-left: 8px;
+}
+
+/* Botões de Ação */
+.controles {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+button:first-child {
+    background: #b30000;
+    color: white;
+}
+
+button:last-child {
+    background: #555;
+    color: white;
+}
+
+button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .entity-container { flex-direction: column; }
+    .vs { margin: 10px 0; }
+    .sprite { width: 100px; height: 100px; }
+}

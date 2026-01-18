@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Combate: Orlos - DarCraker</title>
+    <link rel="stylesheet" href="combate.css">
+</head>
+<body>
+    <div class="battle-arena">
+        <div class="entity-container">
+            <div id="monstro-area">
+                <h2 id="m-nome">Carregando...</h2>
+                <div class="hp-bar"><div id="m-hp-fill" class="fill"></div></div>
+                <p id="m-hp-text">5/5</p>
+                <img src="/pastas/img/orlos.jpg" class="sprite">
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div id="heroi-area">
+                <h2>Você</h2>
+                <div class="hp-bar"><div id="h-hp-fill" class="fill"></div></div>
+                <p id="h-hp-text">0/0</p>
+                <img src="/pastas/img/heroi.jpg" class="sprite">
+            </div>
+        </div>
+
+        <div id="log-combate" class="log">
+            <p>A batalha começou!</p>
+        </div>
+
+        <div class="controles">
+            <button onclick="atacar()">Atacar</button>
+            <button onclick="fugir()">Fugir</button>
+        </div>
+    </div>
+    <script src="combate.js"></script>
+</body>
+</html>
