@@ -15,18 +15,21 @@ async function iniciarBatalha() {
 }
 
 function atualizarInterface() {
-    // Atualiza Monstro
-    const mPct = (monstro.vida_atual / monstro.vida_maxima) * 100;
-    document.getElementById('m-hp-fill').style.width = mPct + "%";
-    document.getElementById('m-hp-text').textContent = `${monstro.vida_atual}/${monstro.vida_maxima}`;
-    document.getElementById('m-nome').textContent = monstro.nome;
+    // Atualiza Monstro (Atenção ao nome da coluna vida_maxima)
+    if (monstro) {
+        const mPct = (monstro.vida_atual / monstro.vida_maxima) * 100;
+        document.getElementById('m-hp-fill').style.width = mPct + "%";
+        document.getElementById('m-hp-text').textContent = `${monstro.vida_atual}/${monstro.vida_maxima}`;
+        document.getElementById('m-nome').textContent = monstro.nome;
+    }
 
-    // Atualiza Herói
-    const hPct = (heroi.vida_atual / heroi.vida_maxima) * 100;
-    document.getElementById('h-hp-fill').style.width = hPct + "%";
-    document.getElementById('h-hp-text').textContent = `${heroi.vida_atual}/${heroi.vida_maxima}`;
+    // Atualiza Herói (Nomes conforme seu darcraker_heroi_status.sql)
+    if (heroi) {
+        const hPct = (heroi.vida_atual / heroi.vida_maxima) * 100;
+        document.getElementById('h-hp-fill').style.width = hPct + "%";
+        document.getElementById('h-hp-text').textContent = `${heroi.vida_atual}/${heroi.vida_maxima}`;
+    }
 }
-
 async function atacar() {
     // --- TURNO DO HERÓI ---
     let danoH = Math.floor(Math.random() * (heroi.ataque_max - heroi.ataque_min + 1)) + heroi.ataque_min;
