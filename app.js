@@ -19,6 +19,13 @@ function verificarLogado(req, res, next) {
     if (req.session.logado) {
         return next();
     }
+    
+    // Se for uma requisição de API, responde com erro JSON
+    if (req.path.startsWith('/api/')) {
+        return res.status(401).json({ erro: "Sessão expirada" });
+    }
+    
+    // Se for navegação normal, redireciona para o login
     res.redirect('/login.html');
 }
 
