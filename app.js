@@ -72,7 +72,7 @@ app.get('/api/status', async (req, res) => {
 
 app.post('/api/status', verificarLogado, async (req, res) => {
     try {
-        // Agora pegamos também nivel, exp e exp_max do corpo da requisição
+        // Agora extraímos nível, exp e exp_max do que veio do jogo
         const { 
             nivel, exp, exp_max, 
             forca, protecao, vitalidade, inteligencia, 
@@ -82,7 +82,7 @@ app.post('/api/status', verificarLogado, async (req, res) => {
         
         const usuarioId = req.session.usuarioId;
 
-        // O segredo está em colocar nivel = ?, exp = ?, exp_max = ? aqui embaixo:
+        // Adicionamos nivel = ?, exp = ?, exp_max = ? no comando UPDATE
         await db.query(
             `UPDATE heroi_status SET 
             nivel = ?, exp = ?, exp_max = ?, 
