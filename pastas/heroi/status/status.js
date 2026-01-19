@@ -4,14 +4,17 @@ function verificarLevelUp(heroi) {
         6: 75, 7: 100, 8: 125, 9: 155, 10: 200
     };
 
-    // Enquanto a exp atual for maior ou igual ao necessário para o nível atual
-    if (heroi.exp >= tabelaXP[heroi.nivel]) {
+    let subiu = false;
+    // Verifica se a exp atual atingiu o limite do nível ATUAL
+    while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
+        heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai a XP gasta para subir
         heroi.nivel += 1; // Sobe o nível
-        heroi.exp_max = tabelaXP[heroi.nivel]; // Define o novo limite no banco
-        heroi.pontos_disponiveis += 5; // Exemplo: ganha pontos para distribuir
-        
-        console.log("Subiu de nível!");
+        heroi.pontos_disponiveis += 5; // Adiciona os pontos
+        heroi.exp_max = tabelaXP[heroi.nivel]; // Define o NOVO limite (ex: 10 para o nível 2)
+        subiu = true;
+        console.log(`Subiu para o nível ${heroi.nivel}! Próximo nível precisa de: ${heroi.exp_max}`);
     }
+    return subiu;
 }
 
 
@@ -58,8 +61,7 @@ function atualizarTela() {
     // Básicos e Experiência
     DOM.level.textContent = heroStatus.nivel;
     DOM.exp.textContent = heroStatus.exp;
-    // Puxa o valor da nova coluna 'exp_max' do banco de dados
-    DOM.expMax.textContent = heroStatus.exp_max || 5; 
+    DOM.expMax.textContent = heroStatus.exp_max; // Isso fará aparecer o "10" no nível 2
     DOM.pontos.textContent = heroStatus.pontos_disponiveis;
     
     // Atributos base
