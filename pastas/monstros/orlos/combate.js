@@ -64,46 +64,41 @@ async function atacar() {
 }
 
 async function finalizarCombate(vitoria) {
-    if (vitoria) {
-        log(`Vitória! +${monstro.exp_recompensa} EXP`);
-        heroi.exp += monstro.exp_recompensa;
+  if (vitoria) {
+    log(`Vitória! +${monstro.exp_recompensa} EXP`);
+    heroi.exp += monstro.exp_recompensa;
 
-        // 1. DEFINE A TABELA DE XP CORRETA
-        const tabelaXP = {
-            1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
-            6: 75, 7: 100, 8: 125, 9: 155, 10: 200
-        };
+    // A TABELA QUE VOCÊ QUER SEGUIR:
+    const tabelaXP = {
+        1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
+        6: 75, 7: 100, 8: 125, 9: 155, 10: 200
+    };
 
-        // 2. LÓGICA DE LEVEL UP COM SOBRA DE XP
-        let subiu = false;
-        // Enquanto o XP atual for maior que o limite do nível atual
-        while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
-            heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai o custo (ex: 5)
-            heroi.nivel += 1; // Sobe para o 2
-            heroi.exp_max = tabelaXP[heroi.nivel]; // Define o novo máximo (ex: 10)
-            heroi.pontos_disponiveis += 5; // Dá os pontos
-            
-            heroi.vida_atual = heroi.vida_maxima;
-            heroi.mana_atual = heroi.mana_maxima;
-            subiu = true;
-        }
+    let subiu = false;
+    // Enquanto a exp for maior que o necessário para o nível atual
+    while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
+        heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai os 5 (ou 10) que usou pra subir
+        heroi.nivel += 1; // Sobe o nível
+        heroi.exp_max = tabelaXP[heroi.nivel]; // ATUALIZA O MÁXIMO (Ex: vira 10)
+        heroi.pontos_disponiveis += 5; // Dá os pontos
+        
+        heroi.vida_atual = heroi.vida_maxima;
+        heroi.mana_atual = heroi.mana_maxima;
+        subiu = true;
+    }
 
-        if (subiu) {
-            alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
-        }
+    if (subiu) alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
+    
+    // Envia o objeto 'heroi' INTEIRO (com nivel e exp_max novos) para o servidor
+    try {
+        await fetch('/api/status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(heroi)
+        });
+    } catch (e) { console.error(e); }
 
-        // 3. SALVAR NO BANCO
-        try {
-            await fetch('/api/status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(heroi)
-            });
-        } catch (e) {
-            console.error("Erro ao salvar progresso:", e);
-        }
-
-        setTimeout(() => { window.location.href = '/heroi.html'; }, 1500);
+    setTimeout(() => { window.location.href = '/heroi.html'; }, 1500);
 
     } else {
         log("Você foi derrotado...");
