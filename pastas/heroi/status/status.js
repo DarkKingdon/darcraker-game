@@ -1,3 +1,31 @@
+// No topo do status.js, garanta que a variável seja global
+window.heroStatus = {}; 
+
+async function carregarDados() {
+    try {
+        const response = await fetch('/api/status');
+        if (!response.ok || response.redirected) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        const data = await response.json();
+        window.heroStatus = data; // Armazena globalmente
+        
+        // Atualiza a tela de Status (se estiver nela)
+        if (typeof atualizarTela === 'function') atualizarTela();
+        
+        // NOVO: Avisa o inicio.js que os dados chegaram
+        if (typeof window.renderizarStatusInicio === 'function') {
+            window.renderizarStatusInicio();
+        }
+    } catch (error) {
+        console.error("Erro ao carregar JSON:", error);
+    }
+}
+
+
+
 function verificarLevelUp(heroi) {
     const tabelaXP = {
     1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
