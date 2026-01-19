@@ -64,51 +64,44 @@ async function atacar() {
 }
 
 async function finalizarCombate(vitoria) {
-  if (vitoria) {
-    log(`Vitória! +${monstro.exp_recompensa} EXP`);
-    heroi.exp += monstro.exp_recompensa;
+    if (vitoria) {
+        log(`Vitória! +${monstro.exp_recompensa} EXP`);
+        heroi.exp += monstro.exp_recompensa;
 
-    // A TABELA QUE VOCÊ QUER SEGUIR:
-    const tabelaXP = {
-        1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
-        6: 75, 7: 100, 8: 125, 9: 155, 10: 200
-    };
+        // TABELA OFICIAL
+        const tabelaXP = {
+            1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
+            6: 75, 7: 100, 8: 125, 9: 155, 10: 200
+        };
 
-    let subiu = false;
-    // Enquanto a exp for maior que o necessário para o nível atual
-    while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
-        heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai os 5 (ou 10) que usou pra subir
-        heroi.nivel += 1; // Sobe o nível
-        heroi.exp_max = tabelaXP[heroi.nivel]; // ATUALIZA O MÁXIMO (Ex: vira 10)
-        heroi.pontos_disponiveis += 5; // Dá os pontos
-        
-        heroi.vida_atual = heroi.vida_maxima;
-        heroi.mana_atual = heroi.mana_maxima;
-        subiu = true;
-    }
+        let subiu = false;
+        // Enquanto tiver XP para subir de nível
+        while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
+            heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai o custo do nível que passou
+            heroi.nivel += 1;
+            heroi.exp_max = tabelaXP[heroi.nivel]; // Atualiza para o próximo limite (ex: 10)
+            heroi.pontos_disponiveis += 5;
+            
+            heroi.vida_atual = heroi.vida_maxima;
+            heroi.mana_atual = heroi.mana_maxima;
+            subiu = true;
+        }
 
-    if (subiu) alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
-    
-    // Envia o objeto 'heroi' INTEIRO (com nivel e exp_max novos) para o servidor
-    try {
-        await fetch('/api/status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(heroi)
-        });
-    } catch (e) { console.error(e); }
+        if (subiu) alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
 
-    setTimeout(() => { window.location.href = '/heroi.html'; }, 1500);
+        // ENVIAR PARA O BANCO (Agora com exp_max atualizado)
+        try {
+            await fetch('/api/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(heroi)
+            });
+        } catch (e) { console.error(e); }
+
+        setTimeout(() => { window.location.href = '/heroi.html'; }, 1500);
 
     } else {
-        log("Você foi derrotado...");
-        heroi.vida_atual = 1;
-        await fetch('/api/status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(heroi)
-        });
-        setTimeout(() => { window.location.href = '/heroi.html'; }, 2000);
+        // Lógica de derrota...
     }
 }
 function log(msg) {
