@@ -1,19 +1,17 @@
 function verificarLevelUp(heroi) {
     const tabelaXP = {
-        1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
-        6: 75, 7: 100, 8: 125, 9: 155, 10: 200
-    };
+    1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
+    6: 75, 7: 100, 8: 125, 9: 155, 10: 200
+};
 
-    let subiu = false;
-    // Verifica se a exp atual atingiu o limite do nível ATUAL
-    while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
-        heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai a XP gasta para subir
-        heroi.nivel += 1; // Sobe o nível
-        heroi.pontos_disponiveis += 5; // Adiciona os pontos
-        heroi.exp_max = tabelaXP[heroi.nivel]; // Define o NOVO limite (ex: 10 para o nível 2)
-        subiu = true;
-        console.log(`Subiu para o nível ${heroi.nivel}! Próximo nível precisa de: ${heroi.exp_max}`);
-    }
+// Exemplo: se heroi.exp chegou em 6 e o nível 1 pedia 5:
+while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
+    heroi.exp -= tabelaXP[heroi.nivel]; // 6 - 5 = sobra 1
+    heroi.nivel += 1; // nível vira 2
+    heroi.exp_max = tabelaXP[heroi.nivel]; // exp_max vira 10
+    heroi.pontos_disponiveis += 5;
+}
+// Resultado: Nível 2 com 1/10 de XP.
     return subiu;
 }
 
