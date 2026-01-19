@@ -61,7 +61,7 @@ function atualizarTela() {
     // Básicos e Experiência
     DOM.level.textContent = heroStatus.nivel;
     DOM.exp.textContent = heroStatus.exp;
-    DOM.expMax.textContent = heroStatus.exp_max; // Isso fará aparecer o "10" no nível 2
+    DOM.expMax.textContent = heroStatus.exp_max; // Mostrará 10, 20, etc.
     DOM.pontos.textContent = heroStatus.pontos_disponiveis;
     
     // Atributos base
