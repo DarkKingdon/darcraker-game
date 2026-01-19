@@ -72,8 +72,9 @@ app.get('/api/status', async (req, res) => {
 
 app.post('/api/status', verificarLogado, async (req, res) => {
     try {
+        // Agora pegamos também nivel, exp e exp_max do corpo da requisição
         const { 
-            nivel, exp, exp_max, // ADICIONADO
+            nivel, exp, exp_max, 
             forca, protecao, vitalidade, inteligencia, 
             pontos_disponiveis, vida_maxima, mana_maxima, 
             vida_atual, mana_atual 
@@ -81,6 +82,7 @@ app.post('/api/status', verificarLogado, async (req, res) => {
         
         const usuarioId = req.session.usuarioId;
 
+        // O segredo está em colocar nivel = ?, exp = ?, exp_max = ? aqui embaixo:
         await db.query(
             `UPDATE heroi_status SET 
             nivel = ?, exp = ?, exp_max = ?, 
@@ -93,7 +95,7 @@ app.post('/api/status', verificarLogado, async (req, res) => {
         res.json({ sucesso: true });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ erro: "Erro ao salvar status" });
+        res.status(500).json({ erro: "Erro ao salvar progresso" });
     }
 });
 
