@@ -68,20 +68,31 @@ async function finalizarCombate(vitoria) {
         log(`Vitória! +${monstro.exp_recompensa} EXP`);
         heroi.exp += monstro.exp_recompensa;
 
-        // LÓGICA DE LEVEL UP (Mantida conforme seu código)
-        if (heroi.exp >= heroi.exp_max) {
-            heroi.nivel += 1;
-            heroi.exp = 0; 
-            heroi.pontos_disponiveis += 1;
-            heroi.exp_max = heroi.nivel * 10;
+        // 1. DEFINE A TABELA DE XP CORRETA
+        const tabelaXP = {
+            1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
+            6: 75, 7: 100, 8: 125, 9: 155, 10: 200
+        };
+
+        // 2. LÓGICA DE LEVEL UP COM SOBRA DE XP
+        let subiu = false;
+        // Enquanto o XP atual for maior que o limite do nível atual
+        while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
+            heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai o custo (ex: 5)
+            heroi.nivel += 1; // Sobe para o 2
+            heroi.exp_max = tabelaXP[heroi.nivel]; // Define o novo máximo (ex: 10)
+            heroi.pontos_disponiveis += 5; // Dá os pontos
             
             heroi.vida_atual = heroi.vida_maxima;
             heroi.mana_atual = heroi.mana_maxima;
-            
+            subiu = true;
+        }
+
+        if (subiu) {
             alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
         }
 
-        // SALVAR NO BANCO
+        // 3. SALVAR NO BANCO
         try {
             await fetch('/api/status', {
                 method: 'POST',
@@ -92,8 +103,6 @@ async function finalizarCombate(vitoria) {
             console.error("Erro ao salvar progresso:", e);
         }
 
-        // REDIRECIONAMENTO CORRIGIDO:
-        // O caminho '/heroi.html' no seu app.js já aponta para '/pastas/heroi/heroi.html'
         setTimeout(() => { window.location.href = '/heroi.html'; }, 1500);
 
     } else {
@@ -104,7 +113,6 @@ async function finalizarCombate(vitoria) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(heroi)
         });
-        // Opcional: Redirecionar para o herói também em caso de derrota
         setTimeout(() => { window.location.href = '/heroi.html'; }, 2000);
     }
 }
