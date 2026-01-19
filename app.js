@@ -72,9 +72,8 @@ app.get('/api/status', async (req, res) => {
 
 app.post('/api/status', verificarLogado, async (req, res) => {
     try {
-        // PRECISAMOS PEGAR O NIVEL, EXP E EXP_MAX QUE VEM DO FRONT-END
         const { 
-            nivel, exp, exp_max, 
+            nivel, exp, exp_max, // ADICIONADO
             forca, protecao, vitalidade, inteligencia, 
             pontos_disponiveis, vida_maxima, mana_maxima, 
             vida_atual, mana_atual 
@@ -82,7 +81,6 @@ app.post('/api/status', verificarLogado, async (req, res) => {
         
         const usuarioId = req.session.usuarioId;
 
-        // O UPDATE PRECISA ATUALIZAR ESSAS COLUNAS NO SQL
         await db.query(
             `UPDATE heroi_status SET 
             nivel = ?, exp = ?, exp_max = ?, 
@@ -95,7 +93,7 @@ app.post('/api/status', verificarLogado, async (req, res) => {
         res.json({ sucesso: true });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ erro: "Erro ao salvar" });
+        res.status(500).json({ erro: "Erro ao salvar status" });
     }
 });
 
