@@ -42,32 +42,23 @@ window.toggleHeroInfo = toggleHeroInfo;
 // RENDERIZAÇÃO DOS STATUS NO INÍCIO
 // =================================================================
 function renderizarStatusInicio() {
-    // Verifica se o objeto de status global existe (veio do status.js)
-    if (typeof window.heroStatus === 'undefined') {
-        console.warn("Aviso: HeroStatus não encontrado. Verifique se o status.js foi carregado.");
-        return;
-    }
-    
-    // Atualiza os dados (se as funções de cálculo existirem)
-    if (typeof window.carregarStatus === 'function') window.carregarStatus();
-    if (typeof window.calcularAtributosSecundarios === 'function') window.calcularAtributosSecundarios();
-    
     const status = window.heroStatus;
-    
-    // Mapeamento dos elementos do HTML
-    const elementos = {
-        level: document.getElementById('inicio-level-valor'),
-        exp: document.getElementById('inicio-exp-valor'),
-        vida: document.getElementById('inicio-vida-valor'),
-        mana: document.getElementById('inicio-mana-valor')
-    };
-    
-    // Preenche os valores apenas se os elementos existirem na página
-    if (elementos.level) elementos.level.textContent = status.level;
-    if (elementos.exp)   elementos.exp.textContent   = `${status.exp} / ${status.expMax}`;
-    if (elementos.vida)  elementos.vida.textContent  = `${status.vidaAtual} / ${status.vidaMaxima}`;
-    if (elementos.mana)  elementos.mana.textContent  = `${status.manaAtual} / ${status.manaMaxima}`;
-    
-    console.log("✅ Status do Início atualizados com sucesso.");
+
+    // Se o objeto estiver vazio, não faz nada ainda
+    if (!status || Object.keys(status).length === 0) return;
+
+    // Seleção dos elementos (ID's que estão no seu HTML do início)
+    const elLevel = document.getElementById('inicio-level-valor');
+    const elExp   = document.getElementById('inicio-exp-valor');
+    const elVida  = document.getElementById('inicio-vida-valor');
+    const elMana  = document.getElementById('inicio-mana-valor');
+
+    // Preenchimento usando os nomes das colunas do seu Banco de Dados
+    if (elLevel) elLevel.textContent = status.nivel;
+    if (elExp)   elExp.textContent   = `${status.exp} / ${status.exp_max}`;
+    if (elVida)  elVida.textContent  = `${status.vida_atual} / ${status.vida_maxima}`;
+    if (elMana)  elMana.textContent  = `${status.mana_atual} / ${status.mana_maxima}`;
+
+    console.log("✅ Widget de Status atualizado com dados do banco.");
 }
 window.renderizarStatusInicio = renderizarStatusInicio;
