@@ -9,7 +9,7 @@ while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
     heroi.exp -= tabelaXP[heroi.nivel]; // 6 - 5 = sobra 1
     heroi.nivel += 1; // nível vira 2
     heroi.exp_max = tabelaXP[heroi.nivel]; // exp_max vira 10
-    heroi.pontos_disponiveis += 5;
+    heroi.pontos_disponiveis += 1;
 }
 // Resultado: Nível 2 com 1/10 de XP.
     return subiu;
