@@ -77,10 +77,11 @@ async function finalizarCombate(vitoria) {
         let subiu = false;
         // Enquanto tiver XP para subir de nível
         while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
-            heroi.exp -= tabelaXP[heroi.nivel]; // Subtrai o custo do nível que passou
-            heroi.nivel += 1;
-            heroi.exp_max = tabelaXP[heroi.nivel]; // Atualiza para o próximo limite (ex: 10)
-            heroi.pontos_disponiveis += 5;
+    heroi.exp -= tabelaXP[heroi.nivel]; 
+    heroi.nivel += 1;
+    // O pulo do gato está aqui:
+    heroi.exp_max = tabelaXP[heroi.nivel]; 
+    heroi.pontos_disponiveis += 5;
             
             heroi.vida_atual = heroi.vida_maxima;
             heroi.mana_atual = heroi.mana_maxima;
