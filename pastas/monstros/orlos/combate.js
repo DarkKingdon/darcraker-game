@@ -81,7 +81,7 @@ async function finalizarCombate(vitoria) {
     heroi.nivel += 1;
     // O pulo do gato está aqui:
     heroi.exp_max = tabelaXP[heroi.nivel]; 
-    heroi.pontos_disponiveis += 5;
+    heroi.pontos_disponiveis += 1;
             
             heroi.vida_atual = heroi.vida_maxima;
             heroi.mana_atual = heroi.mana_maxima;
