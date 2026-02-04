@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DarCraker - Mundo</title>
+    <title>Planícies de Asmon - DarCraker</title>
     <link rel="stylesheet" href="/pastas/inicio/inicio.css">
     <link rel="stylesheet" href="/pastas/mundo/mundo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -11,7 +11,7 @@
 <body>
 
     <header class="navbar">
-      <div class="logo">DarCraker - Exploração</div>
+      <div class="logo">DarCraker - Asmon</div>
       <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
     </header>
 
@@ -49,42 +49,53 @@
     </nav>
 
     <main class="content">
-        <h2>Zonas de Caça</h2>
-        <p>Explore as terras de DarCraker e enfrente perigos constantes.</p>
+        <h2>Planícies de Asmon</h2>
+        <p>A região inicial de todos os aventureiros. Escolha sua atividade.</p>
 
         <div class="map-container">
-            <!-- Zona 0-10 -->
-            <div class="zone-card" data-min-level="0">
-                <img src="/pastas/img/planicies_de_asmon.jpg" alt="Planícies" class="zone-banner">
+            <!-- Monstros -->
+            <div class="zone-card">
+                <img src="/pastas/img/orlos.jpg" alt="Monstros" class="zone-banner">
                 <div class="zone-info">
-                    <h3>Planícies de Asmon</h3>
-                    <span class="zone-level">Nível Requerido: 0 - 10</span>
-                    <p class="zone-description">Campos abertos onde aventureiros iniciantes treinam contra Orlos e Porings.</p>
-                    <a href="/pastas/mundo/asmon/planicies_de_asmon.html" class="enter-btn">Explorar</a>
+                    <h3>Monstros</h3>
+                    <p class="zone-description">Enfrente criaturas locais para ganhar XP e itens.</p>
+                    <a href="/pastas/mundo/asmon/monstros/monstros.html" class="enter-btn">Entrar</a>
                 </div>
             </div>
 
-            <!-- Zona 10-20 -->
-            <div class="zone-card" data-min-level="10">
-                <img src="/pastas/img/mistico.jpg" alt="Floresta" class="zone-banner">
+            <!-- Cidade -->
+            <div class="zone-card">
+                <img src="/pastas/img/inicio.jpg" alt="Cidade" class="zone-banner">
                 <div class="zone-info">
-                    <h3>Floresta Nebulosa</h3>
-                    <span class="zone-level">Nível Requerido: 10 - 20</span>
-                    <p class="zone-description">Uma floresta densa e sombria habitada por criaturas místicas e traiçoeiras.</p>
-                    <a href="#" class="enter-btn">Explorar</a>
+                    <h3>Cidade de Asmon</h3>
+                    <p class="zone-description">Compre suprimentos, aceite missões e descanse.</p>
+                    <a href="/pastas/mundo/asmon/cidade/cidade_de_asmon.html" class="enter-btn">Entrar</a>
                 </div>
             </div>
 
-            <!-- Zona 20-30 -->
-            <div class="zone-card" data-min-level="20">
-                <img src="/pastas/img/fundo.jpg" alt="Abismo" class="zone-banner">
+            <!-- Dungeons -->
+            <div class="zone-card locked">
+                <img src="/pastas/img/fundo.jpg" alt="Dungeons" class="zone-banner">
                 <div class="zone-info">
-                    <h3>Abismo Esquecido</h3>
-                    <span class="zone-level">Nível Requerido: 20 - 30</span>
-                    <p class="zone-description">As profundezas do mundo, onde apenas os mais fortes sobrevivem ao calor e às feras.</p>
-                    <a href="#" class="enter-btn">Explorar</a>
+                    <h3>Dungeons</h3>
+                    <p class="zone-description">Desafios instanciados com chefes poderosos e saques raros.</p>
+                    <a href="#" class="enter-btn">Em breve...</a>
                 </div>
             </div>
+
+            <!-- Chefes Globais -->
+            <div class="zone-card locked">
+                <img src="/pastas/img/mistico.jpg" alt="Chefes" class="zone-banner">
+                <div class="zone-info">
+                    <h3>Chefes Globais</h3>
+                    <p class="zone-description">Criaturas imensas que exigem poder extremo.</p>
+                    <a href="#" class="enter-btn">Em breve...</a>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="/mundo.html" style="color: #ffd700; text-decoration: none;"><i class="fas fa-arrow-left"></i> Voltar ao Mapa Mundi</a>
         </div>
     </main>
 
