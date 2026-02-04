@@ -1,73 +1,114 @@
 /* mundo.css */
 
 .map-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.zone-card {
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #444;
+    border-radius: 20px;
+    overflow: hidden;
+    color: white;
+    transition: transform 0.3s, border-color 0.3s;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.monster-card {
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #555;
-    border-radius: 15px;
-    padding: 20px;
-    width: 250px;
-    text-align: center;
-    color: white;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-}
-
-.monster-card:hover {
-    transform: translateY(-10px);
-    border-color: #007bff;
-}
-
-.monster-img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 15px;
-}
-
-.monster-card h3 {
-    margin-bottom: 10px;
-    color: #ffcc00;
-}
-
-.battle-btn {
-    display: inline-block;
-    background: #e63946;
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 15px;
-    transition: background 0.2s;
-}
-
-.battle-btn:hover {
-    background: #d62828;
-}
-
-.monster-card.locked {
-    opacity: 0.6;
-    filter: grayscale(1);
+    flex-direction: column;
     position: relative;
 }
 
-.lock-icon {
-    font-size: 3rem;
-    margin: 20px 0;
-    color: #aaa;
+.zone-card:hover:not(.locked) {
+    transform: translateY(-10px);
+    border-color: #ffd700;
 }
 
-.monster-card.locked .battle-btn {
-    background: #555;
+.zone-banner {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 2px solid #333;
+}
+
+.zone-info {
+    padding: 20px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.zone-info h3 {
+    font-size: 1.6rem;
+    color: #ffd700;
+    margin-bottom: 5px;
+}
+
+.zone-level {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.zone-description {
+    font-size: 0.95rem;
+    color: #eee;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.enter-btn {
+    display: block;
+    background: linear-gradient(45deg, #e63946, #b30000);
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.enter-btn:hover:not(:disabled) {
+    background: linear-gradient(45deg, #ff4d4d, #d62828);
+    box-shadow: 0 0 15px rgba(230, 57, 70, 0.4);
+}
+
+/* Estado Bloqueado */
+.zone-card.locked {
+    filter: grayscale(0.8) brightness(0.6);
     cursor: not-allowed;
+}
+
+.zone-card.locked::after {
+    content: "\f023";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+}
+
+.zone-card.locked .enter-btn {
+    background: #444;
+    color: #888;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .map-container {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
 }

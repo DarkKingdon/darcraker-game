@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DarCraker - Mundo</title>
+    <title>Monstros - Planícies de Asmon</title>
     <link rel="stylesheet" href="/pastas/inicio/inicio.css">
     <link rel="stylesheet" href="/pastas/mundo/mundo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -11,7 +11,7 @@
 <body>
 
     <header class="navbar">
-      <div class="logo">DarCraker - Exploração</div>
+      <div class="logo">DarCraker - Asmon</div>
       <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
     </header>
 
@@ -49,42 +49,33 @@
     </nav>
 
     <main class="content">
-        <h2>Zonas de Caça</h2>
-        <p>Explore as terras de DarCraker e enfrente perigos constantes.</p>
+        <h2>Monstros da Região</h2>
+        <p>Escolha um oponente para enfrentar nas Planícies de Asmon.</p>
 
         <div class="map-container">
-            <!-- Zona 0-10 -->
-            <div class="zone-card" data-min-level="0">
-                <img src="/pastas/img/inicio.jpg" alt="Planícies" class="zone-banner">
+            <!-- Card do Orlos -->
+            <div class="zone-card" style="width: 250px;">
+                <img src="/pastas/img/orlos.jpg" alt="Orlos" class="zone-banner" style="height: 120px;">
                 <div class="zone-info">
-                    <h3>Planícies de Asmon</h3>
-                    <span class="zone-level">Nível Requerido: 0 - 10</span>
-                    <p class="zone-description">Campos abertos onde aventureiros iniciantes treinam contra Orlos e Porings.</p>
-                    <a href="/pastas/mundo/asmon/monstros/monstros.html" class="enter-btn">Explorar</a>
+                    <h3>Orlos</h3>
+                    <span class="zone-level">Nível: 1</span>
+                    <a href="/pastas/monstros/orlos/combate.html" class="enter-btn">Lutar</a>
                 </div>
             </div>
 
-            <!-- Zona 10-20 -->
-            <div class="zone-card" data-min-level="10">
-                <img src="/pastas/img/mistico.jpg" alt="Floresta" class="zone-banner">
+            <!-- Card do Poring -->
+            <div class="zone-card" style="width: 250px;">
+                <img src="/pastas/img/poring.jpg" alt="Poring" class="zone-banner" style="height: 120px;">
                 <div class="zone-info">
-                    <h3>Floresta Nebulosa</h3>
-                    <span class="zone-level">Nível Requerido: 10 - 20</span>
-                    <p class="zone-description">Uma floresta densa e sombria habitada por criaturas místicas e traiçoeiras.</p>
-                    <a href="#" class="enter-btn">Explorar</a>
+                    <h3>Poring</h3>
+                    <span class="zone-level">Nível: 1</span>
+                    <a href="/pastas/monstros/poring/combate.html" class="enter-btn">Lutar</a>
                 </div>
             </div>
-
-            <!-- Zona 20-30 -->
-            <div class="zone-card" data-min-level="20">
-                <img src="/pastas/img/fundo.jpg" alt="Abismo" class="zone-banner">
-                <div class="zone-info">
-                    <h3>Abismo Esquecido</h3>
-                    <span class="zone-level">Nível Requerido: 20 - 30</span>
-                    <p class="zone-description">As profundezas do mundo, onde apenas os mais fortes sobrevivem ao calor e às feras.</p>
-                    <a href="#" class="enter-btn">Explorar</a>
-                </div>
-            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="/mundo.html" style="color: #ffd700; text-decoration: none;"><i class="fas fa-arrow-left"></i> Voltar ao Mapa</a>
         </div>
     </main>
 
