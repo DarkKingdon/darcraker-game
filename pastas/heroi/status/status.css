@@ -52,6 +52,7 @@ body {
     text-decoration: none; color: white;
     gap: 15px; padding: 10px; border-radius: 8px;
 }
+.sidebar-link:hover { background: rgba(255, 255, 255, 0.1); }
 .sidebar-img { width: 45px !important; height: 45px !important; object-fit: cover; border-radius: 50%; border: 2px solid #fff; }
 
 /* CONTAINER PRINCIPAL */
@@ -87,25 +88,38 @@ body {
 .bar-fill.mp { background: linear-gradient(90deg, #4d94ff, #0052cc); }
 .bar-text { font-size: 0.85rem; font-weight: bold; color: white; text-shadow: 1px 1px 2px black; z-index: 2; }
 
-/* GRID DE ATRIBUTOS */
-.attributes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+/* GRID DE ATRIBUTOS (Estilizado como os bônus) */
+.attributes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 .attr-card {
-    background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;
-    display: flex; justify-content: space-between; align-items: center; border: 1px solid #444;
+    background: rgba(0, 150, 255, 0.1); border: 1px solid rgba(0, 150, 255, 0.3);
+    padding: 10px 15px; border-radius: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: 0.2s;
 }
-.attr-card:hover { background: rgba(255, 255, 255, 0.15); border-color: #ffcc00; }
-.attr-label { font-size: 1rem; }
-.attr-number { font-size: 1.2rem; font-weight: bold; color: #00ffcc; }
+.attr-card:hover { background: rgba(0, 150, 255, 0.2); border-color: rgba(0, 150, 255, 0.6); }
+
+.attr-label { font-size: 0.9rem; color: #ccc; }
+.attr-number { font-size: 1.1rem; font-weight: bold; color: #00ffcc; margin: 0 10px; flex: 1; text-align: right; }
+
 .add-point-btn {
-    background: #28a745; color: white; border: none; width: 30px; height: 30px;
-    border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1.2rem;
+    background: #28a745; color: white; border: none; width: 25px; height: 25px;
+    border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.1s;
 }
+.add-point-btn:active { transform: scale(0.9); }
+.add-point-btn:hover { background: #218838; }
 
 /* STATUS SECUNDÁRIOS */
 .secondary-stats { display: flex; gap: 15px; margin-bottom: 30px; }
 .stat-column { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-.sec-ataque { border-left: 4px solid #ff4d4d; }
-.sec-defesa { border-left: 4px solid #4deeea; }
+
+/* Ajuste nos cards secundários para manter o padrão bônus mas com a borda de cor lateral */
+.secondary-stats .attr-card {
+    padding-left: 10px;
+}
+.sec-ataque { border-left: 4px solid #ff4d4d !important; }
+.sec-defesa { border-left: 4px solid #4deeea !important; }
 
 /* SEÇÃO DE BÔNUS */
 .section-title {
