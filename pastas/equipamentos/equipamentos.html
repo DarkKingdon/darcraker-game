@@ -3,45 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipamentos - Novo Projeto</title>
-    <link rel="stylesheet" href="equipamentos.css">
+    <title>Equipamentos - DarCraker</title>
+    <link rel="stylesheet" href="/pastas/inicio/inicio.css">
+    <link rel="stylesheet" href="/pastas/mochila/mochila.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Equipamentos</h1>
-            <div class="stats-bar">
-                <span>Nível: <strong id="player-level">1</strong></span>
-                <span>Proteção: <strong id="player-protection">0</strong></span>
-                <span>Defesa: <strong id="total-defense">0</strong></span>
-            </div>
-        </header>
 
-        <main class="equipment-layout">
-            <!-- Área do Personagem com Slots -->
-            <div class="character-preview">
-                <div class="slot peito" id="slot-peito" data-slot="peito">
+    <header class="navbar">
+      <div class="logo">DarCraker</div>
+      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="/inicio.html" class="sidebar-link">
+                <img src="/pastas/img/inicio.jpg" alt="Início" class="sidebar-img">
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="/heroi.html" class="sidebar-link">
+                <img src="/pastas/img/heroi.jpg" alt="Herói" class="sidebar-img">
+                <span class="sidebar-text">Herói</span>
+            </a>
+            <a href="/mundo.html" class="sidebar-link">
+                <img src="/pastas/img/icone_mundo.png" alt="Mundo" class="sidebar-img">
+                <span class="sidebar-text">Mundo</span>
+            </a>
+            <a href="/mochila.html" class="sidebar-link">
+                <img src="/pastas/img/mochila.jpg" alt="Mochila" class="sidebar-img">
+                <span class="sidebar-text">Mochila</span>
+            </a>
+            <a href="/rank.html" class="sidebar-link">
+                <img src="/pastas/img/conquistas.jpg" alt="Ranking" class="sidebar-img">
+                <span class="sidebar-text">Ranking</span>
+            </a>
+            <a href="/mercado.html" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Mercado" class="sidebar-img">
+                <span class="sidebar-text">Mercado</span>
+            </a>
+            <a href="/pastas/equipamentos/equipamentos.html" class="sidebar-link">
+                <img src="/pastas/img/icone_equipamento.png" alt="Equipamentos" class="sidebar-img">
+                <span class="sidebar-text">Equipamentos</span>
+            </a>
+            <a href="/sair" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Sair" class="sidebar-img">
+                <span class="sidebar-text">Sair</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="content mochila-container">
+        <h1>Equipamentos</h1>
+        <p>Gerencie as peças de armadura e armas do seu herói.</p>
+
+        <!-- Painel de Status Compacto -->
+        <div class="hero-stats-panel">
+            <p id="player-level-txt">🏅 Nível: ...</p>
+            <p id="player-protection-txt">🛡️ Proteção: ...</p>
+            <p id="total-defense-txt">🛡️ Defesa Total: ...</p>
+        </div>
+
+        <!-- Slot de Equipamento (Slot de Peito) -->
+        <div class="equipment-summary">
+            <div class="equip-slot-container">
+                <div class="slot-display" id="slot-peito">
                     <span class="placeholder-icon">👕</span>
                 </div>
-                <p class="slot-label">Peito (50x50)</p>
+                <label>Peito</label>
+            </div>
+        </div>
+
+        <!-- Painel de Detalhes -->
+        <div id="item-details-panel" class="item-details-panel" style="display:none;">
+            <div class="detail-header-container">
+                <img id="detail-item-image" class="detail-item-image" src="" alt=""> 
+                <h2 id="detail-item-name"></h2>
+            </div>
+            <p id="detail-item-type" class="item-type-tag"></p>
+            <p id="detail-item-description"></p>
+            
+            <div id="detail-stats" class="item-requirements">
+                <!-- Bônus ou Requisitos aparecem aqui -->
             </div>
 
-            <!-- Área de Inventário -->
-            <div class="inventory-section">
-                <h2>Inventário</h2>
-                <div class="inventory-grid" id="inventory">
-                    <!-- Itens serão carregados aqui -->
-                </div>
-            </div>
-        </main>
+            <button id="detail-equip-button" class="use-item-btn" style="display:none;">Equipar Item</button>
+            <button id="detail-unequip-button" class="use-item-btn" style="display:none; background-color: #555;">Desequipar</button>
+        </div>
 
-        <footer class="controls">
-            <button id="btn-drop">Matar Poring (Drop 50%)</button>
-            <button id="btn-level-up">Subir Nível</button>
-            <button id="btn-skill-up">Treinar Proteção</button>
-            <button onclick="location.href='../inicio/inicio.html'">Voltar</button>
-        </footer>
-    </div>
+        <div class="inventory-section">
+            <h2>Itens Disponíveis</h2>
+            <div id="inventory-grid" class="inventory-grid">
+                <!-- Itens carregados via JS -->
+            </div>
+        </div>
+    </main>
 
     <script src="equipamentos.js"></script>
 </body>
