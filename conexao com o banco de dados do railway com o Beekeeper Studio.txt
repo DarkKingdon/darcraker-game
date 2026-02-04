@@ -1,0 +1,11 @@
+Tipo: MySQL
+
+User: root
+
+Password: gMDLeOTiQxbIrJNEAtcNaQZhFoOaTBPw
+
+Host: maglev.proxy.rlwy.net
+
+Porta: 25198
+
+Database: railway

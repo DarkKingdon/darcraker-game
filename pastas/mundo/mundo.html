@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarCraker - Mundo</title>
+    <link rel="stylesheet" href="/pastas/inicio/inicio.css">
+    <link rel="stylesheet" href="/pastas/mundo/mundo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+      <div class="logo">DarCraker - Mundo</div>
+      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="/inicio.html" class="sidebar-link">
+                <img src="/pastas/img/inicio.jpg" alt="Icone inicio" class="sidebar-img">
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="/heroi.html" class="sidebar-link">
+                <img src="/pastas/img/heroi.jpg" alt="Icone Personagem" class="sidebar-img">
+                <span class="sidebar-text">Herói</span>
+            </a>
+            <a href="/mundo.html" class="sidebar-link">
+                <img src="/pastas/img/icone_mundo.png" alt="Icone mundo " class="sidebar-img">
+                <span class="sidebar-text">Mundo</span>
+            </a>
+            <a href="/sair" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Sair" class="sidebar-img">
+                <span class="sidebar-text">Sair</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <h2>Exploração do Mundo</h2>
+        <p>Escolha um destino para enfrentar monstros e ganhar recompensas!</p>
+
+        <div class="map-container">
+            <!-- Card do Orlos -->
+            <div class="monster-card">
+                <img src="/pastas/img/orlos.jpg" alt="Orlos" class="monster-img">
+                <h3>Orlos</h3>
+                <p>Nível: 1</p>
+                <a href="/pastas/monstros/orlos/combate.html" class="battle-btn">Lutar</a>
+            </div>
+
+            <!-- Card do Poring -->
+            <div class="monster-card">
+                <img src="/pastas/img/poring.jpg" alt="Poring" class="monster-img">
+                <h3>Poring</h3>
+                <p>Nível: 1</p>
+                <a href="/pastas/monstros/poring/combate.html" class="battle-btn">Lutar</a>
+            </div>
+
+            <!-- Placeholder para futuros monstros -->
+            <div class="monster-card locked">
+                <div class="lock-icon"><i class="fas fa-lock"></i></div>
+                <h3>Em breve...</h3>
+                <p>Nível: ??</p>
+                <button class="battle-btn" disabled>Bloqueado</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('is-open');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mochila do Herói - DarCraker</title> 
+    <link rel="stylesheet" href="/pastas/inicio/inicio.css">
+    <link rel="stylesheet" href="/pastas/mochila/mochila.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+      <div class="logo">DarCraker</div>
+      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="/inicio.html" class="sidebar-link">
+                <img src="/pastas/img/inicio.jpg" alt="Início" class="sidebar-img">
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="/heroi.html" class="sidebar-link">
+                <img src="/pastas/img/heroi.jpg" alt="Herói" class="sidebar-img">
+                <span class="sidebar-text">Herói</span>
+            </a>
+            <a href="/mundo.html" class="sidebar-link">
+                <img src="/pastas/img/icone_mundo.png" alt="Mundo" class="sidebar-img">
+                <span class="sidebar-text">Mundo</span>
+            </a>
+            <a href="/mochila.html" class="sidebar-link">
+                <img src="/pastas/img/mochila.jpg" alt="Mochila" class="sidebar-img">
+                <span class="sidebar-text">Mochila</span>
+            </a>
+            <a href="/rank.html" class="sidebar-link">
+                <img src="/pastas/img/conquistas.jpg" alt="Ranking" class="sidebar-img">
+                <span class="sidebar-text">Ranking</span>
+            </a>
+            <a href="/mercado.html" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Mercado" class="sidebar-img">
+                <span class="sidebar-text">Mercado</span>
+            </a>
+            <a href="/pastas/equipamentos/equipamentos.html" class="sidebar-link">
+                <img src="/pastas/img/icone_equipamento.png" alt="Equipamentos" class="sidebar-img">
+                <span class="sidebar-text">Equipamentos</span>
+            </a>
+            <a href="/sair" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Sair" class="sidebar-img">
+                <span class="sidebar-text">Sair</span>
+            </a>
+        </div>
+    </nav>
+    
+    <main class="content mochila-container">
+        <h1>Sua Mochila</h1>
+        <p>Clique em um item para ver detalhes e usá-lo.</p>
+        
+        <!-- Painel de Status Compacto -->
+        <div class="hero-stats-panel">
+            <p id="mochila-vida-atual">❤️ Vida: ... / ...</p>
+            <p id="mochila-mana-atual">💙 Mana: ... / ...</p>
+            <p id="mochila-ataque-atual">🗡 Ataque: ... - ...</p>
+            <p id="mochila-defesa-atual">🛡 Defesa: ... - ...</p>
+        </div>
+
+        <!-- Slot de Equipamento (Slot de Peito) -->
+        <div class="equipment-summary">
+            <div class="equip-slot-container">
+                <div class="slot-display" id="backpack-slot-peito">
+                    <span class="placeholder-icon">👕</span>
+                </div>
+                <label>Peito</label>
+            </div>
+        </div>
+
+        <!-- Painel de Detalhes -->
+        <div id="item-details-panel" class="item-details-panel" style="display:none;">
+            <div class="detail-header-container">
+                <img id="detail-item-image" class="detail-item-image" src="" alt=""> 
+                <h2 id="detail-item-name"></h2>
+            </div>
+            <p id="detail-item-type" class="item-type-tag"></p>
+            <p id="detail-item-description"></p>
+            
+            <div id="detail-stats" class="item-requirements">
+                <!-- Bônus ou Requisitos aparecem aqui -->
+            </div>
+
+            <button id="detail-use-button" class="use-item-btn" style="display:none;">Usar Item</button>
+            <button id="detail-equip-button" class="use-item-btn" style="display:none;">Equipar Item</button>
+            <button id="detail-unequip-button" class="use-item-btn" style="display:none; background-color: #555;">Desequipar</button>
+        </div>
+        
+        <div id="inventario-grid" class="inventory-grid">
+            <p id="empty-message">A mochila está vazia...</p>
+        </div>
+    </main>
+    
+    <script src="/pastas/mochila/mochila.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('is-open');
+        }
+    </script>
+</body>
+</html>

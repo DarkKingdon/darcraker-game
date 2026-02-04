@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do Herói - DarCraker</title>
+    <link rel="stylesheet" href="/pastas/heroi/status/status.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+   <header class="navbar">
+      <div class="logo">DarCraker</div>
+      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="/inicio.html" class="sidebar-link">
+                <img src="/pastas/img/inicio.jpg" alt="Início" class="sidebar-img">
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="/heroi.html" class="sidebar-link">
+                <img src="/pastas/img/heroi.jpg" alt="Herói" class="sidebar-img">
+                <span class="sidebar-text">Herói</span>
+            </a>
+            <a href="/mundo.html" class="sidebar-link">
+                <img src="/pastas/img/icone_mundo.png" alt="Mundo" class="sidebar-img">
+                <span class="sidebar-text">Mundo</span>
+            </a>
+            <a href="/mochila.html" class="sidebar-link">
+                <img src="/pastas/img/mochila.jpg" alt="Mochila" class="sidebar-img">
+                <span class="sidebar-text">Mochila</span>
+            </a>
+            <a href="/rank.html" class="sidebar-link">
+                <img src="/pastas/img/conquistas.jpg" alt="Ranking" class="sidebar-img">
+                <span class="sidebar-text">Ranking</span>
+            </a>
+            <a href="/mercado.html" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Mercado" class="sidebar-img">
+                <span class="sidebar-text">Mercado</span>
+            </a>
+            <a href="/sair" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Sair" class="sidebar-img">
+                <span class="sidebar-text">Sair</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="status-container">
+        <section class="level-header">
+            <h1>Nível <span id="level-valor">1</span></h1>
+            <p>Experiência: <span id="exp-valor">0</span> / <span id="exp-max-valor">5</span></p>
+            <p>Pontos Disponíveis: <span id="points-valor">0</span></p>
+        </section>
+
+       <section class="bars-container">
+            <div class="bar-group">
+                <label>Vida (HP)</label>
+                <div class="bar-background">
+                    <div id="hp-bar-fill" class="bar-fill hp">
+                        <span id="hp-texto" class="bar-text">0 / 0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bar-group">
+                <label>Mana (MP)</label>
+                <div class="bar-background">
+                    <div id="mp-bar-fill" class="bar-fill mp">
+                        <span id="mp-texto" class="bar-text">0 / 0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="attributes-grid">
+            <div class="attr-card">
+                <span class="attr-label">⚔️ Força:</span>
+                <span id="forca-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="forca">+</button>
+            </div>
+            <div class="attr-card">
+                <span class="attr-label">🛡️ Proteção:</span>
+                <span id="protecao-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="protecao">+</button>
+            </div>
+            <div class="attr-card">
+                <span class="attr-label">❤️ Vitalidade:</span>
+                <span id="vitalidade-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="vitalidade">+</button>
+            </div>
+            <div class="attr-card">
+                <span class="attr-label">📖 Inteligência:</span>
+                <span id="inteligencia-valor" class="attr-number">1</span>
+                <button class="add-point-btn" data-attribute="inteligencia">+</button>
+            </div>
+        </section>
+
+        <section class="secondary-stats">
+            <div class="stat-column">
+                <div class="attr-card sec-ataque">
+                    <span class="attr-label">⚔️ Atk Mínimo:</span>
+                    <span id="atk-min-val" class="attr-number">0</span>
+                </div>
+                <div class="attr-card sec-ataque">
+                    <span class="attr-label">⚔️ Atk Máximo:</span>
+                    <span id="atk-max-val" class="attr-number">0</span>
+                </div>
+            </div>
+            <div class="stat-column">
+                <div class="attr-card sec-defesa">
+                    <span class="attr-label">🛡️ Def Mínima:</span>
+                    <span id="def-min-val" class="attr-number">0</span>
+                </div>
+                <div class="attr-card sec-defesa">
+                    <span class="attr-label">🛡️ Def Máxima:</span>
+                    <span id="def-max-val" class="attr-number">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO DE BÔNUS -->
+        <h3 class="section-title">⭐ Atributos de Bônus</h3>
+        <section class="bonus-grid">
+            <div class="bonus-card"><span>HP:</span> <span id="bonus-vida" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>MP:</span> <span id="bonus-mana" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Força:</span> <span id="bonus-forca" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Proteção:</span> <span id="bonus-protecao" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Vitalidade:</span> <span id="bonus-vitalidade" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Inteligência:</span> <span id="bonus-inteligencia" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Atk Mín:</span> <span id="bonus-atk-min" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Atk Máx:</span> <span id="bonus-atk-max" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Def Mín:</span> <span id="bonus-def-min" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Def Máx:</span> <span id="bonus-def-max" class="bonus-val">+0</span></div>
+        </section>
+    </main>
+
+    <script src="/pastas/heroi/status/status.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('is-open');
+            }
+        }
+    </script>
+</body>
+</html>

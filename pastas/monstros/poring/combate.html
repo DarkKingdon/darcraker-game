@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combate: Poring</title>
+    <link rel="stylesheet" href="combate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="battle-arena">
+        <div class="entity-container">
+            <!-- Área do Monstro -->
+            <div id="monstro-area">
+                <h2 id="m-nome">Poring</h2>
+                <div id="m-img-container" class="monstro-sprite"></div>
+                <div class="hp-bar">
+                    <div id="m-hp-fill" class="fill"></div>
+                </div>
+                <p id="m-hp-text">--/--</p>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <!-- Área do Herói -->
+            <div id="heroi-area">
+                <h3>Herói</h3>
+                <div id="h-img-container" class="sprite" style="background: url('/pastas/img/heroi.jpg') center/cover;"></div>
+                <div class="hp-bar">
+                    <div id="h-hp-fill" class="fill"></div>
+                </div>
+                <p id="h-hp-text">--/--</p>
+                
+                <!-- Barra de ATB -->
+                <div class="atb-container">
+                    <div id="atb-fill" class="atb-fill"></div>
+                </div>
+                <p id="atb-status" style="font-size: 0.8rem; color: #ffd700; margin-top: 5px;">Carregando...</p>
+
+                <div class="hero-battle-stats">
+                    <span>⚔️ <span id="h-atk-val">--</span></span>
+                    &nbsp;&nbsp;
+                    <span>🛡️ <span id="h-def-val">--</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log de Combate -->
+        <div class="log" id="log-combate">
+            <p>O Poring pula em sua direção!</p>
+        </div>
+
+        <!-- Controles -->
+        <div class="controles">
+            <button id="btn-atacar" onclick="tentarAtacar()" class="btn-battle btn-attack" disabled>ATACAR</button>
+            <button onclick="fugir()" class="btn-battle btn-flee">FUGIR</button>
+        </div>
+    </div>
+
+    <script src="combate.js"></script>
+</body>
+</html>

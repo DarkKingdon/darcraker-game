@@ -1,0 +1,70 @@
+/* rank.css */
+
+.rank-container {
+    background: rgba(0, 0, 0, 0.85);
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #444;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.rank-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+    text-align: left;
+}
+
+.rank-table th {
+    border-bottom: 2px solid #555;
+    padding: 15px;
+    color: #ffcc00;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.rank-table td {
+    padding: 15px;
+    border-bottom: 1px solid #333;
+}
+
+/* Efeito para os top 3 */
+.pos-1 { color: #ffd700; font-weight: bold; font-size: 1.2rem; } /* Ouro */
+.pos-2 { color: #c0c0c0; font-weight: bold; } /* Prata */
+.pos-3 { color: #cd7f32; font-weight: bold; } /* Bronze */
+
+.rank-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.rank-table tr:last-child td {
+    border-bottom: none;
+}
+
+.exp-bar-mini {
+    display: inline-block;
+    width: 100px;
+    height: 8px;
+    background: #444;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: 10px;
+}
+
+.exp-fill-mini {
+    height: 100%;
+    background: #007bff;
+}
+
+@media (max-width: 600px) {
+    .rank-container {
+        margin: 10px;
+        padding: 10px;
+    }
+    .rank-table th, .rank-table td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+}

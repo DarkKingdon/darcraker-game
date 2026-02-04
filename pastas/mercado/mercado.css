@@ -1,0 +1,130 @@
+/* mercado.css */
+
+.mercado-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: 1px solid #555;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    background: #ffcc00;
+    color: black;
+    border-color: #ffcc00;
+}
+
+.market-section {
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.market-section.active {
+    display: block;
+}
+
+/* Grid de Compra */
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.market-card {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.market-card:hover {
+    border-color: #ffcc00;
+}
+
+.market-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.market-price {
+    display: block;
+    color: #ffcc00;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+.market-vendedor {
+    font-size: 0.8rem;
+    color: #aaa;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.btn-comprar {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+}
+
+.btn-comprar:hover { background: #218838; }
+
+/* Form de Venda */
+.venda-form {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+    border: 1px solid #444;
+}
+
+.venda-form select, .venda-form input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    background: #222;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 5px;
+}
+
+.btn-anunciar {
+    background: #ffcc00;
+    color: black;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-anunciar:hover { background: #e6b800; }
+
+.form-group label {
+    color: #ccc;
+    font-size: 0.9rem;
+}

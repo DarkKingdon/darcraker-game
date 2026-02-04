@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Herói - DarCraker</title>
+    <link rel="stylesheet" href="/pastas/heroi/heroi.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+      <div class="logo">DarCraker</div>
+      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="/inicio.html" class="sidebar-link">
+                <img src="/pastas/img/inicio.jpg" alt="Início" class="sidebar-img">
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="/heroi.html" class="sidebar-link">
+                <img src="/pastas/img/heroi.jpg" alt="Herói" class="sidebar-img">
+                <span class="sidebar-text">Herói</span>
+            </a>
+            <a href="/mundo.html" class="sidebar-link">
+                <img src="/pastas/img/icone_mundo.png" alt="Mundo" class="sidebar-img">
+                <span class="sidebar-text">Mundo</span>
+            </a>
+            <a href="/mochila.html" class="sidebar-link">
+                <img src="/pastas/img/mochila.jpg" alt="Mochila" class="sidebar-img">
+                <span class="sidebar-text">Mochila</span>
+            </a>
+            <a href="/rank.html" class="sidebar-link">
+                <img src="/pastas/img/conquistas.jpg" alt="Ranking" class="sidebar-img">
+                <span class="sidebar-text">Ranking</span>
+            </a>
+            <a href="/mercado.html" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Mercado" class="sidebar-img">
+                <span class="sidebar-text">Mercado</span>
+            </a>
+            <a href="/pastas/equipamentos/equipamentos.html" class="sidebar-link">
+                <img src="/pastas/img/icone_equipamento.png" alt="Equipamentos" class="sidebar-img">
+                <span class="sidebar-text">Equipamentos</span>
+            </a>
+            <a href="/pastas/wiki/wiki.html" class="sidebar-link">
+                <img src="/pastas/img/wiki.jpg" alt="Wiki" class="sidebar-img">
+                <span class="sidebar-text">Wiki</span>
+            </a>
+            <a href="/pastas/atualizacoes/atualizacoes.html" class="sidebar-link">
+                <img src="/pastas/img/atualizacoes.jpg" alt="Atualizações" class="sidebar-img">
+                <span class="sidebar-text">Atualização</span>
+            </a>
+            <a href="/sair" class="sidebar-link">
+                <img src="/pastas/img/home.jpg" alt="Sair" class="sidebar-img">
+                <span class="sidebar-text">Sair</span>
+            </a>
+        </div>
+    </nav>
+    
+    <main class="content">
+        <h1>O Herói</h1>
+        <img src="/pastas/img/heroi.jpg" alt="Herói" class="main-hero-img">
+        <p>Gerencie seus atributos e profissões.</p>
+    </main>
+    
+    <div class="professions-container">
+        <div class="professions-header" onclick="toggleProfessions()">
+            <i id="professions-toggle-icon" class="fas fa-chevron-up toggle-icon"></i>
+            <h3>Profissões</h3>
+        </div>
+        
+        <div id="professions-content" class="professions-content is-open">
+            <a href="/pastas/profissoes/forja/forja.html" class="profession-link">
+                <img src="/pastas/img/forja.jpg" alt="Forja" class="profession-img">
+                <span class="profession-text">Forja</span>
+            </a>
+            <a href="/pastas/profissoes/fazenda/fazenda.html" class="profession-link">
+                <img src="/pastas/img/fazenda.jpg" alt="Fazenda" class="profession-img">
+                <span class="profession-text">Fazenda</span>
+            </a>
+            <a href="/pastas/profissoes/alquimia/alquimia.html" class="profession-link">
+                <img src="/pastas/img/alquimia.jpg" alt="Alquimia" class="profession-img">
+                <span class="profession-text">Alquimia</span>
+            </a>
+        </div>
+    </div>
+    
+    <div class="status-grid">
+        <div class="status-item">
+            <a href="/status.html" class="status-link">
+                <img src="/pastas/img/status.jpg" alt="Status" class="status-icon">
+                <span class="status-text">Status</span>
+            </a>
+        </div>
+        <div class="status-item">
+            <a href="/pastas/heroi/habilidades/habilidades.html" class="status-link">
+                <img src="/pastas/img/habilidades.jpg" alt="Habilidades" class="status-icon">
+                <span class="status-text">Habilidades</span>
+            </a>
+        </div>
+        <div class="status-item">
+            <a href="/pastas/equipamento/equipamento.html" class="status-link">
+                <img src="/pastas/img/icone_equipamento.png" alt="Equipamento" class="status-icon">
+                <span class="status-text">Equipamento</span>
+            </a>
+        </div>
+        <div class="status-item">
+            <a href="/mochila.html" class="status-link">
+                <img src="/pastas/img/mochila.jpg" alt="Mochila" class="status-icon">
+                <span class="status-text">Mochila</span>
+            </a>
+        </div>
+        <div class="status-item">
+            <a href="/mochila.html" class="status-link">
+                <img src="/pastas/img/conquistas.jpg" alt="Conquistas" class="status-icon">
+                <span class="status-text">Conquistas</span>
+            </a>
+        </div>
+        <div class="status-item">
+            <a href="/mochila.html" class="status-link">
+                <img src="/pastas/img/mistico.jpg" alt="mistico" class="status-icon">
+                <span class="status-text">Mistico</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="/pastas/heroi/heroi.js"></script> 
+</body>
+</html>

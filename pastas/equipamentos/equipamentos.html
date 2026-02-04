@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipamentos - Novo Projeto</title>
+    <link rel="stylesheet" href="equipamentos.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Equipamentos</h1>
+            <div class="stats-bar">
+                <span>Nível: <strong id="player-level">1</strong></span>
+                <span>Proteção: <strong id="player-protection">0</strong></span>
+                <span>Defesa: <strong id="total-defense">0</strong></span>
+            </div>
+        </header>
+
+        <main class="equipment-layout">
+            <!-- Área do Personagem com Slots -->
+            <div class="character-preview">
+                <div class="slot peito" id="slot-peito" data-slot="peito">
+                    <span class="placeholder-icon">👕</span>
+                </div>
+                <p class="slot-label">Peito (50x50)</p>
+            </div>
+
+            <!-- Área de Inventário -->
+            <div class="inventory-section">
+                <h2>Inventário</h2>
+                <div class="inventory-grid" id="inventory">
+                    <!-- Itens serão carregados aqui -->
+                </div>
+            </div>
+        </main>
+
+        <footer class="controls">
+            <button id="btn-drop">Matar Poring (Drop 50%)</button>
+            <button id="btn-level-up">Subir Nível</button>
+            <button id="btn-skill-up">Treinar Proteção</button>
+            <button onclick="location.href='../inicio/inicio.html'">Voltar</button>
+        </footer>
+    </div>
+
+    <script src="equipamentos.js"></script>
+</body>
+</html>
