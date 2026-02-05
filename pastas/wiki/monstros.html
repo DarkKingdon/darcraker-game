@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monstros - Wiki DarCraker</title>
+    <link rel="stylesheet" href="/pastas/inicio/inicio.css">
+    <link rel="stylesheet" href="wiki.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Wiki - Monstros</div>
+        <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <!-- Sidebar content -->
+        <div class="sidebar-content">
+            <a href="/inicio.html" class="sidebar-link"><img src="/pastas/img/inicio.jpg" class="sidebar-img"><span
+                    class="sidebar-text">Início</span></a>
+            <a href="/pastas/wiki/index.html" class="sidebar-link active"><img src="/pastas/img/wiki.jpg"
+                    class="sidebar-img"><span class="sidebar-text">Voltar Wiki</span></a>
+        </div>
+    </nav>
+
+    <div class="wiki-container">
+        <h1>Bestiário de DarCraker</h1>
+        <a href="index.html" class="back-btn">← Voltar para Wiki</a>
+
+        <div id="monstros-grid" class="wiki-grid">
+            <!-- Preenchido via JS -->
+        </div>
+    </div>
+
+    <script src="wiki.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('is-open');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarListaMonstros();
+        });
+    </script>
+</body>
+
+</html>

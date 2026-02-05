@@ -47,6 +47,12 @@ function atualizarInterface() {
 }
 
 async function atacar() {
+    // Desabilita botão de ataque por 3 segundos
+    const btnAtacar = document.querySelector('.btn-attack');
+    btnAtacar.disabled = true;
+    btnAtacar.style.opacity = '0.5';
+    btnAtacar.style.cursor = 'not-allowed';
+
     // --- TURNO DO HERÓI ---
     let danoH = Math.floor(Math.random() * (heroi.ataque_max - heroi.ataque_min + 1)) + heroi.ataque_min;
     danoH = Math.max(0, danoH - (monstro.defesa || 0));
@@ -74,6 +80,13 @@ async function atacar() {
     }
 
     atualizarInterface();
+
+    // Reabilita botão após 3 segundos
+    setTimeout(() => {
+        btnAtacar.disabled = false;
+        btnAtacar.style.opacity = '1';
+        btnAtacar.style.cursor = 'pointer';
+    }, 3000);
 }
 
 function fugir() {

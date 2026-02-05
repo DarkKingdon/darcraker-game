@@ -54,25 +54,75 @@ const WIKI_ITEMS = {
     }
 };
 
+// Banco de Dados de Monstros
+const WIKI_MONSTROS = {
+    'orlos': {
+        nome: 'Orlos',
+        img: '/pastas/img/orlos.jpg',
+        nivel: 1,
+        regiao: 'Planícies de Asmon',
+        vida: 5,
+        ataque: 1,
+        defesa: 0,
+        exp_recompensa: 1,
+        descricao: 'Um pequeno monstro verde que habita as planícies. Ideal para aventureiros iniciantes.',
+        drops: [
+            { item: 'Moeda de Ouro', chance: '10%' },
+            { item: 'Maçã', chance: '25%' }
+        ]
+    },
+    'poring': {
+        nome: 'Poring',
+        img: '/pastas/img/poring.jpg',
+        nivel: 1,
+        regiao: 'Planícies de Asmon',
+        vida: 10,
+        ataque: 1,
+        defesa: 0,
+        exp_recompensa: 1,
+        descricao: 'Uma criatura gelatinosa e saltitante. Apesar da aparência fofa, pode ser perigosa em grupo.',
+        drops: [
+            { item: 'Moeda de Ouro', chance: '10%' },
+            { item: 'Maçã', chance: '25%' }
+        ]
+    },
+    'fabre': {
+        nome: 'Fabre',
+        img: '/pastas/img/fabre.jpg',
+        nivel: 2,
+        regiao: 'Planícies de Asmon',
+        vida: 15,
+        ataque: 2,
+        defesa: 1,
+        exp_recompensa: 2,
+        descricao: 'Uma larva gigante que se arrasta lentamente. Seus ataques são mais fortes que parecem.',
+        drops: [
+            { item: 'Sangue Tipo 1', chance: '10%' },
+            { item: 'Zaleia', chance: '50%' },
+            { item: 'Moeda de Ouro', chance: '15%' }
+        ]
+    }
+
+
 // Função para renderizar lista de itens
 function renderizarListaItens() {
-    const grid = document.getElementById('itens-grid');
-    if (!grid) return;
+        const grid = document.getElementById('itens-grid');
+if (!grid) return;
 
-    Object.keys(WIKI_ITEMS).forEach(key => {
-        const item = WIKI_ITEMS[key];
-        const card = document.createElement('a');
-        card.className = 'wiki-card';
-        card.href = `item.html?id=${key}`;
-        
-        card.innerHTML = `
+Object.keys(WIKI_ITEMS).forEach(key => {
+    const item = WIKI_ITEMS[key];
+    const card = document.createElement('a');
+    card.className = 'wiki-card';
+    card.href = `item.html?id=${key}`;
+
+    card.innerHTML = `
             <img src="${item.img}" alt="${item.nome}">
             <h3>${item.nome}</h3>
             <span>${item.tipo}</span>
         `;
-        
-        grid.appendChild(card);
-    });
+
+    grid.appendChild(card);
+});
 }
 
 // Função para renderizar detalhes do item
@@ -99,3 +149,54 @@ function renderizarDetalhesItem() {
         dropsList.appendChild(li);
     });
 }
+
+// Função para renderizar lista de monstros
+function renderizarListaMonstros() {
+    const grid = document.getElementById('monstros-grid');
+    if (!grid) return;
+
+    Object.keys(WIKI_MONSTROS).forEach(key => {
+        const monstro = WIKI_MONSTROS[key];
+        const card = document.createElement('a');
+        card.className = 'wiki-card';
+        card.href = `monstro.html?id=${key}`;
+
+        card.innerHTML = `
+            <img src="${monstro.img}" alt="${monstro.nome}">
+            <h3>${monstro.nome}</h3>
+            <span>Nível ${monstro.nivel} - ${monstro.regiao}</span>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+// Função para renderizar detalhes do monstro
+function renderizarDetalhesMonstro() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const monstro = WIKI_MONSTROS[id];
+
+    if (!monstro) {
+        document.getElementById('wiki-content').innerHTML = '<h2>Monstro não encontrado!</h2>';
+        return;
+    }
+
+    document.getElementById('monstro-img').src = monstro.img;
+    document.getElementById('monstro-nome').textContent = monstro.nome;
+    document.getElementById('monstro-nivel').textContent = monstro.nivel;
+    document.getElementById('monstro-regiao').textContent = monstro.regiao;
+    document.getElementById('monstro-vida').textContent = monstro.vida;
+    document.getElementById('monstro-ataque').textContent = monstro.ataque;
+    document.getElementById('monstro-defesa').textContent = monstro.defesa;
+    document.getElementById('monstro-exp').textContent = monstro.exp_recompensa;
+    document.getElementById('monstro-desc').textContent = monstro.descricao;
+
+    const dropsList = document.getElementById('monstro-drops');
+    monstro.drops.forEach(drop => {
+        const li = document.createElement('li');
+        li.textContent = `${drop.item} (${drop.chance})`;
+        dropsList.appendChild(li);
+    });
+}
+
