@@ -1,0 +1,156 @@
+/* atualizacoes.css - Estilo da página de Atualizações */
+
+.atualizacoes-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.atualizacoes-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #444;
+}
+
+.atualizacoes-header h1 {
+    color: #00d4ff;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.atualizacoes-header p {
+    color: #aaa;
+    font-size: 1.1em;
+}
+
+.update-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.update-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
+}
+
+.update-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #00d4ff;
+}
+
+.update-header h2 {
+    color: #00d4ff;
+    font-size: 1.8em;
+    margin: 0;
+}
+
+.update-date {
+    color: #888;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.update-title {
+    color: #fff;
+    font-size: 1.3em;
+    margin: 15px 0;
+}
+
+.update-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 4px solid #00d4ff;
+    border-radius: 8px;
+}
+
+.update-section h4 {
+    color: #00d4ff;
+    font-size: 1.2em;
+    margin-bottom: 12px;
+}
+
+.update-section ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.update-section ul li {
+    color: #ddd;
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+}
+
+.update-section ul li::before {
+    content: "▸";
+    position: absolute;
+    left: 5px;
+    color: #00d4ff;
+    font-weight: bold;
+}
+
+.update-section ul li strong {
+    color: #fff;
+}
+
+.monstro-info {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border-left: 3px solid #ff4d4d;
+}
+
+.monstro-info strong {
+    color: #ff4d4d;
+    font-size: 1.1em;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.monstro-info ul {
+    margin-top: 10px;
+}
+
+.monstro-info ul li {
+    padding: 5px 0;
+    padding-left: 20px;
+}
+
+.monstro-info ul li::before {
+    content: "•";
+    color: #ff4d4d;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .atualizacoes-container {
+        padding: 10px;
+    }
+
+    .update-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .update-header h2 {
+        font-size: 1.5em;
+    }
+
+    .update-date {
+        margin-top: 5px;
+    }
+}
