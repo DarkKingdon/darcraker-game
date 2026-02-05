@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Item - Wiki</title>
+    <link rel="stylesheet" href="/pastas/inicio/inicio.css">
+    <link rel="stylesheet" href="wiki.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Detalhes do Item</div>
+        <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
+
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="/inicio.html" class="sidebar-link"><img src="/pastas/img/inicio.jpg" class="sidebar-img"><span
+                    class="sidebar-text">Início</span></a>
+            <a href="/pastas/wiki/itens.html" class="sidebar-link active"><img src="/pastas/img/wiki.jpg"
+                    class="sidebar-img"><span class="sidebar-text">Voltar Itens</span></a>
+        </div>
+    </nav>
+
+    <div class="wiki-container" id="wiki-content">
+        <a href="itens.html" class="back-btn">← Voltar para Lista</a>
+
+        <div class="item-detail-container">
+            <img id="item-img" class="detail-img" src="" alt="Imagem do Item">
+
+            <div class="detail-info">
+                <div class="info-row">
+                    <span class="label">Nome:</span>
+                    <span class="value" id="item-nome"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Tipo:</span>
+                    <span class="value" id="item-tipo"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Valor de Venda:</span>
+                    <span class="value" id="item-valor"></span>
+                </div>
+
+                <hr style="border-color: #333; margin: 15px 0;">
+
+                <p id="item-desc" style="font-style: italic; color: #ccc; margin-bottom: 20px;"></p>
+
+                <h3>Onde Encontrar (Drops)</h3>
+                <ul id="item-drops" style="color: #e0e0e0; padding-left: 20px;">
+                    <!-- Preenchido via JS -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="wiki.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('is-open');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarDetalhesItem();
+        });
+    </script>
+</body>
+
+</html>

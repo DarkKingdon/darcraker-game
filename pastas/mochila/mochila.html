@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mochila do Herói - DarCraker</title> 
+    <title>Mochila do Herói - DarCraker</title>
     <link rel="stylesheet" href="/pastas/inicio/inicio.css">
     <link rel="stylesheet" href="/pastas/mochila/mochila.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
 
     <header class="navbar">
-      <div class="logo">DarCraker</div>
-      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+        <div class="logo">DarCraker</div>
+        <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
     </header>
 
     <nav id="sidebar" class="sidebar">
@@ -45,17 +47,21 @@
                 <img src="/pastas/img/icone_equipamento.png" alt="Equipamentos" class="sidebar-img">
                 <span class="sidebar-text">Equipamentos</span>
             </a>
+            <a href="/pastas/wiki/index.html" class="sidebar-link">
+                <img src="/pastas/img/wiki.jpg" alt="Wiki" class="sidebar-img">
+                <span class="sidebar-text">Wiki</span>
+            </a>
             <a href="/sair" class="sidebar-link">
                 <img src="/pastas/img/home.jpg" alt="Sair" class="sidebar-img">
                 <span class="sidebar-text">Sair</span>
             </a>
         </div>
     </nav>
-    
+
     <main class="content mochila-container">
         <h1>Sua Mochila</h1>
         <p>Clique em um item para ver detalhes e usá-lo.</p>
-        
+
         <!-- Painel de Status Compacto -->
         <div class="hero-stats-panel">
             <p id="mochila-vida-atual">❤️ Vida: ... / ...</p>
@@ -77,26 +83,27 @@
         <!-- Painel de Detalhes -->
         <div id="item-details-panel" class="item-details-panel" style="display:none;">
             <div class="detail-header-container">
-                <img id="detail-item-image" class="detail-item-image" src="" alt=""> 
+                <img id="detail-item-image" class="detail-item-image" src="" alt="">
                 <h2 id="detail-item-name"></h2>
             </div>
             <p id="detail-item-type" class="item-type-tag"></p>
             <p id="detail-item-description"></p>
-            
+
             <div id="detail-stats" class="item-requirements">
                 <!-- Bônus ou Requisitos aparecem aqui -->
             </div>
 
             <button id="detail-use-button" class="use-item-btn" style="display:none;">Usar Item</button>
             <button id="detail-equip-button" class="use-item-btn" style="display:none;">Equipar Item</button>
-            <button id="detail-unequip-button" class="use-item-btn" style="display:none; background-color: #555;">Desequipar</button>
+            <button id="detail-unequip-button" class="use-item-btn"
+                style="display:none; background-color: #555;">Desequipar</button>
         </div>
-        
+
         <div id="inventario-grid" class="inventory-grid">
             <p id="empty-message">A mochila está vazia...</p>
         </div>
     </main>
-    
+
     <script src="/pastas/mochila/mochila.js"></script>
     <script>
         function toggleSidebar() {
@@ -105,4 +112,5 @@
         }
     </script>
 </body>
+
 </html>

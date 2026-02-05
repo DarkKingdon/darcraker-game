@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipamentos - DarCraker</title>
+    <title>Wiki - DarCraker</title>
     <link rel="stylesheet" href="/pastas/inicio/inicio.css">
-    <link rel="stylesheet" href="/pastas/mochila/mochila.css">
+    <link rel="stylesheet" href="wiki.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 <body>
 
     <header class="navbar">
-        <div class="logo">DarCraker</div>
-        <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+      <div class="logo">DarCraker Wiki</div>
+      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
     </header>
 
     <nav id="sidebar" class="sidebar">
@@ -47,7 +45,8 @@
                 <img src="/pastas/img/icone_equipamento.png" alt="Equipamentos" class="sidebar-img">
                 <span class="sidebar-text">Equipamentos</span>
             </a>
-            <a href="/pastas/wiki/index.html" class="sidebar-link">
+            <!-- Link da Wiki Ativo -->
+            <a href="/pastas/wiki/index.html" class="sidebar-link active">
                 <img src="/pastas/img/wiki.jpg" alt="Wiki" class="sidebar-img">
                 <span class="sidebar-text">Wiki</span>
             </a>
@@ -57,55 +56,38 @@
             </a>
         </div>
     </nav>
+    
+    <div class="wiki-container">
+        <h1>Enciclopédia DarCraker</h1>
+        <p>Bem-vindo à fonte de conhecimento do reino. Aqui você encontra informações sobre itens, monstros e mecânicas.</p>
+        
+        <div class="wiki-grid">
+            <a href="itens.html" class="wiki-card">
+                <img src="/pastas/img/mochila.jpg" alt="Itens">
+                <h3>Itens</h3>
+                <span>Lista completa de drops e equipamentos</span>
+            </a>
+            
+            <a href="#" class="wiki-card" onclick="alert('Em breve!')">
+                <img src="/pastas/img/monstros.jpg" alt="Monstros">
+                <h3>Monstros</h3>
+                <span>Bestiário (Em Breve)</span>
+            </a>
 
-    <main class="content mochila-container">
-        <h1>Equipamentos</h1>
-        <p>Gerencie as peças de armadura e armas do seu herói.</p>
-
-        <!-- Painel de Status Compacto -->
-        <div class="hero-stats-panel">
-            <p id="player-level-txt">🏅 Nível: ...</p>
-            <p id="player-protection-txt">🛡️ Proteção: ...</p>
-            <p id="total-defense-txt">🛡️ Defesa Total: ...</p>
+            <a href="#" class="wiki-card" onclick="alert('Em breve!')">
+                <img src="/pastas/img/conquistas.jpg" alt="Mapas">
+                <h3>Mapas</h3>
+                <span>Guia de Regiões (Em Breve)</span>
+            </a>
         </div>
+    </div>
 
-        <!-- Slot de Equipamento (Slot de Peito) -->
-        <div class="equipment-summary">
-            <div class="equip-slot-container">
-                <div class="slot-display" id="slot-peito">
-                    <span class="placeholder-icon">👕</span>
-                </div>
-                <label>Peito</label>
-            </div>
-        </div>
-
-        <!-- Painel de Detalhes -->
-        <div id="item-details-panel" class="item-details-panel" style="display:none;">
-            <div class="detail-header-container">
-                <img id="detail-item-image" class="detail-item-image" src="" alt="">
-                <h2 id="detail-item-name"></h2>
-            </div>
-            <p id="detail-item-type" class="item-type-tag"></p>
-            <p id="detail-item-description"></p>
-
-            <div id="detail-stats" class="item-requirements">
-                <!-- Bônus ou Requisitos aparecem aqui -->
-            </div>
-
-            <button id="detail-equip-button" class="use-item-btn" style="display:none;">Equipar Item</button>
-            <button id="detail-unequip-button" class="use-item-btn"
-                style="display:none; background-color: #555;">Desequipar</button>
-        </div>
-
-        <div class="inventory-section">
-            <h2>Itens Disponíveis</h2>
-            <div id="inventory-grid" class="inventory-grid">
-                <!-- Itens carregados via JS -->
-            </div>
-        </div>
-    </main>
-
-    <script src="equipamentos.js"></script>
+    <script src="/pastas/inicio/sidebar.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.toggle('is-open');
+        }
+    </script>
 </body>
-
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,12 @@
     <link rel="stylesheet" href="/pastas/heroi/status/status.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
 
-   <header class="navbar">
-      <div class="logo">DarCraker</div>
-      <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    <header class="navbar">
+        <div class="logo">DarCraker</div>
+        <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
     </header>
 
     <nav id="sidebar" class="sidebar">
@@ -40,6 +42,10 @@
                 <img src="/pastas/img/home.jpg" alt="Mercado" class="sidebar-img">
                 <span class="sidebar-text">Mercado</span>
             </a>
+            <a href="/pastas/wiki/index.html" class="sidebar-link">
+                <img src="/pastas/img/wiki.jpg" alt="Wiki" class="sidebar-img">
+                <span class="sidebar-text">Wiki</span>
+            </a>
             <a href="/sair" class="sidebar-link">
                 <img src="/pastas/img/home.jpg" alt="Sair" class="sidebar-img">
                 <span class="sidebar-text">Sair</span>
@@ -54,7 +60,7 @@
             <p>Pontos Disponíveis: <span id="points-valor">0</span></p>
         </section>
 
-       <section class="bars-container">
+        <section class="bars-container">
             <div class="bar-group">
                 <label>Vida (HP)</label>
                 <div class="bar-background">
@@ -127,8 +133,10 @@
             <div class="bonus-card"><span>MP:</span> <span id="bonus-mana" class="bonus-val">+0</span></div>
             <div class="bonus-card"><span>Força:</span> <span id="bonus-forca" class="bonus-val">+0</span></div>
             <div class="bonus-card"><span>Proteção:</span> <span id="bonus-protecao" class="bonus-val">+0</span></div>
-            <div class="bonus-card"><span>Vitalidade:</span> <span id="bonus-vitalidade" class="bonus-val">+0</span></div>
-            <div class="bonus-card"><span>Inteligência:</span> <span id="bonus-inteligencia" class="bonus-val">+0</span></div>
+            <div class="bonus-card"><span>Vitalidade:</span> <span id="bonus-vitalidade" class="bonus-val">+0</span>
+            </div>
+            <div class="bonus-card"><span>Inteligência:</span> <span id="bonus-inteligencia" class="bonus-val">+0</span>
+            </div>
             <div class="bonus-card"><span>Atk Mín:</span> <span id="bonus-atk-min" class="bonus-val">+0</span></div>
             <div class="bonus-card"><span>Atk Máx:</span> <span id="bonus-atk-max" class="bonus-val">+0</span></div>
             <div class="bonus-card"><span>Def Mín:</span> <span id="bonus-def-min" class="bonus-val">+0</span></div>
@@ -146,4 +154,5 @@
         }
     </script>
 </body>
+
 </html>
