@@ -102,27 +102,28 @@ const WIKI_MONSTROS = {
             { item: 'Moeda de Ouro', chance: '15%' }
         ]
     }
+};
 
 
 // Função para renderizar lista de itens
 function renderizarListaItens() {
-        const grid = document.getElementById('itens-grid');
-if (!grid) return;
+    const grid = document.getElementById('itens-grid');
+    if (!grid) return;
 
-Object.keys(WIKI_ITEMS).forEach(key => {
-    const item = WIKI_ITEMS[key];
-    const card = document.createElement('a');
-    card.className = 'wiki-card';
-    card.href = `item.html?id=${key}`;
+    Object.keys(WIKI_ITEMS).forEach(key => {
+        const item = WIKI_ITEMS[key];
+        const card = document.createElement('a');
+        card.className = 'wiki-card';
+        card.href = `item.html?id=${key}`;
 
-    card.innerHTML = `
+        card.innerHTML = `
             <img src="${item.img}" alt="${item.nome}">
             <h3>${item.nome}</h3>
             <span>${item.tipo}</span>
         `;
 
-    grid.appendChild(card);
-});
+        grid.appendChild(card);
+    });
 }
 
 // Função para renderizar detalhes do item
