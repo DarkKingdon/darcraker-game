@@ -76,11 +76,16 @@ app.get('/api/status', verificarLogado, async (req, res) => {
         console.log(`[DEBUG] Buscando status para usuario_id: ${usuarioId}`);
 
         const [rows] = await db.query(`
-            SELECT h.*, i.nome as peito_nome, i.imagem_url as peito_img, 
+            SELECT h.*, 
+                   i.nome as peito_nome, i.imagem_url as peito_img, 
                    i.defesa as peito_defesa, i.nivel_requerido as peito_nivel_req, 
-                   i.protecao_requerida as peito_prot_req
+                   i.protecao_requerida as peito_prot_req,
+                   c.nome as cabeca_nome, c.imagem_url as cabeca_img,
+                   c.defesa as cabeca_defesa_item, c.nivel_requerido as cabeca_nivel_req,
+                   c.protecao_requerida as cabeca_prot_req, c.vitalidade_requerida as cabeca_vit_req
             FROM heroi_status h
             LEFT JOIN itens i ON h.equip_peito = i.id
+            LEFT JOIN itens c ON h.cabeca_id = c.id
             WHERE h.usuario_id = ?
         `, [usuarioId]);
 
@@ -137,6 +142,87 @@ app.post('/api/equipamentos/equipar', verificarLogado, async (req, res) => {
         res.status(500).json({ erro: "Erro ao equipar item." });
     }
 });
+
+// Endpoint para equipar item de cabeça
+app.post('/api/equipar/cabeca', verificarLogado, async (req, res) => {
+    try {
+        const usuarioId = req.session.usuarioId;
+        const { item_id } = req.body;
+
+        // 1. Busca o item e o herói
+        const [item] = await db.query('SELECT * FROM itens WHERE id = ? AND tipo = "cabeca"', [item_id]);
+        const [heroi] = await db.query('SELECT * FROM heroi_status WHERE usuario_id = ?', [usuarioId]);
+
+        if (item.length === 0) {
+            return res.status(404).json({ erro: "Item não encontrado ou não é do tipo cabeça." });
+        }
+
+        // 2. Valida requisitos
+        const itemData = item[0];
+        const heroiData = heroi[0];
+
+        if (heroiData.nivel < (itemData.nivel_requerido || 0)) {
+            return res.status(400).json({ erro: `Você precisa ser nível ${itemData.nivel_requerido} para equipar este item.` });
+        }
+        if (heroiData.protecao < (itemData.protecao_requerida || 0)) {
+            return res.status(400).json({ erro: `Você precisa ter ${itemData.protecao_requerida} de Proteção para equipar este item.` });
+        }
+        if (heroiData.vitalidade < (itemData.vitalidade_requerida || 0)) {
+            return res.status(400).json({ erro: `Você precisa ter ${itemData.vitalidade_requerida} de Vitalidade para equipar este item.` });
+        }
+
+        // 3. Devolve item antigo ao inventário (se houver)
+        const itemAntigoId = heroiData.cabeca_id;
+        if (itemAntigoId) {
+            await db.query(
+                'INSERT INTO inventario (usuario_id, item_id, quantidade) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE quantidade = quantidade + 1',
+                [usuarioId, itemAntigoId]
+            );
+        }
+
+        // 4. Equipa o novo item e atualiza defesa
+        await db.query(
+            'UPDATE heroi_status SET cabeca_id = ?, cabeca_defesa = ? WHERE usuario_id = ?',
+            [item_id, itemData.defesa || 0, usuarioId]
+        );
+
+        // 5. Remove do inventário
+        await db.query('UPDATE inventario SET quantidade = quantidade - 1 WHERE usuario_id = ? AND item_id = ?', [usuarioId, item_id]);
+        await db.query('DELETE FROM inventario WHERE usuario_id = ? AND item_id = ? AND quantidade <= 0', [usuarioId, item_id]);
+
+        res.json({ sucesso: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ erro: "Erro ao equipar item de cabeça." });
+    }
+});
+
+// Endpoint para desequipar cabeça
+app.post('/api/desequipar/cabeca', verificarLogado, async (req, res) => {
+    try {
+        const usuarioId = req.session.usuarioId;
+        const [heroi] = await db.query('SELECT cabeca_id FROM heroi_status WHERE usuario_id = ?', [usuarioId]);
+
+        if (!heroi[0].cabeca_id) {
+            return res.status(400).json({ erro: "Nenhum item equipado na cabeça." });
+        }
+
+        // Devolve ao inventário
+        await db.query(
+            'INSERT INTO inventario (usuario_id, item_id, quantidade) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE quantidade = quantidade + 1',
+            [usuarioId, heroi[0].cabeca_id]
+        );
+
+        // Remove do slot
+        await db.query('UPDATE heroi_status SET cabeca_id = NULL, cabeca_defesa = 0 WHERE usuario_id = ?', [usuarioId]);
+
+        res.json({ sucesso: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ erro: "Erro ao desequipar item." });
+    }
+});
+
 
 app.post('/api/equipamentos/desequipar', verificarLogado, async (req, res) => {
     const { slot } = req.body;

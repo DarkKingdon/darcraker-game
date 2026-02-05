@@ -2,7 +2,7 @@ let heroi, monstro;
 let isCombatActive = true;
 let isHeroTurnReady = false;
 let atbInterval;
-const ATB_TIME_SECONDS = 3; 
+const ATB_TIME_SECONDS = 3;
 
 async function iniciarBatalha() {
     try {
@@ -10,10 +10,10 @@ async function iniciarBatalha() {
             fetch('/api/status'),
             fetch('/api/monstro/Poring')
         ]);
-        
+
         heroi = await resH.json();
         monstro = await resM.json();
-        
+
         monstro.vida_atual = monstro.vida_maxima || 3;
 
         atualizarInterface();
@@ -36,11 +36,11 @@ function atualizarInterface() {
         const hPct = (heroi.vida_atual / heroi.vida_maxima) * 100;
         document.getElementById('h-hp-fill').style.width = hPct + "%";
         document.getElementById('h-hp-text').textContent = `${Math.floor(heroi.vida_atual)}/${heroi.vida_maxima}`;
-        
+
         heroi.ataque_min = heroi.forca * 1;
         heroi.ataque_max = heroi.forca * 2;
         heroi.defesa_min = heroi.protecao * 1;
-        heroi.defesa_max = (heroi.protecao * 2) + (heroi.peito_defesa || 0);
+        heroi.defesa_max = (heroi.protecao * 2) + (heroi.peito_defesa || 0) + (heroi.cabeca_defesa || 0);
 
         document.getElementById('h-atk-val').textContent = `${heroi.ataque_min} - ${heroi.ataque_max}`;
         document.getElementById('h-def-val').textContent = `${heroi.defesa_min} - ${heroi.defesa_max}`;
@@ -54,7 +54,7 @@ function startATB() {
     const bar = document.getElementById('atb-fill');
     const status = document.getElementById('atb-status');
     const btn = document.getElementById('btn-atacar');
-    
+
     if (bar) bar.style.width = "0%";
     if (bar) bar.classList.remove('full');
     if (status) status.textContent = "Carregando...";
@@ -100,11 +100,11 @@ function tentarAtacar() {
 async function executarTurno() {
     isHeroTurnReady = false;
     document.getElementById('btn-atacar').disabled = true;
-    
+
     // Turno do Herói
     let danoH = Math.floor(Math.random() * (heroi.ataque_max - heroi.ataque_min + 1)) + heroi.ataque_min;
     danoH = Math.max(1, danoH - (monstro.defesa || 0)); // Mínimo de 1 de dano
-    
+
     monstro.vida_atual -= danoH;
     showFloatingDamage(danoH, 'monstro-area');
     shakeElement('m-img-container');
@@ -124,8 +124,8 @@ async function executarTurno() {
         if (!isCombatActive) return;
 
         let defesaSorteada = Math.floor(Math.random() * (heroi.defesa_max - heroi.defesa_min + 1)) + heroi.defesa_min;
-        let danoM = Math.max(0, monstro.ataque - defesaSorteada); 
-        
+        let danoM = Math.max(0, monstro.ataque - defesaSorteada);
+
         heroi.vida_atual -= Math.floor(danoM);
         showFloatingDamage(Math.floor(danoM), 'heroi-area');
         shakeElement('h-img-container');
@@ -152,9 +152,9 @@ function showFloatingDamage(amount, targetId) {
     const dmgDiv = document.createElement('div');
     dmgDiv.className = 'floating-damage';
     dmgDiv.textContent = `-${amount}`;
-    
+
     // Posicionamento aleatório leve para não sobrepor sempre
-    const randomX = Math.random() * 40 - 20; 
+    const randomX = Math.random() * 40 - 20;
     dmgDiv.style.left = `calc(50% + ${randomX}px)`;
 
     target.appendChild(dmgDiv);
@@ -191,7 +191,7 @@ async function finalizarCombate(vitoria, fugiu = false) {
         const tabelaXP = { 1: 5, 2: 10, 3: 20, 4: 35, 5: 50, 6: 75, 7: 100, 8: 125, 9: 155, 10: 200 };
         let subiu = false;
         while (heroi.exp >= (tabelaXP[heroi.nivel] || 999999) && heroi.nivel < 10) {
-            heroi.exp -= tabelaXP[heroi.nivel]; 
+            heroi.exp -= tabelaXP[heroi.nivel];
             heroi.nivel += 1;
             heroi.pontos_disponiveis += 1;
             heroi.vida_atual = heroi.vida_maxima;
@@ -202,7 +202,7 @@ async function finalizarCombate(vitoria, fugiu = false) {
         if (subiu) alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
 
         const sorteio = Math.random() * 100;
-        if (sorteio <= 50) { 
+        if (sorteio <= 50) {
             log(`<b style="color: #3498db;">👕 Você dropou uma Camiseta Simples!</b>`);
             await adicionarAoInventario(3, 1);
         } else if (sorteio <= 60) {
@@ -250,10 +250,10 @@ iniciarBatalha();
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
-        sidebar.classList.toggle('is-open'); 
+        sidebar.classList.toggle('is-open');
     }
 }
-window.toggleSidebar = toggleSidebar; 
+window.toggleSidebar = toggleSidebar;
 
 // Fecha a sidebar ao clicar fora dela
 document.addEventListener('click', (event) => {

@@ -51,6 +51,18 @@ const WIKI_ITEMS = {
             { monstro: 'Loja', chance: '100% (Compra)' }
         ],
         valor_venda: '10 Moedas'
+    },
+    'chapeu_simples': {
+        nome: 'Chapéu Simples',
+        img: '/pastas/img/chapeu_simples.jpg',
+        tipo: 'Equipamento (Cabeça)',
+        descricao: 'Um chapéu de tecido simples. Oferece proteção básica para a cabeça.',
+        drops: [
+            { monstro: 'Fabre', chance: '2%' }
+        ],
+        valor_venda: '12 Moedas',
+        requisitos: 'Nível 3, Proteção 2, Vitalidade 2',
+        defesa: '+1 Defesa'
     }
 };
 

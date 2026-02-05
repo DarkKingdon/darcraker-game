@@ -40,7 +40,7 @@ function atualizarInterface() {
         heroi.ataque_min = heroi.forca * 1;
         heroi.ataque_max = heroi.forca * 2;
         heroi.defesa_min = heroi.protecao * 1;
-        heroi.defesa_max = (heroi.protecao * 2) + (heroi.peito_defesa || 0);
+        heroi.defesa_max = (heroi.protecao * 2) + (heroi.peito_defesa || 0) + (heroi.cabeca_defesa || 0);
 
         document.getElementById('h-atk-val').textContent = `${heroi.ataque_min} - ${heroi.ataque_max}`;
         document.getElementById('h-def-val').textContent = `${heroi.defesa_min} - ${heroi.defesa_max}`;
@@ -125,6 +125,14 @@ async function finalizarCombate(vitoria, fugiu = false) {
             log(`<b style="color: #00ffff;">💎 Você dropou Zaleia!</b>`);
             // ID 5 = Zaleia (Assumindo ID 5)
             await adicionarAoInventario(5, 1);
+        }
+
+        // Sorteio de Chapéu Simples (Independente, 2% de chance)
+        const sorteioChapeu = Math.random() * 100;
+        if (sorteioChapeu <= 2) {
+            log(`<b style="color: #8B4513;">🎩 Você dropou um Chapéu Simples!</b>`);
+            // ID 6 = Chapéu Simples
+            await adicionarAoInventario(6, 1);
         }
     } else if (fugiu) {
         log(`Você fugiu da batalha...`);

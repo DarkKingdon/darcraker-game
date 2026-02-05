@@ -6,10 +6,10 @@ async function iniciarBatalha() {
             fetch('/api/status'),
             fetch('/api/monstro/Orlos')
         ]);
-        
+
         heroi = await resH.json();
         monstro = await resM.json();
-        
+
         // Garante que o monstro comece com vida cheia
         monstro.vida_atual = monstro.vida_maxIMA || monstro.vida_maxima;
 
@@ -32,14 +32,14 @@ function atualizarInterface() {
         const hPct = (heroi.vida_atual / heroi.vida_maxima) * 100;
         document.getElementById('h-hp-fill').style.width = hPct + "%";
         document.getElementById('h-hp-text').textContent = `${Math.floor(heroi.vida_atual)}/${heroi.vida_maxima}`;
-        
+
         // Atualiza os valores de Ataque e Defesa baseados nos Status (Força e Proteção)
         // 1 Força = 1 Min Atk / 2 Max Atk
         // 1 Proteção = 1 Min Def / 2 Max Def + Equipamento
         heroi.ataque_min = heroi.forca * 1;
         heroi.ataque_max = heroi.forca * 2;
         heroi.defesa_min = heroi.protecao * 1;
-        heroi.defesa_max = (heroi.protecao * 2) + (heroi.peito_defesa || 0);
+        heroi.defesa_max = (heroi.protecao * 2) + (heroi.peito_defesa || 0) + (heroi.cabeca_defesa || 0);
 
         document.getElementById('h-atk-val').textContent = `${heroi.ataque_min} - ${heroi.ataque_max}`;
         document.getElementById('h-def-val').textContent = `${heroi.defesa_min} - ${heroi.defesa_max}`;
@@ -68,8 +68,8 @@ async function atacar() {
     // --- TURNO DO MONSTRO ---
     // Defesa Dinâmica: Sorteia um valor entre o mínimo e o máximo de defesa do herói
     let defesaSorteada = Math.floor(Math.random() * (heroi.defesa_max - heroi.defesa_min + 1)) + heroi.defesa_min;
-    let danoM = Math.max(0, monstro.ataque - defesaSorteada); 
-    
+    let danoM = Math.max(0, monstro.ataque - defesaSorteada);
+
     heroi.vida_atual -= Math.floor(danoM);
     log(`${monstro.nome} te deu <b style="color: #ff4d4d;">${Math.floor(danoM)}</b> de dano! (Você defendeu ${defesaSorteada})`);
 
@@ -107,9 +107,9 @@ async function finalizarCombate(vitoria, fugiu = false) {
 
         let subiu = false;
         while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
-            heroi.exp -= tabelaXP[heroi.nivel]; 
+            heroi.exp -= tabelaXP[heroi.nivel];
             heroi.nivel += 1;
-            heroi.exp_max = tabelaXP[heroi.nivel]; 
+            heroi.exp_max = tabelaXP[heroi.nivel];
             heroi.pontos_disponiveis += 1;
             heroi.vida_atual = heroi.vida_maxima;
             heroi.mana_atual = heroi.mana_maxima;
