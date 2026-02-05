@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('./db'); 
+const db = require('./db');
 const path = require('path');
 const session = require('express-session');
 const app = express();
@@ -12,7 +12,7 @@ app.use(session({
     cookie: { maxAge: 3600000 }
 }));
 
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 function verificarLogado(req, res, next) {
@@ -27,7 +27,7 @@ function verificarLogado(req, res, next) {
 }
 
 app.use('/pastas/img', express.static(path.join(__dirname, 'pastas', 'img')));
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Protege todos os arquivos dentro de /pastas exigindo login
 app.use('/pastas', verificarLogado, express.static(path.join(__dirname, 'pastas')));
@@ -65,6 +65,11 @@ app.get('/mercado.html', verificarLogado, (req, res) => {
     res.sendFile(path.join(__dirname, 'pastas', 'mercado', 'mercado.html'));
 });
 
+app.get('/atualizacoes.html', verificarLogado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'pastas', 'atualizacoes', 'atualizacoes.html'));
+});
+
+
 app.get('/api/status', verificarLogado, async (req, res) => {
     try {
         const usuarioId = req.session.usuarioId;
@@ -78,7 +83,7 @@ app.get('/api/status', verificarLogado, async (req, res) => {
             LEFT JOIN itens i ON h.equip_peito = i.id
             WHERE h.usuario_id = ?
         `, [usuarioId]);
-        
+
         if (rows.length > 0) {
             console.log(`[DEBUG] Dados encontrados: Level ${rows[0].nivel}`);
             res.json(rows[0]);
@@ -90,10 +95,10 @@ app.get('/api/status', verificarLogado, async (req, res) => {
         }
     } catch (err) {
         console.error("[ERRO SQL] /api/status:", err);
-        res.status(500).json({ 
-            erro: "Erro ao buscar status", 
+        res.status(500).json({
+            erro: "Erro ao buscar status",
             detalhe: err.message,
-            sqlState: err.sqlState 
+            sqlState: err.sqlState
         });
     }
 });
@@ -159,18 +164,18 @@ app.post('/api/equipamentos/desequipar', verificarLogado, async (req, res) => {
 
 app.post('/api/status', verificarLogado, async (req, res) => {
     try {
-        const { 
-            nivel, exp, exp_max, 
-            forca, protecao, vitalidade, inteligencia, 
+        const {
+            nivel, exp, exp_max,
+            forca, protecao, vitalidade, inteligencia,
             pontos_disponiveis, pontos_maestria,
             vida_maxima, mana_maxima, vida_atual, mana_atual,
             ataque_min, ataque_max, defesa_min, defesa_max,
             // NOVOS CAMPOS DE BÔNUS
-            bonus_vida, bonus_mana, 
+            bonus_vida, bonus_mana,
             bonus_forca, bonus_protecao, bonus_vitalidade, bonus_inteligencia,
             bonus_ataque_min, bonus_ataque_max, bonus_defesa_min, bonus_defesa_max
         } = req.body;
-        
+
         const usuarioId = req.session.usuarioId;
 
         await db.query(
@@ -185,12 +190,12 @@ app.post('/api/status', verificarLogado, async (req, res) => {
             bonus_ataque_min = ?, bonus_ataque_max = ?, bonus_defesa_min = ?, bonus_defesa_max = ?
             WHERE usuario_id = ?`,
             [
-                nivel, exp, exp_max, 
-                forca, protecao, vitalidade, inteligencia, 
+                nivel, exp, exp_max,
+                forca, protecao, vitalidade, inteligencia,
                 pontos_disponiveis, pontos_maestria,
                 vida_maxima, mana_maxima, vida_atual, mana_atual,
                 ataque_min, ataque_max, defesa_min, defesa_max,
-                bonus_vida, bonus_mana, 
+                bonus_vida, bonus_mana,
                 bonus_forca, bonus_protecao, bonus_vitalidade, bonus_inteligencia,
                 bonus_ataque_min, bonus_ataque_max, bonus_defesa_min, bonus_defesa_max,
                 usuarioId
@@ -248,7 +253,7 @@ app.post('/api/inventario/adicionar', verificarLogado, async (req, res) => {
              ON DUPLICATE KEY UPDATE quantidade = quantidade + ?`,
             [usuarioId, item_id, quantidade || 1, quantidade || 1]
         );
-        
+
         res.json({ sucesso: true });
     } catch (err) {
         console.error("Erro ao adicionar item ao inventário:", err);
@@ -395,7 +400,7 @@ app.post('/api/mercado/comprar', verificarLogado, async (req, res) => {
         }
 
         await db.query('UPDATE inventario SET quantidade = quantidade - ? WHERE usuario_id = ? AND item_id = 1', [preco, compradorId]);
-        
+
         await db.query(
             `INSERT INTO inventario (usuario_id, item_id, quantidade) VALUES (?, 1, ?) 
              ON DUPLICATE KEY UPDATE quantidade = quantidade + ?`,
@@ -426,7 +431,7 @@ app.post('/cadastrar', async (req, res) => {
             return res.send("<script>alert('Este e-mail já está cadastrado!'); window.location='/cadastro.html';</script>");
         }
         const [result] = await db.query(
-            'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)', 
+            'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
             [nome, email, senha]
         );
         const novoUsuarioId = result.insertId;
@@ -445,7 +450,7 @@ app.post('/login', async (req, res) => {
         if (usuarios.length > 0) {
             req.session.logado = true;
             req.session.usuarioId = usuarios[0].id;
-            res.redirect('/inicio.html'); 
+            res.redirect('/inicio.html');
         } else {
             res.send("<script>alert('Login incorreto!'); window.location='/login.html';</script>");
         }
