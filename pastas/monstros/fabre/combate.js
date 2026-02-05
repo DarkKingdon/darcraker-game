@@ -7,10 +7,10 @@ async function iniciarBatalha() {
             // Busca dados do Fabre (nome deve bater com banco de dados)
             fetch('/api/monstro/Fabre')
         ]);
-        
+
         heroi = await resH.json();
         monstro = await resM.json();
-        
+
         // Garante que o monstro comece com vida cheia
         monstro.vida_atual = monstro.vida_maxIMA || monstro.vida_maxima;
 
@@ -35,7 +35,7 @@ function atualizarInterface() {
         const hPct = (vidaH / heroi.vida_maxima) * 100;
         document.getElementById('h-hp-fill').style.width = hPct + "%";
         document.getElementById('h-hp-text').textContent = `${Math.floor(vidaH)}/${heroi.vida_maxima}`;
-        
+
         // Atualiza os valores de Ataque e Defesa baseados nos Status
         heroi.ataque_min = heroi.forca * 1;
         heroi.ataque_max = heroi.forca * 2;
@@ -63,8 +63,8 @@ async function atacar() {
     // --- TURNO DO MONSTRO ---
     // Defesa Dinâmica
     let defesaSorteada = Math.floor(Math.random() * (heroi.defesa_max - heroi.defesa_min + 1)) + heroi.defesa_min;
-    let danoM = Math.max(0, monstro.ataque - defesaSorteada); 
-    
+    let danoM = Math.max(0, monstro.ataque - defesaSorteada);
+
     heroi.vida_atual -= Math.floor(danoM);
     log(`${monstro.nome} te deu <b style="color: #ff4d4d;">${Math.floor(danoM)}</b> de dano! (Você defendeu ${defesaSorteada})`);
 
@@ -96,9 +96,9 @@ async function finalizarCombate(vitoria, fugiu = false) {
 
         let subiu = false;
         while (heroi.exp >= tabelaXP[heroi.nivel] && heroi.nivel < 10) {
-            heroi.exp -= tabelaXP[heroi.nivel]; 
+            heroi.exp -= tabelaXP[heroi.nivel];
             heroi.nivel += 1;
-            heroi.exp_max = tabelaXP[heroi.nivel]; 
+            heroi.exp_max = tabelaXP[heroi.nivel];
             heroi.pontos_disponiveis += 1;
             heroi.vida_atual = heroi.vida_maxima;
             heroi.mana_atual = heroi.mana_maxima;
@@ -112,12 +112,19 @@ async function finalizarCombate(vitoria, fugiu = false) {
         const sorteio = Math.random() * 100;
         if (sorteio <= 10) {
             log(`<b style="color: #ff0000;">🩸 Você dropou Sangue Tipo 1!</b>`);
-            // ID 4 = Sangue Tipo 1 (Verificar ID no banco se for diferente)
+            // ID 4 = Sangue Tipo 1
             await adicionarAoInventario(4, 1);
         } else if (sorteio <= 15) {
-            // Pequena chance extra de moeda
-             log(`<b style="color: gold;">⭐ Você dropou uma Moeda de Ouro!</b>`);
-             await adicionarAoInventario(1, 1);
+            log(`<b style="color: gold;">⭐ Você dropou uma Moeda de Ouro!</b>`);
+            await adicionarAoInventario(1, 1);
+        }
+
+        // Sorteio de Zaleia (Independente, 50% de chance)
+        const sorteioZaleia = Math.random() * 100;
+        if (sorteioZaleia <= 50) {
+            log(`<b style="color: #00ffff;">💎 Você dropou Zaleia!</b>`);
+            // ID 5 = Zaleia (Assumindo ID 5)
+            await adicionarAoInventario(5, 1);
         }
     } else if (fugiu) {
         log(`Você fugiu da batalha...`);
