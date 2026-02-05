@@ -15,10 +15,10 @@ async function carregarStatusHerói() {
     try {
         const res = await fetch('/api/status');
         heroStatus = await res.json();
-        
+
         document.getElementById('mochila-vida-atual').textContent = `❤️ Vida: ${Math.floor(heroStatus.vida_atual)} / ${heroStatus.vida_maxima}`;
         document.getElementById('mochila-mana-atual').textContent = `💙 Mana: ${Math.floor(heroStatus.mana_atual)} / ${heroStatus.mana_maxima}`;
-        
+
         const atkMin = heroStatus.forca * 1;
         const atkMax = heroStatus.forca * 2;
         const defMin = heroStatus.protecao * 1;
@@ -58,7 +58,7 @@ async function carregarInventario() {
     try {
         const response = await fetch('/api/inventario');
         const itens = await response.json();
-        grid.innerHTML = ''; 
+        grid.innerHTML = '';
 
         if (itens.length === 0) {
             grid.innerHTML = '<p id="empty-message">Sua mochila está vazia por enquanto...</p>';
@@ -125,6 +125,10 @@ function mostrarDetalhes(item, estaEquipado) {
         stats.innerHTML = `<strong>Efeito:</strong> Recupera vida ou mana.`;
         btnUse.style.display = 'block';
         btnUse.onclick = () => alert("Uso de item consumível em breve!");
+    } else if (item.tipo === 'material') {
+        stats.innerHTML = `<strong>Tipo:</strong> Material de Crafting/Drops.<br><em>Guarde para forjar equipamentos no futuro!</em>`;
+    } else {
+        stats.innerHTML = `<strong>Info:</strong> Item genérico.`;
     }
 }
 
@@ -179,10 +183,10 @@ async function desequiparItem() {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
-        sidebar.classList.toggle('is-open'); 
+        sidebar.classList.toggle('is-open');
     }
 }
-window.toggleSidebar = toggleSidebar; 
+window.toggleSidebar = toggleSidebar;
 
 // Fecha a sidebar ao clicar fora dela
 document.addEventListener('click', (event) => {
