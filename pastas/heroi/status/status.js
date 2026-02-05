@@ -1,6 +1,6 @@
 // status.js - Gerenciamento de Status do Herói
 
-window.heroStatus = {}; 
+window.heroStatus = {};
 
 const DOM = {
     level: document.getElementById('level-valor'),
@@ -15,7 +15,7 @@ const DOM = {
     mpBar: document.getElementById('mp-bar-fill'),
     hpTexto: document.getElementById('hp-texto'),
     mpTexto: document.getElementById('mp-texto'),
-    
+
     // Status Secundários Separados
     atkMin: document.getElementById('atk-min-val'),
     atkMax: document.getElementById('atk-max-val'),
@@ -23,7 +23,7 @@ const DOM = {
     defMax: document.getElementById('def-max-val'),
 
     btns: document.querySelectorAll('.add-point-btn'),
-    
+
     // CAMPOS DE BÔNUS
     bonusVida: document.getElementById('bonus-vida'),
     bonusMana: document.getElementById('bonus-mana'),
@@ -40,7 +40,7 @@ const DOM = {
 async function carregarDados() {
     try {
         const response = await fetch('/api/status');
-        
+
         if (response.status === 401) {
             window.location.href = '/login.html';
             return;
@@ -55,8 +55,13 @@ async function carregarDados() {
 
         const data = await response.json();
         console.log("Dados do Herói recebidos:", data);
-        
+
         window.heroStatus = data;
+
+        // --- CORREÇÃO AUTOMÁTICA DE NÍVEL ---
+        // Verifica se o jogador tem XP suficiente para subir de nível mas travou
+        await verificarLevelUp(window.heroStatus);
+
         atualizarTela();
     } catch (error) {
         console.error("Erro ao carregar status do herói:", error);
@@ -71,7 +76,7 @@ function atualizarTela() {
     if (DOM.exp) DOM.exp.textContent = status.exp;
     if (DOM.expMax) DOM.expMax.textContent = status.exp_max;
     if (DOM.pontos) DOM.pontos.textContent = status.pontos_disponiveis;
-    
+
     if (DOM.forca) DOM.forca.textContent = status.forca;
     if (DOM.protecao) DOM.protecao.textContent = status.protecao;
     if (DOM.vitalidade) DOM.vitalidade.textContent = status.vitalidade;
@@ -87,7 +92,7 @@ function atualizarTela() {
     if (DOM.bonusAtkMin) DOM.bonusAtkMin.textContent = `+${status.bonus_ataque_min || 0}`;
     if (DOM.bonusAtkMax) DOM.bonusAtkMax.textContent = `+${status.bonus_ataque_max || 0}`;
     if (DOM.bonusDefMin) DOM.bonusDefMin.textContent = `+${status.bonus_defesa_min || 0}`;
-    
+
     // Bônus de Defesa Máxima (Soma bônus fixo + bônus de equipamento)
     if (DOM.bonusDefMax) {
         const totalBonusDefMax = (status.bonus_defesa_max || 0) + (status.peito_defesa || 0);
@@ -135,7 +140,7 @@ async function adicionarAtributo(attr) {
         }
 
         atualizarTela();
-        
+
         try {
             await fetch('/api/status', {
                 method: 'POST',
@@ -158,6 +163,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+async function verificarLevelUp(status) {
+    const tabelaXP = {
+        1: 5, 2: 10, 3: 20, 4: 35, 5: 50,
+        6: 75, 7: 100, 8: 125, 9: 155, 10: 200
+    };
+
+    let mudou = false;
+
+    // Enquanto tiver XP suficiente e não estiver no nível máximo
+    while (status.nivel < 10 && status.exp >= (tabelaXP[status.nivel] || 9999)) {
+        status.exp -= tabelaXP[status.nivel];
+        status.nivel++;
+        status.exp_max = tabelaXP[status.nivel];
+        status.pontos_disponiveis++;
+
+        // Recupera Vida e Mana ao subir de nível
+        status.vida_atual = status.vida_maxima;
+        status.mana_atual = status.mana_maxima;
+
+        mudou = true;
+    }
+
+    if (mudou) {
+        console.log("Correção de Nível aplicada! Novo Nível:", status.nivel);
+        alert(`Opa! Detectamos que você tinha XP acumulado. Parabéns, você subiu para o Nível ${status.nivel}!`);
+
+        try {
+            await fetch('/api/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(status)
+            });
+        } catch (e) {
+            console.error("Erro ao salvar correção de nível:", e);
+        }
+    }
+}
 
 // =================================================================
 // CONTROLE DO MENU LATERAL (SIDEBAR)
