@@ -2,7 +2,8 @@
 
 .atualizacoes-container {
     max-width: 900px;
-    margin: 20px auto;
+    margin: 80px auto 20px auto;
+    /* Increased top margin to clear navbar */
     padding: 20px;
 }
 
@@ -112,6 +113,8 @@
     margin: 10px 0;
     border-radius: 8px;
     border-left: 3px solid #ff4d4d;
+    color: #fff;
+    /* Ensure all text is white */
 }
 
 .monstro-info strong {
