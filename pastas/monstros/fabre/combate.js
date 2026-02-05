@@ -108,28 +108,28 @@ async function finalizarCombate(vitoria, fugiu = false) {
         if (subiu) alert(`SUBIU DE NÍVEL! Agora você é nível ${heroi.nivel}`);
 
         // Sorteio de Drops do Fabre
-        // 10% Chance de Sangue Tipo 1 (ID assumido: 4)
+        // 5% Chance de Sangue Tipo 1 (ID assumido: 4)
         const sorteio = Math.random() * 100;
-        if (sorteio <= 10) {
+        if (sorteio <= 5) {
             log(`<b style="color: #ff0000;">🩸 Você dropou Sangue Tipo 1!</b>`);
             // ID 4 = Sangue Tipo 1
             await adicionarAoInventario(4, 1);
-        } else if (sorteio <= 15) {
+        } else if (sorteio <= 10) {
             log(`<b style="color: gold;">⭐ Você dropou uma Moeda de Ouro!</b>`);
             await adicionarAoInventario(1, 1);
         }
 
-        // Sorteio de Zaleia (Independente, 50% de chance)
+        // Sorteio de Zaleia (Independente, 4% de chance)
         const sorteioZaleia = Math.random() * 100;
-        if (sorteioZaleia <= 50) {
+        if (sorteioZaleia <= 4) {
             log(`<b style="color: #00ffff;">💎 Você dropou Zaleia!</b>`);
             // ID 5 = Zaleia (Assumindo ID 5)
             await adicionarAoInventario(5, 1);
         }
 
-        // Sorteio de Chapéu Simples (Independente, 2% de chance)
+        // Sorteio de Chapéu Simples (Independente, 90% de chance)
         const sorteioChapeu = Math.random() * 100;
-        if (sorteioChapeu <= 2) {
+        if (sorteioChapeu <= 90) {
             log(`<b style="color: #8B4513;">🎩 Você dropou um Chapéu Simples!</b>`);
             // ID 6 = Chapéu Simples
             await adicionarAoInventario(6, 1);
