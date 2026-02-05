@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combate: Fabre - DarCraker</title>
+    <!-- Reaproveitamos o CSS do Orlos já que o layout é o mesmo -->
+    <link rel="stylesheet" href="/pastas/monstros/orlos/combate.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <div class="battle-arena">
+        <div class="entity-container">
+            <div id="monstro-area">
+                <h2 id="m-nome">Carregando...</h2>
+                <div class="hp-bar">
+                    <div id="m-hp-fill" class="fill"></div>
+                </div>
+                <p id="m-hp-text">10/10</p>
+                <img src="/pastas/img/fabre.jpg" class="sprite">
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div id="heroi-area">
+                <h2>Você</h2>
+                <div class="hp-bar">
+                    <div id="h-hp-fill" class="fill"></div>
+                </div>
+                <p id="h-hp-text">0/0</p>
+                <img src="/pastas/img/heroi.jpg" class="sprite">
+
+                <!-- Painel de Status do Herói no Combate -->
+                <div class="hero-battle-stats">
+                    <p>⚔️ Ataque: <span id="h-atk-val">0 - 0</span></p>
+                    <p>🛡️ Defesa: <span id="h-def-val">0 - 0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="log-combate" class="log">
+            <p>A batalha contra Fabre começou!</p>
+        </div>
+
+        <div class="controles">
+            <button onclick="atacar()" class="btn-battle btn-attack">Atacar</button>
+            <button onclick="fugir()" class="btn-battle btn-flee">Fugir</button>
+        </div>
+    </div>
+    <script src="combate.js"></script>
+</body>
+
+</html>
