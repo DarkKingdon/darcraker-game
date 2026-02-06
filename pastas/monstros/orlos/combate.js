@@ -119,6 +119,24 @@ async function executarTurno() {
         monstro.vida_atual = 0;
         atualizarInterface();
         isCombatActive = false;
+        
+        // Notificar a página de missões sobre a derrota do inimigo
+        if (window.parent && window.parent !== window) {
+            // Se estiver em um iframe, tenta chamar a função no parent
+            try {
+                if (window.parent.notificarDerrotaInimigo) {
+                    window.parent.notificarDerrotaInimigo(monstro.nome || 'orlos');
+                }
+            } catch(e) {
+                console.log("Não foi possível notificar a página de missões (iframe)");
+            }
+        } else {
+            // Se for a janela principal, chama diretamente
+            if (window.notificarDerrotaInimigo) {
+                window.notificarDerrotaInimigo(monstro.nome || 'orlos');
+            }
+        }
+        
         return finalizarCombate(true);
     }
 
