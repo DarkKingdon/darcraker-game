@@ -1,4 +1,4 @@
-// Sistema de Missões para Asmon
+// Sistema de Missões para Asmon - Usando API do Servidor
 document.addEventListener('DOMContentLoaded', function() {
     // Carrega o status do herói
     carregarStatusHeroi().catch(error => {
@@ -26,6 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
             desistirMissao(missionId);
         });
     });
+    
+    // Adiciona evento ao botão de atualizar manualmente
+    const btnAtualizar = document.getElementById('btn-atualizar-missoes');
+    if (btnAtualizar) {
+        btnAtualizar.addEventListener('click', function() {
+            carregarProgressoMissoes();
+            // Faz uma breve animação para indicar que está atualizando
+            const originalText = btnAtualizar.textContent;
+            btnAtualizar.textContent = 'Atualizando...';
+            btnAtualizar.disabled = true;
+            setTimeout(() => {
+                btnAtualizar.textContent = originalText;
+                btnAtualizar.disabled = false;
+            }, 1000);
+        });
+    }
     
     // Carrega o progresso das missões salvas
     carregarProgressoMissoes();
@@ -67,48 +83,51 @@ function atualizarInterfaceHeroi(heroi) {
 }
 
 // Função para aceitar uma missão
-function aceitarMissao(missionId) {
+async function aceitarMissao(missionId) {
     // Verifica se o jogador já aceitou esta missão
-    const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
-    
-    if (missoesAceitas[missionId]) {
+    const progressoMissoes = await carregarProgressoMissoesAPI();
+    if (progressoMissoes[missionId]) {
         alert('Você já aceitou esta missão!');
         return;
     }
     
-    // Aceita a missão
-    missoesAceitas[missionId] = {
-        aceita: true,
-        progresso: 0,
-        objetivo: getObjetivoMissao(missionId)
-    };
-    
-    localStorage.setItem('missoesAceitas', JSON.stringify(missoesAceitas));
-    
-    // Atualiza a interface
-    atualizarInterfaceMissao(missionId);
-    
-    // Exibe mensagem de confirmação
-    const nomeMissao = getNomeMissao(missionId);
-    alert(`Missão "${nomeMissao}" aceita! Boa sorte na sua jornada.`);
+    // Aceita a missão no servidor (inicia com progresso 0)
+    try {
+        await fetch('/api/progresso-missoes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                missao_id: missionId,
+                incremento: 0
+            })
+        });
+        
+        // Atualiza a interface
+        atualizarInterfaceMissao(missionId);
+        
+        // Exibe mensagem de confirmação
+        const nomeMissao = getNomeMissao(missionId);
+        alert(`Missão "${nomeMissao}" aceita! Boa sorte na sua jornada.`);
+    } catch (error) {
+        console.error('Erro ao aceitar missão:', error);
+        alert('Erro ao aceitar a missão.');
+    }
 }
 
 // Função para completar uma missão
-function completarMissao(missionId) {
-    const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
-    const missao = missoesAceitas[missionId];
+async function completarMissao(missionId) {
+    const progressoMissoes = await carregarProgressoMissoesAPI();
+    const missao = progressoMissoes[missionId];
     
-    if (!missao || !missao.aceita || missao.progresso < missao.objetivo) {
+    if (!missao || missao.progresso < getObjetivoMissao(missionId)) {
         alert('Você ainda não completou os objetivos desta missão!');
         return;
     }
     
-    // Remove a missão da lista de aceitas
-    delete missoesAceitas[missionId];
-    localStorage.setItem('missoesAceitas', JSON.stringify(missoesAceitas));
-    
     // Entrega recompensa
-    entregarRecompensa(missionId);
+    await entregarRecompensa(missionId);
     
     // Atualiza a interface
     atualizarInterfaceMissao(missionId);
@@ -119,18 +138,13 @@ function completarMissao(missionId) {
 }
 
 // Função para desistir de uma missão
-function desistirMissao(missionId) {
+async function desistirMissao(missionId) {
     if (!confirm('Tem certeza que deseja desistir desta missão? Todo o progresso será perdido.')) {
         return;
     }
     
-    const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
-    
-    // Remove a missão da lista de aceitas
-    delete missoesAceitas[missionId];
-    localStorage.setItem('missoesAceitas', JSON.stringify(missoesAceitas));
-    
-    // Atualiza a interface
+    // No nosso sistema, desistir basicamente ignora a missão
+    // Podemos limpar o progresso ou marcar como inativa, mas por simplicidade vamos apenas atualizar a interface
     atualizarInterfaceMissao(missionId);
     
     // Exibe mensagem de confirmação
@@ -139,68 +153,94 @@ function desistirMissao(missionId) {
 }
 
 // Função para atualizar o progresso da missão (seria chamada ao derrotar um inimigo)
-function atualizarProgressoMissao(missionId, incremento = 1) {
+async function atualizarProgressoMissao(missionId, incremento = 1) {
     console.log(`Atualizando progresso da missão ${missionId}, incremento: ${incremento}`); // Debug
-    const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
-    const missao = missoesAceitas[missionId];
     
-    console.log(`Missão antes da atualização:`, missao); // Debug
-    
-    if (missao && missao.aceita && missao.progresso < missao.objetivo) {
-        missao.progresso += incremento;
-        localStorage.setItem('missoesAceitas', JSON.stringify(missoesAceitas));
+    try {
+        const response = await fetch('/api/progresso-missoes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                missao_id: missionId,
+                incremento: incremento
+            })
+        });
         
-        console.log(`Progresso atualizado: ${missao.progresso}/${missao.objetivo}`); // Debug
-        
-        // Atualiza a interface
-        atualizarInterfaceMissao(missionId);
-        
-        // Verifica se a missão foi completada
-        if (missao.progresso >= missao.objetivo) {
-            mostrarBotaoConcluir(missionId);
+        if (response.ok) {
+            const data = await response.json();
+            console.log(`Progresso atualizado: ${data.progresso}/${getObjetivoMissao(missionId)}`); // Debug
+            
+            // Atualiza a interface
+            atualizarInterfaceMissao(missionId);
+            
+            // Verifica se a missão foi completada
+            if (data.progresso >= getObjetivoMissao(missionId)) {
+                mostrarBotaoConcluir(missionId);
+            }
+        } else {
+            console.error('Erro ao atualizar progresso da missão:', response.statusText);
         }
-    } else {
-        console.log(`Condições não atendidas para atualizar missão ${missionId}:`, {
-            missao: !!missao,
-            aceita: missao?.aceita,
-            abaixoObjetivo: missao?.progresso < missao?.objetivo
-        }); // Debug
+    } catch (error) {
+        console.error('Erro na atualização de progresso:', error);
     }
 }
 
 // Função para atualizar a interface da missão
-function atualizarInterfaceMissao(missionId) {
-    const missao = JSON.parse(localStorage.getItem('missoesAceitas') || '{}')[missionId];
+async function atualizarInterfaceMissao(missionId) {
+    const progressoMissoes = await carregarProgressoMissoesAPI();
+    const missao = progressoMissoes[missionId];
+    const objetivo = getObjetivoMissao(missionId);
+    
     const progressElement = document.querySelector(`.progress-fill[data-mission="${missionId}"]`);
     const progressText = document.querySelector(`.progress-text[data-mission="${missionId}"]`);
     const acceptButton = document.querySelector(`.accept-mission[data-mission-id="${missionId}"]`);
     const completeButton = document.querySelector(`.complete-mission[data-mission-id="${missionId}"]`);
     const abandonButton = document.querySelector(`.abandon-mission[data-mission-id="${missionId}"]`);
     
-    if (missao) {
-        const percentual = (missao.progresso / missao.objetivo) * 100;
+    if (missao && missao.progresso < objetivo) {
+        const percentual = (missao.progresso / objetivo) * 100;
         if (progressElement) {
             progressElement.style.width = `${percentual}%`;
         }
         if (progressText) {
-            progressText.textContent = `${missao.progresso}/${missao.objetivo} Poring derrotados`;
+            progressText.textContent = `${missao.progresso}/${objetivo} Poring derrotados`;
         }
         if (acceptButton) {
             acceptButton.style.display = 'none';
         }
         if (completeButton) {
-            completeButton.style.display = missao.progresso >= missao.objetivo ? 'inline-block' : 'none';
+            completeButton.style.display = 'none'; // Apenas mostra quando completar
         }
         if (abandonButton) {
             abandonButton.style.display = 'inline-block';
         }
+    } else if (missao && missao.progresso >= objetivo) {
+        // Missão completa
+        const percentual = 100;
+        if (progressElement) {
+            progressElement.style.width = `${percentual}%`;
+        }
+        if (progressText) {
+            progressText.textContent = `${objetivo}/${objetivo} Poring derrotados`;
+        }
+        if (acceptButton) {
+            acceptButton.style.display = 'none';
+        }
+        if (completeButton) {
+            completeButton.style.display = 'inline-block';
+        }
+        if (abandonButton) {
+            abandonButton.style.display = 'none';
+        }
     } else {
-        // Se a missão não está mais ativa, resetar a interface
+        // Se a missão não está ativa, resetar a interface
         if (progressElement) {
             progressElement.style.width = '0%';
         }
         if (progressText) {
-            progressText.textContent = '0/10 Poring derrotados';
+            progressText.textContent = `0/${objetivo} Poring derrotados`;
         }
         if (acceptButton) {
             acceptButton.style.display = 'inline-block';
@@ -214,16 +254,32 @@ function atualizarInterfaceMissao(missionId) {
     }
 }
 
+// Função para carregar o progresso das missões do servidor
+async function carregarProgressoMissoesAPI() {
+    try {
+        const response = await fetch('/api/progresso-missoes');
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error('Erro ao carregar progresso das missões:', response.statusText);
+            return {};
+        }
+    } catch (error) {
+        console.error('Erro na requisição de progresso das missões:', error);
+        return {};
+    }
+}
+
 // Função para carregar o progresso das missões
-function carregarProgressoMissoes() {
-    const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
+async function carregarProgressoMissoes() {
+    const progressoMissoes = await carregarProgressoMissoesAPI();
     
-    for (const missionId in missoesAceitas) {
-        atualizarInterfaceMissao(missionId);
+    for (const missionId in progressoMissoes) {
+        await atualizarInterfaceMissao(missionId);
         
         // Verifica se a missão está completa para mostrar o botão de concluir
-        const missao = missoesAceitas[missionId];
-        if (missao.progresso >= missao.objetivo) {
+        const missao = progressoMissoes[missionId];
+        if (missao.progresso >= getObjetivoMissao(missionId)) {
             mostrarBotaoConcluir(missionId);
         }
     }
@@ -237,7 +293,7 @@ function mostrarBotaoConcluir(missionId) {
         completeButton.style.display = 'inline-block';
     }
     if (abandonButton) {
-        abandonButton.style.display = 'inline-block';
+        abandonButton.style.display = 'none'; // Oculta o botão de abandonar quando a missão está completa
     }
 }
 
@@ -368,67 +424,47 @@ function getNomeMissao(missionId) {
     }
 }
 
-// Função para simular o progresso da missão (apenas para teste)
-// Esta função seria chamada quando o jogador derrota um monstro
-function simularDerrotaPoring() {
-    const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
-    
-    // Verifica se a missão 1 está ativa
-    if (missoesAceitas['1'] && missoesAceitas['1'].aceita) {
-        atualizarProgressoMissao('1', 1);
-    }
-}
-
 // Função para notificação de derrota de inimigo
 // Esta função pode ser chamada de outras páginas do jogo
-function notificarDerrotaInimigo(tipoInimigo) {
+async function notificarDerrotaInimigo(tipoInimigo) {
     console.log(`Notificação de derrota recebida para: ${tipoInimigo}`); // Debug
     
     // Se o tipo de inimigo for "poring" e a missão estiver ativa
     if (tipoInimigo.toLowerCase().includes('poring')) {
-        const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
-        
         // Verifica se a missão 1 está ativa
-        if (missoesAceitas['1'] && missoesAceitas['1'].aceita) {
+        const progressoMissoes = await carregarProgressoMissoesAPI();
+        if (progressoMissoes['1']) {
             console.log('Missão 1 está ativa, atualizando progresso...'); // Debug
-            atualizarProgressoMissao('1', 1);
+            await atualizarProgressoMissao('1', 1);
         } else {
             console.log('Missão 1 não está ativa'); // Debug
         }
     }
 }
 
-// Adiciona listener para atualizar a interface quando o localStorage for modificado em outra aba
-window.addEventListener('storage', function(e) {
-    if (e.key === 'missoesAceitas') {
-        console.log('Atualizando interface devido a mudança em outra aba');
-        // Recarrega o progresso das missões
-        carregarProgressoMissoes();
-    }
-});
-
 // Função para verificar derrotas de inimigos registradas em outras abas
-function verificarDerrotasPendentes() {
+async function verificarDerrotasRecentes() {
     try {
         const ultimaDerrotaStr = localStorage.getItem('ultimaDerrotaInimigo');
         if (ultimaDerrotaStr) {
             const ultimaDerrota = JSON.parse(ultimaDerrotaStr);
             // Verifica se a derrota é recente (nos últimos 10 segundos)
             if (Date.now() - ultimaDerrota.timestamp < 10000) {
-                notificarDerrotaInimigo(ultimaDerrota.tipo);
+                await notificarDerrotaInimigo(ultimaDerrota.tipo);
+                // Limpa a notificação após processar
+                localStorage.removeItem('ultimaDerrotaInimigo');
             }
         }
     } catch(e) {
-        console.log("Erro ao verificar derrotas pendentes:", e);
+        console.log("Erro ao verificar derrotas recentes:", e);
     }
 }
 
 // Atualiza o progresso periodicamente para manter sincronizado
-setInterval(function() {
-    carregarProgressoMissoes();
-    verificarDerrotasPendentes(); // Verifica se há derrotas registradas em outras abas
+setInterval(async function() {
+    await carregarProgressoMissoes();
+    await verificarDerrotasRecentes(); // Verifica se há derrotas registradas em outras abas
 }, 2000); // Atualiza a cada 2 segundos para maior agilidade
 
 // Expondo a função para uso global (para testes ou integração com outras partes do jogo)
-window.simularDerrotaPoring = simularDerrotaPoring;
 window.notificarDerrotaInimigo = notificarDerrotaInimigo;

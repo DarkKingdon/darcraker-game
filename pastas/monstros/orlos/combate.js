@@ -120,24 +120,23 @@ async function executarTurno() {
         atualizarInterface();
         isCombatActive = false;
         
-        // Notificar a página de missões sobre a derrota do inimigo
-        if (window.parent && window.parent !== window) {
-            // Se estiver em um iframe, tenta chamar a função no parent
-            try {
-                if (window.parent.notificarDerrotaInimigo) {
-                    window.parent.notificarDerrotaInimigo(monstro.nome || 'orlos');
-                }
-            } catch(e) {
-                console.log("Não foi possível notificar a página de missões (iframe)");
-            }
-        } else {
-            // Se for a janela principal, chama diretamente
-            if (window.notificarDerrotaInimigo) {
-                window.notificarDerrotaInimigo(monstro.nome || 'orlos');
-            }
-        }
+        // Atualizar o progresso da missão de derrotar Poring (caso o jogador esteja fazendo a missão)
+    try {
+        await fetch('/api/progresso-missoes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                missao_id: '1', // ID da missão de derrotar Poring (mesmo para outros monstros, dependendo da configuração)
+                incremento: 1
+            })
+        });
+    } catch(e) {
+        console.log("Erro ao atualizar progresso da missão:", e);
+    }
         
-        return finalizarCombate(true);
+    return finalizarCombate(true);
     }
 
     // --- TURNO DO MONSTRO ---

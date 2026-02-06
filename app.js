@@ -299,6 +299,83 @@ app.post('/api/status', verificarLogado, async (req, res) => {
     }
 });
 
+// Endpoint para gerenciar progresso de missões
+app.get('/api/progresso-missoes', verificarLogado, async (req, res) => {
+    const usuarioId = req.session.usuarioId;
+
+    try {
+        // Cria a tabela de progresso de missões se não existir
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS progresso_missoes (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                usuario_id INT NOT NULL,
+                missao_id VARCHAR(50) NOT NULL,
+                progresso INT DEFAULT 0,
+                completo BOOLEAN DEFAULT FALSE,
+                data_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                data_conclusao TIMESTAMP NULL,
+                FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                UNIQUE KEY unique_usuario_missao (usuario_id, missao_id)
+            )
+        `);
+
+        const [rows] = await db.query(`
+            SELECT missao_id, progresso, completo 
+            FROM progresso_missoes 
+            WHERE usuario_id = ?
+        `, [usuarioId]);
+
+        res.json(rows.reduce((acc, row) => {
+            acc[row.missao_id] = {
+                progresso: row.progresso,
+                completo: row.completo
+            };
+            return acc;
+        }, {}));
+    } catch (err) {
+        console.error('[ERRO SQL] /api/progresso-missoes GET:', err);
+        res.status(500).json({ erro: 'Erro ao buscar progresso das missões' });
+    }
+});
+
+// Endpoint para atualizar progresso de missão
+app.post('/api/progresso-missoes', verificarLogado, async (req, res) => {
+    const usuarioId = req.session.usuarioId;
+    const { missao_id, incremento = 1 } = req.body;
+
+    try {
+        // Primeiro, verifica se já existe um registro para esta missão
+        const [existing] = await db.query(`
+            SELECT progresso, completo 
+            FROM progresso_missoes 
+            WHERE usuario_id = ? AND missao_id = ?
+        `, [usuarioId, missao_id]);
+
+        let novoProgresso = incremento;
+        if (existing.length > 0) {
+            if (!existing[0].completo) {
+                novoProgresso = existing[0].progresso + incremento;
+            } else {
+                // Se já foi completada, não atualiza
+                return res.json({ sucesso: true, progresso: existing[0].progresso });
+            }
+        }
+
+        // Atualiza ou insere o progresso
+        await db.query(`
+            INSERT INTO progresso_missoes (usuario_id, missao_id, progresso, completo) 
+            VALUES (?, ?, ?, FALSE)
+            ON DUPLICATE KEY UPDATE 
+            progresso = CASE WHEN completo = FALSE THEN ? ELSE progresso END
+        `, [usuarioId, missao_id, novoProgresso, novoProgresso]);
+
+        res.json({ sucesso: true, progresso: novoProgresso });
+    } catch (err) {
+        console.error('[ERRO SQL] /api/progresso-missoes POST:', err);
+        res.status(500).json({ erro: 'Erro ao atualizar progresso da missão' });
+    }
+});
+
 // 5. API de Monstros
 app.get('/api/monstro/:nome', verificarLogado, async (req, res) => {
     try {

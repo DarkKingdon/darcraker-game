@@ -242,40 +242,20 @@ async function finalizarCombate(vitoria, fugiu = false) {
         });
     } catch (e) { console.error(e); }
 
-    // Notificar a página de missões sobre a derrota do inimigo ANTES do redirecionamento
-    if (window.opener && window.opener.notificarDerrotaInimigo) {
-        // Se foi aberto em nova janela/aba pelo sistema de missões
-        window.opener.notificarDerrotaInimigo(monstro.nome || 'poring');
-    } else {
-        // Tenta notificar qualquer janela pai ou irmã
-        try {
-            if (window.parent && window.parent !== window) {
-                if (window.parent.notificarDerrotaInimigo) {
-                    window.parent.notificarDerrotaInimigo(monstro.nome || 'poring');
-                }
-            } else if (window.top && window.top !== window) {
-                if (window.top.notificarDerrotaInimigo) {
-                    window.top.notificarDerrotaInimigo(monstro.nome || 'poring');
-                }
-            }
-        } catch(e) {
-            // Se não conseguir notificar diretamente, tenta armazenar no localStorage
-            try {
-                const ultimaDerrota = {
-                    tipo: monstro.nome || 'poring',
-                    timestamp: Date.now()
-                };
-                localStorage.setItem('ultimaDerrotaInimigo', JSON.stringify(ultimaDerrota));
-                
-                // Dispara um evento de armazenamento para notificar outras abas
-                window.dispatchEvent(new StorageEvent('storage', {
-                    key: 'ultimaDerrotaInimigo',
-                    newValue: JSON.stringify(ultimaDerrota)
-                }));
-            } catch(e) {
-                console.log("Não foi possível notificar sobre a derrota do inimigo");
-            }
-        }
+    // Atualizar o progresso da missão de derrotar Poring
+    try {
+        await fetch('/api/progresso-missoes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                missao_id: '1', // ID da missão de derrotar Poring
+                incremento: 1
+            })
+        });
+    } catch(e) {
+        console.log("Erro ao atualizar progresso da missão:", e);
     }
 
     setTimeout(() => { window.location.href = '/heroi.html'; }, 2000);
