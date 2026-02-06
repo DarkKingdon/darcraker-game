@@ -1,4 +1,84 @@
-/* Estilos específicos para a página de missões de Asmon */
+/* Estilos específicos para a página de missões de Asmon - com estilos gerais inclusos */
+
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('../../../../img/fundo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    overflow-x: hidden;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- NAVBAR --- */
+header {
+    background-color: #000; 
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    position: fixed;
+    top: 0;          
+    left: 0;         
+    width: 100%;     
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-nav {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-nav:hover {
+    background: linear-gradient(145deg, #2980b9, #3498db);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+main {
+    margin-top: 100px;
+    flex: 1;
+    padding: 20px;
+}
+
+footer {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    text-align: center;
+    margin-top: auto;
+}
 .hero-status {
     max-width: 1000px;
     margin: 20px auto;

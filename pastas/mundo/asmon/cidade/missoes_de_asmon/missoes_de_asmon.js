@@ -326,5 +326,15 @@ function simularDerrotaPoring() {
     }
 }
 
+// Função para notificação de derrota de inimigo
+// Esta função pode ser chamada de outras páginas do jogo
+function notificarDerrotaInimigo(tipoInimigo) {
+    // Se o tipo de inimigo for "poring" e a missão estiver ativa
+    if (tipoInimigo.toLowerCase().includes('poring')) {
+        simularDerrotaPoring();
+    }
+}
+
 // Expondo a função para uso global (para testes ou integração com outras partes do jogo)
 window.simularDerrotaPoring = simularDerrotaPoring;
+window.notificarDerrotaInimigo = notificarDerrotaInimigo;

@@ -38,7 +38,11 @@
         </div>
 
         <div class="controles">
-            <button onclick="atacar()" class="btn-battle btn-attack">Atacar</button>
+            <button id="btn-atacar" onclick="tentarAtacar()" class="btn-battle btn-attack">Atacar</button>
+            <div class="atb-container">
+                <div id="atb-fill" class="atb-fill"></div>
+            </div>
+            <div id="atb-status" style="text-align: center; margin-top: 5px; font-weight: bold;">Carregando...</div>
             <button onclick="fugir()" class="btn-battle btn-flee">Fugir</button>
         </div>
     </div>
