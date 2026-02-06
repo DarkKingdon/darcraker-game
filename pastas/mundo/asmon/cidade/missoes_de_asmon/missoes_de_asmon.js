@@ -407,6 +407,11 @@ window.addEventListener('storage', function(e) {
     }
 });
 
+// Atualiza o progresso periodicamente para manter sincronizado
+setInterval(function() {
+    carregarProgressoMissoes();
+}, 5000); // Atualiza a cada 5 segundos
+
 // Expondo a função para uso global (para testes ou integração com outras partes do jogo)
 window.simularDerrotaPoring = simularDerrotaPoring;
 window.notificarDerrotaInimigo = notificarDerrotaInimigo;
