@@ -193,15 +193,18 @@ async function entregarRecompensa(missionId) {
     // Recompensas baseadas na missão
     let experiencia = 0;
     let moedas = 0;
+    let pontosHonra = 0;
     
     switch(missionId) {
         case '1':
             experiencia = 5; // 5 de experiência
             moedas = 1; // 1 moeda
+            pontosHonra = 1; // 1 ponto de honra
             break;
         default:
             experiencia = 1;
             moedas = 1;
+            pontosHonra = 1;
     }
     
     try {
@@ -218,6 +221,7 @@ async function entregarRecompensa(missionId) {
             
             // Atualiza os valores
             heroi.exp += experiencia;
+            heroi.pontos_honra = (heroi.pontos_honra || 0) + pontosHonra; // Adiciona pontos de honra
             
             // Verifica se ganhou nível
             if(heroi.exp >= heroi.exp_max) {
@@ -272,12 +276,13 @@ async function entregarRecompensa(missionId) {
                     bonus_ataque_min: heroi.bonus_ataque_min,
                     bonus_ataque_max: heroi.bonus_ataque_max,
                     bonus_defesa_min: heroi.bonus_defesa_min,
-                    bonus_defesa_max: heroi.bonus_defesa_max
+                    bonus_defesa_max: heroi.bonus_defesa_max,
+                    pontos_honra: heroi.pontos_honra
                 })
             });
             
             if(updateResponse.ok) {
-                console.log(`Recompensas entregues: ${experiencia} EXP e ${moedas} moedas`);
+                console.log(`Recompensas entregues: ${experiencia} EXP, ${moedas} moedas e ${pontosHonra} pontos de honra`);
             } else {
                 console.error('Falha ao atualizar status no servidor');
             }

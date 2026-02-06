@@ -7,6 +7,7 @@ const DOM = {
     exp: document.getElementById('exp-valor'),
     expMax: document.getElementById('exp-max-valor'),
     pontos: document.getElementById('points-valor'),
+    honra: document.getElementById('honra-valor'),
     forca: document.getElementById('forca-valor'),
     protecao: document.getElementById('protecao-valor'),
     vitalidade: document.getElementById('vitalidade-valor'),
@@ -76,6 +77,7 @@ function atualizarTela() {
     if (DOM.exp) DOM.exp.textContent = status.exp;
     if (DOM.expMax) DOM.expMax.textContent = status.exp_max;
     if (DOM.pontos) DOM.pontos.textContent = status.pontos_disponiveis;
+    if (DOM.honra) DOM.honra.textContent = status.pontos_honra || 0;
 
     if (DOM.forca) DOM.forca.textContent = status.forca;
     if (DOM.protecao) DOM.protecao.textContent = status.protecao;

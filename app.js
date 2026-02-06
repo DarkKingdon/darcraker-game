@@ -259,7 +259,9 @@ app.post('/api/status', verificarLogado, async (req, res) => {
             // NOVOS CAMPOS DE BÔNUS
             bonus_vida, bonus_mana,
             bonus_forca, bonus_protecao, bonus_vitalidade, bonus_inteligencia,
-            bonus_ataque_min, bonus_ataque_max, bonus_defesa_min, bonus_defesa_max
+            bonus_ataque_min, bonus_ataque_max, bonus_defesa_min, bonus_defesa_max,
+            // NOVO CAMPO PONTOS DE HONRA
+            pontos_honra
         } = req.body;
 
         const usuarioId = req.session.usuarioId;
@@ -273,7 +275,8 @@ app.post('/api/status', verificarLogado, async (req, res) => {
             ataque_min = ?, ataque_max = ?, defesa_min = ?, defesa_max = ?,
             bonus_vida = ?, bonus_mana = ?, 
             bonus_forca = ?, bonus_protecao = ?, bonus_vitalidade = ?, bonus_inteligencia = ?,
-            bonus_ataque_min = ?, bonus_ataque_max = ?, bonus_defesa_min = ?, bonus_defesa_max = ?
+            bonus_ataque_min = ?, bonus_ataque_max = ?, bonus_defesa_min = ?, bonus_defesa_max = ?,
+            pontos_honra = ?
             WHERE usuario_id = ?`,
             [
                 nivel, exp, exp_max,
@@ -284,6 +287,7 @@ app.post('/api/status', verificarLogado, async (req, res) => {
                 bonus_vida, bonus_mana,
                 bonus_forca, bonus_protecao, bonus_vitalidade, bonus_inteligencia,
                 bonus_ataque_min, bonus_ataque_max, bonus_defesa_min, bonus_defesa_max,
+                pontos_honra || 0,
                 usuarioId
             ]
         );
