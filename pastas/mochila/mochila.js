@@ -11,45 +11,55 @@ async function carregarDadosIniciais() {
     await carregarInventario();
 }
 
-async function carregarStatusHerói() {
+async function equiparItem(item) {
+    // Busca os requisitos do objeto do item ou define 0 como padrão
+    const reqNivel = item.nivel_requerido || 0;
+    const reqProtecao = item.protecao_requerida || 0;
+    const reqVitalidade = item.vitalidade_requerida || 0;
+
+    // Validações de requisitos baseadas no status do herói
+    if (heroStatus.nivel < reqNivel) {
+        alert(`Nível insuficiente! Requerido: ${reqNivel}`);
+        return;
+    }
+    if (heroStatus.protecao < reqProtecao) {
+        alert(`Proteção insuficiente! Requerida: ${reqProtecao}`);
+        return;
+    }
+    // Verifica vitalidade apenas se for um item de cabeça
+    if (item.tipo === 'cabeca' && heroStatus.vitalidade < reqVitalidade) {
+        alert(`Vitalidade insuficiente! Requerida: ${reqVitalidade}`);
+        return;
+    }
+
     try {
-        const res = await fetch('/api/status');
-        heroStatus = await res.json();
+        let endpoint, body;
 
-        document.getElementById('mochila-vida-atual').textContent = `❤️ Vida: ${Math.floor(heroStatus.vida_atual)} / ${heroStatus.vida_maxima}`;
-        document.getElementById('mochila-mana-atual').textContent = `💙 Mana: ${Math.floor(heroStatus.mana_atual)} / ${heroStatus.mana_maxima}`;
-
-        const atkMin = heroStatus.forca * 1;
-        const atkMax = heroStatus.forca * 2;
-        const defMin = heroStatus.protecao * 1;
-        const defMax = (heroStatus.protecao * 2) + (heroStatus.peito_defesa || 0);
-
-        document.getElementById('mochila-ataque-atual').textContent = `🗡 Ataque: ${atkMin} - ${atkMax}`;
-        document.getElementById('mochila-defesa-atual').textContent = `🛡 Defesa: ${defMin} - ${defMax}`;
-
-        // Atualizar o Slot de Peito na Mochila
-        const slotPeito = document.getElementById('backpack-slot-peito');
-        if (heroStatus.equip_peito) {
-            slotPeito.innerHTML = `<img src="${heroStatus.peito_img}" title="${heroStatus.peito_nome}">`;
-            slotPeito.onclick = () => {
-                const itemEquipado = {
-                    item_id: heroStatus.equip_peito,
-                    nome: heroStatus.peito_nome,
-                    imagem_url: heroStatus.peito_img,
-                    tipo: 'equipamento',
-                    descricao: 'Este item está equipado atualmente.',
-                    defesa: heroStatus.peito_defesa,
-                    nivel_requerido: heroStatus.peito_nivel_req,
-                    protecao_requerida: heroStatus.peito_prot_req
-                };
-                mostrarDetalhes(itemEquipado, true);
-            };
+        // Lógica de Direcionamento
+        if (item.tipo === 'cabeca') {
+            endpoint = '/api/equipar/cabeca';
+            body = JSON.stringify({ item_id: item.item_id });
         } else {
-            slotPeito.innerHTML = '<span class="placeholder-icon">👕</span>';
-            slotPeito.onclick = null;
+            // Itens do tipo 'equipamento' vão para o slot de peito
+            endpoint = '/api/equipamentos/equipar';
+            body = JSON.stringify({ item_id: item.item_id, slot: 'peito' });
         }
-    } catch (e) {
-        console.error("Erro ao carregar status na mochila:", e);
+
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: body
+        });
+
+        const data = await res.json();
+        if (data.sucesso) {
+            document.getElementById('item-details-panel').style.display = 'none';
+            await carregarDadosIniciais(); // Atualiza a tela após equipar
+        } else {
+            alert(data.erro);
+        }
+    } catch (e) { 
+        console.error("Erro ao equipar:", e); 
     }
 }
 
