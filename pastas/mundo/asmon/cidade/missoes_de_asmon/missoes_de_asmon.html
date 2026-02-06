@@ -6,73 +6,99 @@
     <title>Missões de Asmon - Jogo</title>
     <link rel="stylesheet" href="../../../mundo.css">
     <link rel="stylesheet" href="missoes_de_asmon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Missões de Asmon</h1>
-            <nav>
-                <a href="../../../../inicio.html" class="btn-nav">Início</a>
-                <a href="../../../../mochila.html" class="btn-nav">Mochila</a>
-                <a href="../../../../heroi.html" class="btn-nav">Herói</a>
-                <a href="../../../../rank.html" class="btn-nav">Ranking</a>
-                <a href="../../../../mercado.html" class="btn-nav">Mercado</a>
-                <a href="../../cidade_de_asmon.html" class="btn-nav">Voltar à Cidade</a>
-            </nav>
-        </header>
+    <header class="navbar">
+        <div class="logo">DarCraker - Missões</div>
+        <i class="fas fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+    </header>
 
-        <main>
-            <section class="hero-status">
-                <div class="status-card">
-                    <h3>Herói: <span class="hero-nome">Carregando...</span></h3>
-                    <p>Nível: <span class="hero-nivel">-</span></p>
-                    <p>EXP: <span class="hero-exp">-/100</span></p>
-                </div>
-            </section>
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <a href="../../../../inicio.html" class="sidebar-link">
+                <img src="../../../../img/inicio.jpg" alt="Início" class="sidebar-img">
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="../../../../heroi.html" class="sidebar-link">
+                <img src="../../../../img/heroi.jpg" alt="Herói" class="sidebar-img">
+                <span class="sidebar-text">Herói</span>
+            </a>
+            <a href="../../../mundo.html" class="sidebar-link">
+                <img src="../../../../img/icone_mundo.png" alt="Mundo" class="sidebar-img">
+                <span class="sidebar-text">Mundo</span>
+            </a>
+            <a href="../../../../mochila.html" class="sidebar-link">
+                <img src="../../../../img/mochila.jpg" alt="Mochila" class="sidebar-img">
+                <span class="sidebar-text">Mochila</span>
+            </a>
+            <a href="../../../../rank.html" class="sidebar-link">
+                <img src="../../../../img/conquistas.jpg" alt="Ranking" class="sidebar-img">
+                <span class="sidebar-text">Ranking</span>
+            </a>
+            <a href="../../../../mercado.html" class="sidebar-link">
+                <img src="../../../../img/home.jpg" alt="Mercado" class="sidebar-img">
+                <span class="sidebar-text">Mercado</span>
+            </a>
+            <a href="../../../../pastas/wiki/index.html" class="sidebar-link">
+                <img src="../../../../img/wiki.jpg" alt="Wiki" class="sidebar-img">
+                <span class="sidebar-text">Wiki</span>
+            </a>
+            <a href="../../../../sair" class="sidebar-link">
+                <img src="../../../../img/home.jpg" alt="Sair" class="sidebar-img">
+                <span class="sidebar-text">Sair</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <section class="hero-status">
+            <div class="status-card">
+                <h3>Herói: <span class="hero-nome">Carregando...</span></h3>
+                <p>Nível: <span class="hero-nivel">-</span></p>
+                <p>EXP: <span class="hero-exp">-/100</span></p>
+                <p>Pontos de Honra: <span class="hero-honra">0</span></p>
+            </div>
+        </section>
+        
+        <section class="missions-container">
+            <h2>Missões Disponíveis</h2>
             
-            <section class="missions-container">
-                <h2>Missões Disponíveis</h2>
+            <!-- Missão 1 -->
+            <div class="mission-card" data-mission-id="1">
+                <div class="mission-header">
+                    <h3>Missão #1: Infestação de Poring</h3>
+                    <span class="mission-level">Nível Requerido: 3</span>
+                </div>
                 
-                <!-- Missão 1 -->
-                <div class="mission-card" data-mission-id="1">
-                    <div class="mission-header">
-                        <h3>Missão #1: Infestação de Poring</h3>
-                        <span class="mission-level">Nível Requerido: 3</span>
+                <div class="mission-content">
+                    <p class="mission-description">O prefeito da região procura alguém para derrotar 10 poring. Ele dará uma recompensa para quem aceitar o desafio.</p>
+                    
+                    <div class="mission-rewards">
+                        <h4>Recompensas:</h4>
+                        <ul>
+                            <li>1 Moeda de Ouro</li>
+                            <li>+5 EXP</li>
+                        </ul>
                     </div>
                     
-                    <div class="mission-content">
-                        <p class="mission-description">O prefeito da região procura alguém para derrotar 10 poring. Ele dará uma recompensa para quem aceitar o desafio.</p>
-                        
-                        <div class="mission-rewards">
-                            <h4>Recompensas:</h4>
-                            <ul>
-                                <li>1 Moeda de Ouro</li>
-                                <li>+5 EXP</li>
-                            </ul>
+                    <div class="mission-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-mission="1"></div>
                         </div>
-                        
-                        <div class="mission-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" data-mission="1"></div>
-                            </div>
-                            <span class="progress-text" data-mission="1">0/10 Poring derrotados</span>
-                        </div>
-                        
-                        <div class="mission-actions">
-                            <button class="btn btn-primary accept-mission" data-mission-id="1">Aceitar Missão</button>
-                            <button class="btn btn-secondary complete-mission" data-mission-id="1" style="display:none;">Completar Missão</button>
-                        </div>
+                        <span class="progress-text" data-mission="1">0/10 Poring derrotados</span>
+                    </div>
+                    
+                    <div class="mission-actions">
+                        <button class="btn btn-primary accept-mission" data-mission-id="1">Aceitar Missão</button>
+                        <button class="btn btn-secondary complete-mission" data-mission-id="1" style="display:none;">Completar Missão</button>
                     </div>
                 </div>
-                
-                <!-- Mais missões podem ser adicionadas aqui -->
-            </section>
-        </main>
-        
-        <footer>
-            <p>&copy; 2026 Jogo Online. Todos os direitos reservados.</p>
-        </footer>
-    </div>
+            </div>
+            
+            <!-- Mais missões podem ser adicionadas aqui -->
+        </section>
+    </main>
 
     <script src="../../../../heroi.js"></script>
     <script src="missoes_de_asmon.js"></script>

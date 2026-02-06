@@ -53,6 +53,10 @@ function atualizarInterfaceHeroi(heroi) {
     document.querySelectorAll('.hero-exp').forEach(element => {
         element.textContent = `${heroi.exp || 0}/${heroi.exp_max || 100}`;
     });
+    
+    document.querySelectorAll('.hero-honra').forEach(element => {
+        element.textContent = heroi.pontos_honra || 0;
+    });
 }
 
 // Função para aceitar uma missão
