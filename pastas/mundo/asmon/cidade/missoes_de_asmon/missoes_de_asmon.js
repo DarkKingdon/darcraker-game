@@ -398,6 +398,15 @@ function notificarDerrotaInimigo(tipoInimigo) {
     }
 }
 
+// Adiciona listener para atualizar a interface quando o localStorage for modificado em outra aba
+window.addEventListener('storage', function(e) {
+    if (e.key === 'missoesAceitas') {
+        console.log('Atualizando interface devido a mudança em outra aba');
+        // Recarrega o progresso das missões
+        carregarProgressoMissoes();
+    }
+});
+
 // Expondo a função para uso global (para testes ou integração com outras partes do jogo)
 window.simularDerrotaPoring = simularDerrotaPoring;
 window.notificarDerrotaInimigo = notificarDerrotaInimigo;
