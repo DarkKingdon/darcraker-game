@@ -407,10 +407,27 @@ window.addEventListener('storage', function(e) {
     }
 });
 
+// Função para verificar derrotas de inimigos registradas em outras abas
+function verificarDerrotasPendentes() {
+    try {
+        const ultimaDerrotaStr = localStorage.getItem('ultimaDerrotaInimigo');
+        if (ultimaDerrotaStr) {
+            const ultimaDerrota = JSON.parse(ultimaDerrotaStr);
+            // Verifica se a derrota é recente (nos últimos 10 segundos)
+            if (Date.now() - ultimaDerrota.timestamp < 10000) {
+                notificarDerrotaInimigo(ultimaDerrota.tipo);
+            }
+        }
+    } catch(e) {
+        console.log("Erro ao verificar derrotas pendentes:", e);
+    }
+}
+
 // Atualiza o progresso periodicamente para manter sincronizado
 setInterval(function() {
     carregarProgressoMissoes();
-}, 5000); // Atualiza a cada 5 segundos
+    verificarDerrotasPendentes(); // Verifica se há derrotas registradas em outras abas
+}, 2000); // Atualiza a cada 2 segundos para maior agilidade
 
 // Expondo a função para uso global (para testes ou integração com outras partes do jogo)
 window.simularDerrotaPoring = simularDerrotaPoring;
