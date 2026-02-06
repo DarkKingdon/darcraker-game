@@ -140,12 +140,17 @@ function desistirMissao(missionId) {
 
 // Função para atualizar o progresso da missão (seria chamada ao derrotar um inimigo)
 function atualizarProgressoMissao(missionId, incremento = 1) {
+    console.log(`Atualizando progresso da missão ${missionId}, incremento: ${incremento}`); // Debug
     const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
     const missao = missoesAceitas[missionId];
+    
+    console.log(`Missão antes da atualização:`, missao); // Debug
     
     if (missao && missao.aceita && missao.progresso < missao.objetivo) {
         missao.progresso += incremento;
         localStorage.setItem('missoesAceitas', JSON.stringify(missoesAceitas));
+        
+        console.log(`Progresso atualizado: ${missao.progresso}/${missao.objetivo}`); // Debug
         
         // Atualiza a interface
         atualizarInterfaceMissao(missionId);
@@ -154,6 +159,12 @@ function atualizarProgressoMissao(missionId, incremento = 1) {
         if (missao.progresso >= missao.objetivo) {
             mostrarBotaoConcluir(missionId);
         }
+    } else {
+        console.log(`Condições não atendidas para atualizar missão ${missionId}:`, {
+            missao: !!missao,
+            aceita: missao?.aceita,
+            abaixoObjetivo: missao?.progresso < missao?.objetivo
+        }); // Debug
     }
 }
 
@@ -371,9 +382,19 @@ function simularDerrotaPoring() {
 // Função para notificação de derrota de inimigo
 // Esta função pode ser chamada de outras páginas do jogo
 function notificarDerrotaInimigo(tipoInimigo) {
+    console.log(`Notificação de derrota recebida para: ${tipoInimigo}`); // Debug
+    
     // Se o tipo de inimigo for "poring" e a missão estiver ativa
     if (tipoInimigo.toLowerCase().includes('poring')) {
-        simularDerrotaPoring();
+        const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
+        
+        // Verifica se a missão 1 está ativa
+        if (missoesAceitas['1'] && missoesAceitas['1'].aceita) {
+            console.log('Missão 1 está ativa, atualizando progresso...'); // Debug
+            atualizarProgressoMissao('1', 1);
+        } else {
+            console.log('Missão 1 não está ativa'); // Debug
+        }
     }
 }
 
