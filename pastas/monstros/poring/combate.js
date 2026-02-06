@@ -233,6 +233,7 @@ async function finalizarCombate(vitoria, fugiu = false) {
         log(`Você foi derrotado...`);
     }
 
+    // Salva o estado do herói (Vida, EXP, etc) no banco de dados
     try {
         await fetch('/api/status', {
             method: 'POST',
@@ -240,6 +241,42 @@ async function finalizarCombate(vitoria, fugiu = false) {
             body: JSON.stringify(heroi)
         });
     } catch (e) { console.error(e); }
+
+    // Notificar a página de missões sobre a derrota do inimigo ANTES do redirecionamento
+    if (window.opener && window.opener.notificarDerrotaInimigo) {
+        // Se foi aberto em nova janela/aba pelo sistema de missões
+        window.opener.notificarDerrotaInimigo(monstro.nome || 'poring');
+    } else {
+        // Tenta notificar qualquer janela pai ou irmã
+        try {
+            if (window.parent && window.parent !== window) {
+                if (window.parent.notificarDerrotaInimigo) {
+                    window.parent.notificarDerrotaInimigo(monstro.nome || 'poring');
+                }
+            } else if (window.top && window.top !== window) {
+                if (window.top.notificarDerrotaInimigo) {
+                    window.top.notificarDerrotaInimigo(monstro.nome || 'poring');
+                }
+            }
+        } catch(e) {
+            // Se não conseguir notificar diretamente, tenta armazenar no localStorage
+            try {
+                const ultimaDerrota = {
+                    tipo: monstro.nome || 'poring',
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('ultimaDerrotaInimigo', JSON.stringify(ultimaDerrota));
+                
+                // Dispara um evento de armazenamento para notificar outras abas
+                window.dispatchEvent(new StorageEvent('storage', {
+                    key: 'ultimaDerrotaInimigo',
+                    newValue: JSON.stringify(ultimaDerrota)
+                }));
+            } catch(e) {
+                console.log("Não foi possível notificar sobre a derrota do inimigo");
+            }
+        }
+    }
 
     setTimeout(() => { window.location.href = '/heroi.html'; }, 2000);
 }
