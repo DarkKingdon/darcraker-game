@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    document.querySelectorAll('.abandon-mission').forEach(button => {
+        button.addEventListener('click', function() {
+            const missionId = this.getAttribute('data-mission-id');
+            desistirMissao(missionId);
+        });
+    });
+    
     // Carrega o progresso das missões salvas
     carregarProgressoMissoes();
 });
@@ -111,6 +118,26 @@ function completarMissao(missionId) {
     alert(`Parabéns! Você completou a missão "${nomeMissao}" e recebeu sua recompensa.`);
 }
 
+// Função para desistir de uma missão
+function desistirMissao(missionId) {
+    if (!confirm('Tem certeza que deseja desistir desta missão? Todo o progresso será perdido.')) {
+        return;
+    }
+    
+    const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
+    
+    // Remove a missão da lista de aceitas
+    delete missoesAceitas[missionId];
+    localStorage.setItem('missoesAceitas', JSON.stringify(missoesAceitas));
+    
+    // Atualiza a interface
+    atualizarInterfaceMissao(missionId);
+    
+    // Exibe mensagem de confirmação
+    const nomeMissao = getNomeMissao(missionId);
+    alert(`Você desistiu da missão "${nomeMissao}". Poderá aceitá-la novamente quando quiser.`);
+}
+
 // Função para atualizar o progresso da missão (seria chamada ao derrotar um inimigo)
 function atualizarProgressoMissao(missionId, incremento = 1) {
     const missoesAceitas = JSON.parse(localStorage.getItem('missoesAceitas') || '{}');
@@ -137,6 +164,7 @@ function atualizarInterfaceMissao(missionId) {
     const progressText = document.querySelector(`.progress-text[data-mission="${missionId}"]`);
     const acceptButton = document.querySelector(`.accept-mission[data-mission-id="${missionId}"]`);
     const completeButton = document.querySelector(`.complete-mission[data-mission-id="${missionId}"]`);
+    const abandonButton = document.querySelector(`.abandon-mission[data-mission-id="${missionId}"]`);
     
     if (missao) {
         const percentual = (missao.progresso / missao.objetivo) * 100;
@@ -152,6 +180,9 @@ function atualizarInterfaceMissao(missionId) {
         if (completeButton) {
             completeButton.style.display = missao.progresso >= missao.objetivo ? 'inline-block' : 'none';
         }
+        if (abandonButton) {
+            abandonButton.style.display = 'inline-block';
+        }
     } else {
         // Se a missão não está mais ativa, resetar a interface
         if (progressElement) {
@@ -165,6 +196,9 @@ function atualizarInterfaceMissao(missionId) {
         }
         if (completeButton) {
             completeButton.style.display = 'none';
+        }
+        if (abandonButton) {
+            abandonButton.style.display = 'none';
         }
     }
 }
@@ -187,8 +221,12 @@ function carregarProgressoMissoes() {
 // Função para mostrar o botão de concluir missão
 function mostrarBotaoConcluir(missionId) {
     const completeButton = document.querySelector(`.complete-mission[data-mission-id="${missionId}"]`);
+    const abandonButton = document.querySelector(`.abandon-mission[data-mission-id="${missionId}"]`);
     if (completeButton) {
         completeButton.style.display = 'inline-block';
+    }
+    if (abandonButton) {
+        abandonButton.style.display = 'inline-block';
     }
 }
 

@@ -3,6 +3,7 @@
 window.heroStatus = {};
 
 const DOM = {
+    heroName: document.getElementById('hero-name'),
     level: document.getElementById('level-valor'),
     exp: document.getElementById('exp-valor'),
     expMax: document.getElementById('exp-max-valor'),
@@ -73,6 +74,7 @@ function atualizarTela() {
     const status = window.heroStatus;
     if (!status || Object.keys(status).length === 0) return;
 
+    if (DOM.heroName) DOM.heroName.textContent = status.nome || 'Aventureiro';
     if (DOM.level) DOM.level.textContent = status.nivel;
     if (DOM.exp) DOM.exp.textContent = status.exp;
     if (DOM.expMax) DOM.expMax.textContent = status.exp_max;

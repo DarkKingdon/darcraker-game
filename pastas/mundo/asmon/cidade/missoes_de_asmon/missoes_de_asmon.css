@@ -296,6 +296,18 @@ body {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
 }
 
+.btn-warning {
+    background: linear-gradient(145deg, #f39c12, #d35400);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(145deg, #d35400, #f39c12);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
 .btn:disabled {
     background: #7f8c8d;
     cursor: not-allowed;
