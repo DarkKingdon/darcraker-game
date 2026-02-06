@@ -76,7 +76,7 @@ app.get('/api/status', verificarLogado, async (req, res) => {
         console.log(`[DEBUG] Buscando status para usuario_id: ${usuarioId}`);
 
         const [rows] = await db.query(`
-            SELECT h.*, 
+            SELECT h.*, u.nome as nome,
                    i.nome as peito_nome, i.imagem_url as peito_img, 
                    i.defesa as peito_defesa, i.nivel_requerido as peito_nivel_req, 
                    i.protecao_requerida as peito_prot_req,
@@ -84,6 +84,7 @@ app.get('/api/status', verificarLogado, async (req, res) => {
                    c.defesa as cabeca_defesa_item, c.nivel_requerido as cabeca_nivel_req,
                    c.protecao_requerida as cabeca_prot_req, c.vitalidade_requerida as cabeca_vit_req
             FROM heroi_status h
+            LEFT JOIN usuarios u ON h.usuario_id = u.id
             LEFT JOIN itens i ON h.equip_peito = i.id
             LEFT JOIN itens c ON h.cabeca_id = c.id
             WHERE h.usuario_id = ?
