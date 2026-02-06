@@ -1,4 +1,4 @@
-// mochila.js - Adaptado para Equipar/Desequipar direto na Mochila
+// mochila.js - Versão Corrigida (Sem acentos e com suporte a Cabeça)
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarDadosIniciais();
@@ -7,27 +7,29 @@ document.addEventListener('DOMContentLoaded', () => {
 let heroStatus = null;
 
 async function carregarDadosIniciais() {
-    await carregarStatusHerói();
+    await carregarStatusHeroi(); // Chamada sem acento
     await carregarInventario();
 }
 
-async function carregarStatusHerói() {
+async function carregarStatusHeroi() { // Definição sem acento
     try {
         const res = await fetch('/api/status');
         heroStatus = await res.json();
 
+        // Atualização de textos de status
         document.getElementById('mochila-vida-atual').textContent = `❤️ Vida: ${Math.floor(heroStatus.vida_atual)} / ${heroStatus.vida_maxima}`;
         document.getElementById('mochila-mana-atual').textContent = `💙 Mana: ${Math.floor(heroStatus.mana_atual)} / ${heroStatus.mana_maxima}`;
 
         const atkMin = heroStatus.forca * 1;
         const atkMax = heroStatus.forca * 2;
         const defMin = heroStatus.protecao * 1;
-        const defMax = (heroStatus.protecao * 2) + (heroStatus.peito_defesa || 0);
+        // Soma a defesa base com a defesa dos itens de peito e cabeça
+        const defMax = (heroStatus.protecao * 2) + (heroStatus.peito_defesa || 0) + (heroStatus.cabeca_defesa_item || 0);
 
         document.getElementById('mochila-ataque-atual').textContent = `🗡 Ataque: ${atkMin} - ${atkMax}`;
         document.getElementById('mochila-defesa-atual').textContent = `🛡 Defesa: ${defMin} - ${defMax}`;
 
-        // Atualizar o Slot de Peito na Mochila
+        // --- ATUALIZAR SLOT DE PEITO ---
         const slotPeito = document.getElementById('backpack-slot-peito');
         if (heroStatus.equip_peito) {
             slotPeito.innerHTML = `<img src="${heroStatus.peito_img}" title="${heroStatus.peito_nome}">`;
@@ -48,6 +50,32 @@ async function carregarStatusHerói() {
             slotPeito.innerHTML = '<span class="placeholder-icon">👕</span>';
             slotPeito.onclick = null;
         }
+
+        // --- ATUALIZAR SLOT DE CABEÇA ---
+        const slotCabeca = document.getElementById('backpack-slot-cabeca');
+        if (slotCabeca) { // Verifica se o slot existe no HTML
+            if (heroStatus.cabeca_id) {
+                slotCabeca.innerHTML = `<img src="${heroStatus.cabeca_img}" title="${heroStatus.cabeca_nome}">`;
+                slotCabeca.onclick = () => {
+                    const itemEquipado = {
+                        item_id: heroStatus.cabeca_id,
+                        nome: heroStatus.cabeca_nome,
+                        imagem_url: heroStatus.cabeca_img,
+                        tipo: 'cabeca',
+                        descricao: 'Este item está equipado atualmente.',
+                        defesa: heroStatus.cabeca_defesa_item,
+                        nivel_requerido: heroStatus.cabeca_nivel_req,
+                        protecao_requerida: heroStatus.cabeca_prot_req,
+                        vitalidade_requerida: heroStatus.cabeca_vit_req
+                    };
+                    mostrarDetalhes(itemEquipado, true);
+                };
+            } else {
+                slotCabeca.innerHTML = '<span class="placeholder-icon">🎩</span>';
+                slotCabeca.onclick = null;
+            }
+        }
+
     } catch (e) {
         console.error("Erro ao carregar status na mochila:", e);
     }
@@ -76,8 +104,7 @@ async function carregarInventario() {
             grid.appendChild(slot);
         });
     } catch (error) {
-        console.error(error);
-        grid.innerHTML = '<p id="empty-message">Erro ao carregar inventário.</p>';
+        console.error("Erro ao carregar inventário:", error);
     }
 }
 
@@ -103,20 +130,25 @@ function mostrarDetalhes(item, estaEquipado) {
     btnEquip.style.display = 'none';
     btnUnequip.style.display = 'none';
 
-    if (item.tipo === 'equipamento') {
-        // Exibe bônus e requisitos solicitados
-        stats.innerHTML = `
+    if (item.tipo === 'equipamento' || item.tipo === 'cabeca') {
+        let requisitosHTML = `
             <strong>Atributos:</strong>
-            <span class="detail-bonus-item">🛡 Defesa Máxima: +${item.defesa || 0}</span>
+            <span class="detail-bonus-item" style="display: block;">🛡 Defesa Máxima: +${item.defesa || 0}</span>
             <br>
             <strong>Requisitos:</strong>
-            <span class="detail-req-item">🏅 Nível: ${item.nivel_requerido || 0}</span>
-            <span class="detail-req-item">🛡 Proteção: ${item.protecao_requerida || 0}</span>
+            <span class="detail-req-item" style="display: block;">🏅 Nível: ${item.nivel_requerido || 0}</span>
+            <span class="detail-req-item" style="display: block;">🛡 Proteção: ${item.protecao_requerida || 0}</span>
         `;
+
+        if (item.tipo === 'cabeca' && item.vitalidade_requerida) {
+            requisitosHTML += `<span class="detail-req-item" style="display: block;">❤️ Vitalidade: ${item.vitalidade_requerida}</span>`;
+        }
+
+        stats.innerHTML = requisitosHTML;
 
         if (estaEquipado) {
             btnUnequip.style.display = 'block';
-            btnUnequip.onclick = () => desequiparItem();
+            btnUnequip.onclick = () => desequiparItem(item.tipo);
         } else {
             btnEquip.style.display = 'block';
             btnEquip.onclick = () => equiparItem(item);
@@ -125,32 +157,44 @@ function mostrarDetalhes(item, estaEquipado) {
         stats.innerHTML = `<strong>Efeito:</strong> Recupera vida ou mana.`;
         btnUse.style.display = 'block';
         btnUse.onclick = () => alert("Uso de item consumível em breve!");
-    } else if (item.tipo === 'material') {
-        stats.innerHTML = `<strong>Tipo:</strong> Material de Crafting/Drops.<br><em>Guarde para forjar equipamentos no futuro!</em>`;
     } else {
-        stats.innerHTML = `<strong>Info:</strong> Item genérico.`;
+        stats.innerHTML = `<strong>Info:</strong> Item de material ou diverso.`;
     }
 }
 
 async function equiparItem(item) {
-    // Requisitos: Nível 2 e Proteção 2
-    const reqNivel = item.nivel_requerido || 2;
-    const reqProtecao = item.protecao_requerida || 2;
+    const reqNivel = item.nivel_requerido || 0;
+    const reqProtecao = item.protecao_requerida || 0;
+    const reqVitalidade = item.vitalidade_requerida || 0;
 
     if (heroStatus.nivel < reqNivel) {
-        alert(`Você precisa ser nível ${reqNivel} para equipar este item!`);
+        alert(`Nível insuficiente! Requerido: ${reqNivel}`);
         return;
     }
     if (heroStatus.protecao < reqProtecao) {
-        alert(`Você precisa de ${reqProtecao} pontos em Proteção!`);
+        alert(`Proteção insuficiente! Requerida: ${reqProtecao}`);
+        return;
+    }
+    if (item.tipo === 'cabeca' && heroStatus.vitalidade < reqVitalidade) {
+        alert(`Vitalidade insuficiente! Requerida: ${reqVitalidade}`);
         return;
     }
 
     try {
-        const res = await fetch('/api/equipamentos/equipar', {
+        let endpoint, body;
+
+        if (item.tipo === 'cabeca') {
+            endpoint = '/api/equipar/cabeca';
+            body = JSON.stringify({ item_id: item.item_id });
+        } else {
+            endpoint = '/api/equipamentos/equipar';
+            body = JSON.stringify({ item_id: item.item_id, slot: 'peito' });
+        }
+
+        const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ item_id: item.item_id, slot: 'peito' })
+            body: body
         });
         const data = await res.json();
         if (data.sucesso) {
@@ -159,43 +203,36 @@ async function equiparItem(item) {
         } else {
             alert(data.erro);
         }
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Erro ao equipar:", e); }
 }
 
-async function desequiparItem() {
+async function desequiparItem(tipoItem) {
     try {
-        const res = await fetch('/api/equipamentos/desequipar', {
+        let endpoint, body;
+
+        if (tipoItem === 'cabeca') {
+            endpoint = '/api/desequipar/cabeca';
+            body = JSON.stringify({ slot: 'cabeca' });
+        } else {
+            endpoint = '/api/equipamentos/desequipar';
+            body = JSON.stringify({ slot: 'peito' });
+        }
+
+        const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slot: 'peito' })
+            body: body
         });
         const data = await res.json();
         if (data.sucesso) {
             document.getElementById('item-details-panel').style.display = 'none';
             await carregarDadosIniciais();
         }
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Erro ao desequipar:", e); }
 }
 
-// =================================================================
-// CONTROLE DO MENU LATERAL (SIDEBAR)
-// =================================================================
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('is-open');
-    }
+    if (sidebar) sidebar.classList.toggle('is-open');
 }
 window.toggleSidebar = toggleSidebar;
-
-// Fecha a sidebar ao clicar fora dela
-document.addEventListener('click', (event) => {
-    const sidebar = document.getElementById('sidebar');
-    const menuToggle = document.querySelector('.menu-toggle');
-
-    if (sidebar && sidebar.classList.contains('is-open')) {
-        if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-            sidebar.classList.remove('is-open');
-        }
-    }
-});

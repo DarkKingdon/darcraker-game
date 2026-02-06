@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missões de Asmon - Jogo</title>
+    <link rel="stylesheet" href="../../../mundo.css">
+    <link rel="stylesheet" href="missoes_de_asmon.css">
+    <link rel="icon" type="image/x-icon" href="../../../img/favicon.ico">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Missões de Asmon</h1>
+            <nav>
+                <a href="../../../../inicio.html" class="btn-nav">Início</a>
+                <a href="../../../../mochila.html" class="btn-nav">Mochila</a>
+                <a href="../../../../heroi.html" class="btn-nav">Herói</a>
+                <a href="../../../../rank.html" class="btn-nav">Ranking</a>
+                <a href="../../../../mercado.html" class="btn-nav">Mercado</a>
+                <a href="../../cidade_de_asmon.html" class="btn-nav">Voltar à Cidade</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero-status">
+                <div class="status-card">
+                    <h3>Herói: <span class="hero-nome">Carregando...</span></h3>
+                    <p>Nível: <span class="hero-nivel">-</span></p>
+                    <p>EXP: <span class="hero-exp">-/100</span></p>
+                </div>
+            </section>
+            
+            <section class="missions-container">
+                <h2>Missões Disponíveis</h2>
+                
+                <!-- Missão 1 -->
+                <div class="mission-card" data-mission-id="1">
+                    <div class="mission-header">
+                        <h3>Missão #1: Infestação de Poring</h3>
+                        <span class="mission-level">Nível Requerido: 3</span>
+                    </div>
+                    
+                    <div class="mission-content">
+                        <p class="mission-description">O prefeito da região procura alguém para derrotar 10 poring. Ele dará uma recompensa para quem aceitar o desafio.</p>
+                        
+                        <div class="mission-rewards">
+                            <h4>Recompensas:</h4>
+                            <ul>
+                                <li>1 Moeda de Ouro</li>
+                                <li>+5 EXP</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mission-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-mission="1"></div>
+                            </div>
+                            <span class="progress-text" data-mission="1">0/10 Poring derrotados</span>
+                        </div>
+                        
+                        <div class="mission-actions">
+                            <button class="btn btn-primary accept-mission" data-mission-id="1">Aceitar Missão</button>
+                            <button class="btn btn-secondary complete-mission" data-mission-id="1" style="display:none;">Completar Missão</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mais missões podem ser adicionadas aqui -->
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2026 Jogo Online. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <script src="../../../../heroi.js"></script>
+    <script src="missoes_de_asmon.js"></script>
+</body>
+</html>

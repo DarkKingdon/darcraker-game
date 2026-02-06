@@ -1,0 +1,24 @@
+📋 Documentação Técnica: Sistema de Equipamentos (Mochila)
+1. Problema Corrigido: O item "Chapéu Simples" estava sendo equipado no slot de peito porque a função equiparItem estava com o endpoint e o slot fixos como "peito", ignorando o tipo do item.
+
+2. Alterações no JavaScript (mochila.js):
+
+Padronização de Nomes: A função carregarStatusHerói foi renomeada para carregarStatusHeroi (sem acento) para evitar erros de ReferenceError.
+
+Diferenciação de Tipos: A função equiparItem agora verifica se item.tipo === 'cabeca':
+
+Se for cabeça: Envia para /api/equipar/cabeca.
+
+Se for equipamento: Envia para /api/equipamentos/equipar (slot peito).
+
+Exibição de Slots: A função de carregamento agora atualiza tanto o elemento backpack-slot-peito quanto o novo backpack-slot-cabeca.
+
+Cálculo de Defesa: A interface agora soma a defesa base do herói com os bônus vindos de peito_defesa e cabeca_defesa_item.
+
+3. Alterações no HTML (mochila.html):
+
+Adicionada uma nova div com id="backpack-slot-cabeca" dentro da seção equipment-summary para exibir visualmente o chapéu equipado.
+
+4. Requisito de Banco de Dados (SQL):
+
+Para que a lógica funcione, o item de cabeça deve obrigatoriamente ter a coluna tipo definida como 'cabeca' na tabela itens.
